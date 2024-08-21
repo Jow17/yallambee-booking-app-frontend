@@ -16,7 +16,7 @@
   
   /* navbar */
   .navbar {
-    background-color: aliceblue;
+    background-color: #90c09e;
     padding: 10px 20px;
     display: flex;
     justify-content: space-between;
@@ -28,8 +28,7 @@
   
   /* logo  */
   .logo {
-    font-size: 30px;
-    font-family: Arial, Helvetica, sans-serif;
+    width: 1px;
   }
   
   

@@ -5,7 +5,7 @@ import HomePage from "./pages/HomePage"
 import PropertyListingPage from "./pages/PropertyListingPage"
 import ProfilePage from "./pages/ProfilePage"
 import Header from "./components/Header"
-import { Link, Routes, Route, Router } from "react-router-dom"
+import {Routes, Route } from "react-router-dom"
 
 function App() {
 
