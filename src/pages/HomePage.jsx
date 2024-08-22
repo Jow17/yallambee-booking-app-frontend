@@ -3,9 +3,12 @@ import { Link } from "react-router-dom"
 
 const HomePage = () => {
     return (
-        <div>
-            <h1>Home</h1>
-        </div>
+        <>  
+            
+                <img class=""
+                    src="/tiny_home_pics/Yallambee-Hero-Image.webp" alt="Yallambee hero image"/>
+            
+        </>
     )
 }
 
