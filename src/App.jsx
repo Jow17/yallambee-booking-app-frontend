@@ -6,6 +6,7 @@ import {Routes, Route } from "react-router-dom"
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
+import SignInPage from "./pages/SignInPage"
 import "./styles/index.css"
 
 function App() {
@@ -22,9 +23,9 @@ function App() {
         <Route exact path="/profile" element={
           <Layout><ProfilePage/></Layout>} />
         <Route exact path="/register" element={
-          <Layout>
-            <Register/>
-          </Layout>} />
+          <Layout><Register/></Layout>} />
+        <Route exact path="/SignInPage" element={
+          <Layout><SignInPage/></Layout>} />
       </Routes>
     </>
      
