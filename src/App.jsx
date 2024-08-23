@@ -27,6 +27,7 @@ function App() {
           <Layout><Register/></Layout>} />
         <Route exact path="/SignInPage" element={
           <Layout><SignInPage/></Layout>} />
+        <Route path="*" element={<h3>Page not found!</h3>} />
       </Routes>
     </>
      
