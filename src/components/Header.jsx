@@ -1,43 +1,30 @@
-import { Link } from "react-router-dom"
-
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
-    <div className="bg-green-900 py-6">
-      <div className="container mx-auto flex justify-between">
-        <span className="text-3xl text-white font-bold tracking-tight">
-          <Link to="/"> 
-          Yallambee Tiny Homes
+    <div className="bg-lime-800 py-6">
+      <div className="container mx-auto flex justify-between items-center">
+        <span className="flex items-center h-12">
+          <Link to="/">
+            <img 
+              src="/Logo.png" 
+              alt="Yallambee logo" 
+              className="h-full max-h-20 w-auto "
+            />
           </Link>
         </span>
-        <span className="flex items-center text-white px-3">
-          <Link to="/"> 
-          Home
-          </Link>
-        </span>
-        <span className="flex items-center text-white px-3">
-          <Link to="/property-listing"> 
-          Properties
-          </Link>
-        </span>
-        <span className="flex items-center text-white px-3">
-          <Link to="/booking"> 
-          Booking
-          </Link>
-        </span>
-        <span className="flex items-center text-white px-3">
-          <Link to="/profile"> 
-          Profile
-          </Link>
-        </span>
-    <span className="flex space-x-2">
-      <Link to="/SignInPage" className="flex bg-white items-center text-black-600 px-3 font-bold hover:bg-gray-100">
-       Sign In 
-      </Link>
-    </span>
+        <nav className="flex items-center space-x-6 text-white">
+          <Link to="/" className="px-3">Home</Link>
+          <Link to="/property-listing" className="px-3">Properties</Link>
+          <Link to="/booking" className="px-3">Booking</Link>
+          <Link to="/profile" className="px-3">Profile</Link>
+        </nav>
+        <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
+          <Link to="/SignInPage">Sign In</Link>
+        </button>
+      </div>
     </div>
-  </div>
-  )
+  );
 }
 
-export default Header
+export default Header;

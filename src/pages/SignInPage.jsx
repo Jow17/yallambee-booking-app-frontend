@@ -6,7 +6,7 @@ const SignInForm = ({ onSubmit }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-bold">Sign In</h2>
 
       <label className="text-gray-700 text-sm font-bold flex-1">

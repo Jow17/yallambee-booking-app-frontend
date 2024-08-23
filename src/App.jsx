@@ -7,6 +7,7 @@ import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
 import SignInPage from "./pages/SignInPage"
+import PropertyCard from "./components/PropertyCard"
 import "./styles/index.css"
 
 function App() {

@@ -9,7 +9,7 @@ const HomePage = () => {
         <br />
         <img 
           className="object-fill" 
-          src="/tiny_home_pics/Yallambee-Hero-Image.webp" 
+          src="/tiny_home_pics/Yallambee-Hero-Image.jpg" 
           alt="Yallambee hero image"
         />
       </>

@@ -32,8 +32,8 @@ const SearchBar = () => {
                 absolute 
                 end-2.5 
                 bottom-2.5 
-                bg-green-700 
-                hover:bg-green-800 
+                bg-lime-700 
+                hover:bg-lime-800 
                 focus:ring-4 
                 focus:outline-none 
                 focus:ring-green-300 
@@ -41,7 +41,7 @@ const SearchBar = () => {
                 text-sm 
                 px-4 
                 py-2 
-                dark:bg-green-600 
+                dark:bg-lime-600 
                 dark:hover:bg-green-700 
                 dark:focus:ring-green-800">
                     Search</button>
