@@ -5,7 +5,7 @@ import ProfilePage from "./pages/ProfilePage"
 import {Routes, Route } from "react-router-dom"
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
-import SignInPage from "./pages/SignInPage"
+import Register from "./pages/Register"
 import "./styles/index.css"
 
 function App() {
@@ -21,8 +21,10 @@ function App() {
           <Layout><BookingPage/></Layout>} />
         <Route exact path="/profile" element={
           <Layout><ProfilePage/></Layout>} />
-        <Route exact path="/SignInPage" element={
-          <Layout><SignInPage/></Layout>} />
+        <Route exact path="/register" element={
+          <Layout>
+            <Register/>
+          </Layout>} />
       </Routes>
     </>
      
