@@ -1,26 +1,43 @@
 import React from "react"
-import AdminDashboard from "./pages/AdminDashboard"
 import BookingPage from "./pages/BookingPage"
-import HomePage from "./pages/HomePage"
 import PropertyListingPage from "./pages/PropertyListingPage"
 import ProfilePage from "./pages/ProfilePage"
-import Header from "./components/Header"
-import { Link, Routes, Route, Router } from "react-router-dom"
+import {Routes, Route } from "react-router-dom"
+import Layout from "./Layouts/Layout"
+import HomePage from "./pages/HomePage"
+import Register from "./pages/Register"
+import SignInPage from "./pages/SignInPage"
+import PropertyCard from "./components/PropertyCard"
+import AdminDashboard from "./pages/AdminDashboard"
+import "./styles/index.css"
 
 function App() {
 
   return (
     <> 
-      <Header/>
       <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route exact path="/property-listing" element={<PropertyListingPage />} />
-        <Route exact path="/booking" element={<BookingPage />} />
-        <Route exact path="/profile" element={<ProfilePage />} />
-        <Route exact path="/admin" element={<AdminDashboard />} />
+
+        <Route exact path="/" element={
+          <Layout><HomePage/></Layout>} />
+        <Route exact path="/property-listing" element={
+          <Layout><PropertyListingPage /></Layout>} />
+        <Route exact path="/booking" element={
+          <Layout><BookingPage/></Layout>} />
+        <Route exact path="/profile" element={
+          <Layout><ProfilePage/></Layout>} />
+        <Route exact path="/register" element={
+          <Layout><Register/></Layout>} />
+        <Route exact path="/SignInPage" element={
+          <Layout><SignInPage/></Layout>} />
+        <Route path="/PropertyCard" element={
+          <Layout><PropertyCard/></Layout>} />
+        <Route path="/admin-dashboard" element={
+          <Layout><AdminDashboard/></Layout>} />
+
+        <Route path="*" element={<h3>Page not found!</h3>} />
+      
       </Routes>
     </>
-     
   )
 }
 

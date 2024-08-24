@@ -1,49 +1,31 @@
-import { useState } from "react"
-import  styles from "../styles/Header.module.css"
 import { Link } from "react-router-dom"
 
-function Navbar() {
-    // adding the states 
-    const [isActive, setIsActive] = useState(false);
-    //add the active class
-    const toggleActiveClass = () => {
-      setIsActive(!isActive);
-    };
-    //clean up function to remove the active class
-    const removeActive = () => {
-      setIsActive(false)
-    }
-    return (
-      <div className="App">
-        <header className="App-header">
-          <nav className={`${styles.navbar}`}>
-            {/* logo */}
-            <Link className={`${styles.logo}`} to="/"> Logo </Link>
-            <ul className={`${styles.navMenu} ${isActive ? styles.active : ''}`}>
-              <li onClick={removeActive}>
-                <Link className={`${styles.logo}`} to="/"> Home </Link>
-              </li>
-              <li onClick={removeActive}>
-                <Link className={`${styles.logo}`} to="/property-listing"> Properties </Link>
-              </li>
-              <li onClick={removeActive}>
-                <Link className={`${styles.logo}`} to="/booking"> Bookings </Link>
-              </li>
-              <li onClick={removeActive}>
-                <Link className={`${styles.logo}`} to="/profile"> Profile </Link>
-              </li>
-              <li onClick={removeActive}>
-              <Link className={`${styles.logo}`} to="/admin"> Admin Dashboard </Link>
-              </li>
-            </ul>
-            <div className={`${styles.hamburger} ${isActive ? styles.active : ''}`}  onClick={toggleActiveClass}>
-              <span className={`${styles.bar}`}></span>
-              <span className={`${styles.bar}`}></span>
-              <span className={`${styles.bar}`}></span>
-            </div>
-          </nav>
-        </header>
+const Header = () => {
+  return (
+    <div className="bg-lime-800 py-6">
+      <div className="container mx-auto flex justify-between items-center">
+        <span className="flex items-center h-12">
+          <Link to="/">
+            <img 
+              src="/Logo.png" 
+              alt="Yallambee logo" 
+              className="h-full max-h-20 w-auto "
+            />
+          </Link>
+        </span>
+        <nav className="flex items-center space-x-6 text-white">
+          <Link to="/" className="px-3">Home</Link>
+          <Link to="/property-listing" className="px-3">Properties</Link>
+          <Link to="/booking" className="px-3">Booking</Link>
+          <Link to="/profile" className="px-3">Profile</Link>
+          <Link to="/admin-dashboard" className="px-3">Admin Dashboard</Link>
+        </nav>
+        <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
+          <Link to="/SignInPage">Sign In</Link>
+        </button>
       </div>
-    );
-  }
-  export default Navbar;;
+    </div>
+  )
+}
+
+export default Header;
