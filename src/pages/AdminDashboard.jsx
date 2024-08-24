@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BsWindowSidebar } from 'react-icons/bs';
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -36,8 +37,11 @@ const AdminDashboard = () => {
       const response = await axios.post('http://localhost:4001/properties', newProperty);
       setProperties([...properties, response.data]);
       setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }); // Reset form
+      console.log('Successfully added property!');
+      window.alert('Successfully added property!')
     } catch (error) {
-      console.error('Error adding property:', error);
+      console.error('Error adding property' , error);
+      window.alert('Error adding property');
     }
   };
 
@@ -45,8 +49,10 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`http://localhost:4001/properties/${id}`);
       setProperties(properties.filter(property => property._id !== id));
+      console.log('Property delete successfully!')
       window.alert('Property deleted successfully!');
     } catch (error) {
+      console.log('Error deleting property. Please try again.', error)
       window.alert('Error deleting property. Please try again.');
     }
   };
@@ -56,8 +62,11 @@ const AdminDashboard = () => {
       const response = await axios.post('http://localhost:4001/users', newUser);
       setUsers([...users, response.data]);
       setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }); // Reset form
+      console.log('Successfully added user!')
+      window.log('Successfully added user!');
     } catch (error) {
       console.error('Error adding user:', error);
+      window.alert('Error adding user:');
     }
   };
 
@@ -65,8 +74,10 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`http://localhost:4001/users/${id}`);
       setUsers(users.filter(user => user._id !== id));
+      console.log('Successfully deleted user!');
       window.alert('User deleted successfully!');
     } catch (error) {
+      console.log('Error deleting user. Please try again'. error);
       window.alert('Error deleting user. Please try again.');
     }
   };
