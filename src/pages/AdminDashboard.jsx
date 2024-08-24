@@ -45,8 +45,9 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`http://localhost:4001/properties/${id}`);
       setProperties(properties.filter(property => property._id !== id));
+      window.alert('Property deleted successfully!');
     } catch (error) {
-      console.error('Error deleting property:', error);
+      window.alert('Error deleting property. Please try again.');
     }
   };
 
@@ -64,8 +65,9 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`http://localhost:4001/users/${id}`);
       setUsers(users.filter(user => user._id !== id));
+      window.alert('User deleted successfully!');
     } catch (error) {
-      console.error('Error deleting user:', error);
+      window.alert('Error deleting user. Please try again.');
     }
   };
 
