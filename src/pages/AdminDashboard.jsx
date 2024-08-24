@@ -4,30 +4,30 @@ import axios from 'axios';
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
   const [users, setUsers] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', cost: 0 });
-  const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '' });
+  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' });
+  const [newUser, setNewUser] = useState({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: ''});
 
   // Fetch properties and users from API on component mount
   useEffect(() => {
     fetchProperties();
     fetchUsers();
-  }, []);
+  }, [])
 
   const fetchProperties = async () => {
     try {
       const response = await axios.get('http://localhost:4001/properties');
       setProperties(response.data);
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error('Error fetching properties:', error)
     }
   };
 
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:4001/users');
-      setUsers(response.data);
+      setUsers(response.data)
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching users:', error)
     }
   };
 
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
     try {
       const response = await axios.post('http://localhost:4001/properties', newProperty);
       setProperties([...properties, response.data]);
-      setNewProperty({ name: '', location: '', description: '', ageRestriction: 0 }); // Reset form
+      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }); // Reset form
     } catch (error) {
       console.error('Error adding property:', error);
     }
@@ -114,7 +114,7 @@ const AdminDashboard = () => {
             <div key={property.id} className="mb-2">
               {property.name} - {property.location.city}
               <button onClick={() => handleDeleteProperty(property.id)} className="text-red-500 ml-4">
-                Delete
+                Delete Property
               </button>
             </div>
           ))}
