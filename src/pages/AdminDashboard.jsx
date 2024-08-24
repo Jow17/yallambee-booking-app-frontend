@@ -54,7 +54,7 @@ const AdminDashboard = () => {
     try {
       const response = await axios.post('http://localhost:4001/users', newUser);
       setUsers([...users, response.data]);
-      setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: ''}); // Reset form
+      setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: ''}); // Reset form
     } catch (error) {
       console.error('Error adding user:', error);
     }
@@ -172,8 +172,15 @@ const AdminDashboard = () => {
                 placeholder="Date of Birth" 
                 value={newUser.dob} 
                 onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
-                className="border rounded p-2 mr-2"
-        />
+                className="border rounded p-2 mr-2"      
+            />
+            <input 
+                type="text" 
+                placeholder="Is Admin" 
+                value={newUser.isAdmin} 
+                onChange={(e) => setNewUser({ ...newUser, isAdmin: e.target.value })} 
+                className="border rounded p-2 mr-2"      
+            />
             <button onClick={handleAddUser} className="bg-lime-500 text-white p-2 rounded">
                 Add User
             </button>
