@@ -1,23 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import React from  "react"
+import { Link } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import axios from "axios"
 
-const SignInForm = ({ onSubmit }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+const SignInForm = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm()
+
+  const onSubmit = async (data) => {
+    try {
+      // Replace with your API endpoint
+      const response = await axios.post('http://localhost:4001/login', data)
+      // Handle successful login (e.g., store token, redirect user)
+      console.log('Login successful:', response.data);
+      // Example: Redirect to dashboard or home page
+      // window.location.href = '/dashboard';
+    } catch (error) {
+      // Handle login error (e.g., show error message)
+      console.error('Login error:', error.response?.data || error.message);
+    }
+  }
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-bold">Sign In</h2>
 
       <label className="text-gray-700 text-sm font-bold flex-1">
-        Email
+        Username
         <input
-          type="email"
+          type="username"
           className="border rounded w-full py-1 px-2 font-normal"
-          {...register("email", { required: "This field is required" })}
+          {...register("username", { required: "This field is required" })}
         />
-        {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
+        {errors.username && (
+          <span className="text-red-500">{errors.username.message}</span>
         )}
       </label>
 
@@ -54,7 +69,7 @@ const SignInForm = ({ onSubmit }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default SignInForm;
+export default SignInForm

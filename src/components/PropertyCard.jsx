@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-
-
+import React, { useState, useEffect } from "react";
 
 // PropertyCard Component
 const PropertyCard = () => {
@@ -12,8 +10,8 @@ const PropertyCard = () => {
     fetch('http://localhost:4001/properties/66c98a7b8ea9b17cf0c60120')
       .then(response => response.json())
       .then(data => setProperty(data))
-      .catch(error => console.error('Error fetching properties:', error));
-  }, []);
+      .catch(error => console.error('Error fetching properties:', error))
+  }, [])
 
   return (
     <>
@@ -49,6 +47,6 @@ const PropertyCard = () => {
         </div>
       </div>
     </>
-  );
-};
-export default PropertyCard;
+  )
+}
+export default PropertyCard

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom"
 
 const Header = () => {
   return (
@@ -18,13 +18,14 @@ const Header = () => {
           <Link to="/property-listing" className="px-3">Properties</Link>
           <Link to="/booking" className="px-3">Booking</Link>
           <Link to="/profile" className="px-3">Profile</Link>
+          <Link to="/admin-dashboard" className="px-3">Admin Dashboard</Link>
         </nav>
         <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
           <Link to="/SignInPage">Sign In</Link>
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 export default Header;

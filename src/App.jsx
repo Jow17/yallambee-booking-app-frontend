@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
 import SignInPage from "./pages/SignInPage"
 import PropertyCard from "./components/PropertyCard"
+import AdminDashboard from "./pages/AdminDashboard"
 import "./styles/index.css"
 
 function App() {
@@ -15,8 +16,9 @@ function App() {
   return (
     <> 
       <Routes>
-        <Route exact path="/" element={<Layout><HomePage/></Layout>} />
 
+        <Route exact path="/" element={
+          <Layout><HomePage/></Layout>} />
         <Route exact path="/property-listing" element={
           <Layout><PropertyListingPage /></Layout>} />
         <Route exact path="/booking" element={
@@ -27,12 +29,15 @@ function App() {
           <Layout><Register/></Layout>} />
         <Route exact path="/SignInPage" element={
           <Layout><SignInPage/></Layout>} />
-        <Route path="/PropertyCard" element={<Layout><PropertyCard/></Layout>} />
+        <Route path="/PropertyCard" element={
+          <Layout><PropertyCard/></Layout>} />
+        <Route path="/admin-dashboard" element={
+          <Layout><AdminDashboard/></Layout>} />
+
         <Route path="*" element={<h3>Page not found!</h3>} />
-        
+      
       </Routes>
     </>
-     
   )
 }
 
