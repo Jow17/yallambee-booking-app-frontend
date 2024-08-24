@@ -6,7 +6,7 @@ import {Routes, Route } from "react-router-dom"
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
-import SignInPage from "./pages/SignInPage"
+import SignInForm from "./pages/SignInPage"
 import PropertyCard from "./components/PropertyCard"
 import AdminDashboard from "./pages/AdminDashboard"
 import "./styles/index.css"
@@ -28,7 +28,7 @@ function App() {
         <Route path="/register" element={
           <Layout><Register/></Layout>} />
         <Route path="/SignInPage" element={
-          <Layout><SignInPage/></Layout>} />
+          <Layout><SignInForm/></Layout>} />
         <Route path="/profile/:userId" element={<Layout><ProfilePage/></Layout>} />
         <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={
