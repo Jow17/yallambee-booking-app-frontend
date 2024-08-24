@@ -29,6 +29,8 @@ function App() {
           <Layout><Register/></Layout>} />
         <Route path="/SignInPage" element={
           <Layout><SignInPage/></Layout>} />
+        <Route path="/profile/:userId" element={<Layout><ProfilePage/></Layout>} />
+        <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={
           <Layout><PropertyCard /></Layout>} />
         <Route path="/admin-dashboard" element={
