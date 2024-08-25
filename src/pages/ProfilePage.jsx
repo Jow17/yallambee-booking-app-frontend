@@ -11,10 +11,10 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userResponse = await axios.get('http://localhost:4001/users/:id');
+        const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id');
         setUser(userResponse.data);
 
-        const bookingsResponse = await axios.get('http://localhost:4001/users/booking');
+        const bookingsResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/booking');
         setBookings(bookingsResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,7 +42,7 @@ const ProfilePage = () => {
       });
       alert('Profile picture updated successfully!');
       // Re-fetch user data to update the profile picture
-      const userResponse = await axios.get('http://localhost:4001/users/:id');
+      const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id');
       setUser(userResponse.data);
     } catch (error) {
       console.error('Error uploading image:', error);

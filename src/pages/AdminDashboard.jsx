@@ -95,7 +95,7 @@ const AdminDashboard = () => {
 
   const handleAddBooking = async () => {
     try {
-      const response = await axios.post('http://localhost:4001/bookings', newBooking);
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking);
       setBookings([...bookings, response.data]);
       setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' }); // Reset form
       console.log('Successfully added booking!');
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/bookings/${id}`);
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`);
       setBookings(bookings.filter(booking => booking._id !== id));
       console.log('Successfully deleted booking!');
       window.alert('Booking deleted successfully!');

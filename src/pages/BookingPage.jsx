@@ -13,7 +13,7 @@ const BookingPage = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/bookings');
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings');
       setBookings(response.data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
@@ -22,7 +22,7 @@ const BookingPage = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/properties');
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
       setProperties(response.data);
     } catch (error) {
       console.error('Error fetching properties:', error);
@@ -31,7 +31,7 @@ const BookingPage = () => {
 
   const handleAddBooking = async (bookingData) => {
     try {
-      const response = await axios.post('http://localhost:4001/bookings', bookingData);
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/bookings', bookingData);
       setBookings([...bookings, response.data]);
       console.log('Booking added successfully!');
       window.alert('Booking added successfully!');
@@ -43,7 +43,7 @@ const BookingPage = () => {
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/bookings/${id}`);
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/bookings/${id}`);
       setBookings(bookings.filter(booking => booking._id !== id));
       console.log('Booking deleted successfully!');
       window.alert('Booking deleted successfully!');
