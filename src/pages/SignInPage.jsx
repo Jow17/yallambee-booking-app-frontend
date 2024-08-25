@@ -1,24 +1,30 @@
-import React from  "react"
-import { Link } from "react-router-dom"
-import { useForm } from "react-hook-form"
-import axios from "axios"
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const SignInForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const navigate = useNavigate();  // To programmatically navigate
 
   const onSubmit = async (data) => {
     try {
       // Replace with your API endpoint
-      const response = await axios.post('http://localhost:4001/login', data)
+      const response = await axios.post('http://localhost:4001/login/id', data);
+
+      // Assuming the response includes the user's ID
+      const userId = response.data.user._id;
+
       // Handle successful login (e.g., store token, redirect user)
       console.log('Login successful:', response.data);
-      // Example: Redirect to dashboard or home page
-      // window.location.href = '/dashboard';
+
+      // Redirect to the user's profile page
+      navigate(`/profile/${userId}`);
     } catch (error) {
       // Handle login error (e.g., show error message)
       console.error('Login error:', error.response?.data || error.message);
     }
-  }
+  };
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
@@ -69,7 +75,7 @@ const SignInForm = () => {
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default SignInForm
+export default SignInForm;
