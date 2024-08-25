@@ -3,18 +3,18 @@ import axios from 'axios';
 
 function ProfilePage() {
   const [user, setUser] = useState(null);
-  const [bookings, setBookings] = useState([]);
+  // const [bookings, setBookings] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     // Fetch user details and bookings from API
     const fetchUserData = async () => {
       try {
-        const userResponse = await axios.get('http://localhost:4001/users/:id');
+        const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/id');
         setUser(userResponse.data);
 
-        const bookingsResponse = await axios.get('http://localhost:4001/users/bookings');
-        setBookings(bookingsResponse.data);
+      //   const bookingsResponse = await axios.get('http://localhost:4001/users/booking/id');
+      //   setBookings(bookingsResponse.data);
       } catch (error) {
         console.error('Error fetching data', error);
       }

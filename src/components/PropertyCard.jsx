@@ -11,7 +11,7 @@ const PropertyCard = () => {
     const fetchProperty = async () => {
       try {
         if (id) { // Ensure ID is available before making the request
-          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/${id}`);
+          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`);
           setProperty(response.data);
         }
       } catch (error) {
