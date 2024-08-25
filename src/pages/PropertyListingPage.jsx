@@ -11,7 +11,7 @@ const PropertyListing = () => {
     // Fetch all properties from the API
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/properties');
+        const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
         setProperties(response.data);
       } catch (error) {
         console.error('Error fetching properties:', error);

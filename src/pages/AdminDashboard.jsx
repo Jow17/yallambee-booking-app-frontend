@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { BsWindowSidebar } from 'react-icons/bs';
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -16,7 +15,7 @@ const AdminDashboard = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/properties');
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
       setProperties(response.data);
     } catch (error) {
       console.error('Error fetching properties:', error);
@@ -25,7 +24,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/users');
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users');
       setUsers(response.data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -34,7 +33,7 @@ const AdminDashboard = () => {
 
   const handleAddProperty = async () => {
     try {
-      const response = await axios.post('http://localhost:4001/properties', newProperty);
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty);
       setProperties([...properties, response.data]);
       setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }); // Reset form
       console.log('Successfully added property!');
@@ -47,7 +46,7 @@ const AdminDashboard = () => {
 
   const handleDeleteProperty = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/properties/${id}`);
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`);
       setProperties(properties.filter(property => property._id !== id));
       console.log('Property delete successfully!')
       window.alert('Property deleted successfully!');
@@ -59,7 +58,7 @@ const AdminDashboard = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post('http://localhost:4001/users', newUser);
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser);
       setUsers([...users, response.data]);
       setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }); // Reset form
       console.log('Successfully added user!')
@@ -72,7 +71,7 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/users/${id}`);
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`);
       setUsers(users.filter(user => user._id !== id));
       console.log('Successfully deleted user!');
       window.alert('User deleted successfully!');
