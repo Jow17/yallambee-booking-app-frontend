@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
 const BookingForm = ({ onSubmit }) => {
   const [bookingData, setBookingData] = useState({
@@ -6,18 +6,26 @@ const BookingForm = ({ onSubmit }) => {
     startDate: '',
     endDate: '',
     status: 'Pending',
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBookingData({ ...bookingData, [name]: value });
-  };
+    const { name, value } = e.target
+    setBookingData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(bookingData);
-    setBookingData({ property: '', startDate: '', endDate: '', status: 'Pending' }); // Reset form
-  };
+    e.preventDefault()
+    onSubmit(bookingData)
+    setBookingData({
+      property: '',
+      startDate: '',
+      endDate: '',
+      status: 'Pending',
+    }) // Reset form
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
@@ -28,7 +36,9 @@ const BookingForm = ({ onSubmit }) => {
         className="border rounded p-2"
         required
       >
-        <option value="" disabled>Select Property</option>
+        <option value="" disabled>
+          Select Property
+        </option>
         {/* Populate this with real property data */}
         <option value="property1">Yallambee on Bolong</option>
         {/* <option value="property2">Property 2</option> */}
@@ -56,7 +66,7 @@ const BookingForm = ({ onSubmit }) => {
         Submit Booking
       </button>
     </form>
-  );
-};
+  )
+}
 
-export default BookingForm;
+export default BookingForm

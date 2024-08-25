@@ -1,25 +1,23 @@
-// PropertyListing.js
-import React, { useState, useEffect } from 'react';
-import SearchBar from '../components/SearchBar';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import SearchBar from '../components/SearchBar'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const PropertyListing = () => {
-  const [properties, setProperties] = useState([]);
+  const [properties, setProperties] = useState([])
 
   useEffect(() => {
-    // Fetch all properties from the API
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/properties');
-        setProperties(response.data);
+        const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties')
+        setProperties(response.data)
       } catch (error) {
-        console.error('Error fetching properties:', error);
+        console.error('Error fetching properties:', error)
       }
-    };
+    }
 
-    fetchProperties();
-  }, []);
+    fetchProperties()
+  }, [])
 
   return (
     <>
@@ -32,7 +30,7 @@ const PropertyListing = () => {
               properties.map(property => (
                 <Link
                   to={`/property/${property._id}`} // Ensure this path includes the property ID
-                  key={property.id}
+                  key={property._id}
                   className="bg-white shadow-lg rounded-lg overflow-hidden"
                 >
                   <img
@@ -54,7 +52,7 @@ const PropertyListing = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default PropertyListing;
+export default PropertyListing

@@ -1,57 +1,57 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import BookingForm from '../components/BookingForm.jsx';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import BookingForm from '../components/BookingForm.jsx'
 
 const BookingPage = () => {
-  const [bookings, setBookings] = useState([]);
-  const [properties, setProperties] = useState([]);
+  const [bookings, setBookings] = useState([])
+  const [properties, setProperties] = useState([])
 
   useEffect(() => {
-    fetchBookings();
-    fetchProperties();
-  }, []);
+    fetchBookings()
+    fetchProperties()
+  }, [])
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings');
-      setBookings(response.data);
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings')
+      setBookings(response.data)
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error('Error fetching bookings:', error)
     }
-  };
+  }
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
-      setProperties(response.data);
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties')
+      setProperties(response.data)
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error('Error fetching properties:', error)
     }
-  };
+  }
 
   const handleAddBooking = async (bookingData) => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/bookings', bookingData);
-      setBookings([...bookings, response.data]);
-      console.log('Booking added successfully!');
-      window.alert('Booking added successfully!');
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/bookings', bookingData)
+      setBookings([...bookings, response.data])
+      console.log('Booking added successfully!')
+      window.alert('Booking added successfully!')
     } catch (error) {
-      console.error('Error adding booking:', error);
-      window.alert('Error adding booking');
+      console.error('Error adding booking:', error)
+      window.alert('Error adding booking')
     }
-  };
+  }
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/bookings/${id}`);
-      setBookings(bookings.filter(booking => booking._id !== id));
-      console.log('Booking deleted successfully!');
-      window.alert('Booking deleted successfully!');
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/bookings/${id}`)
+      setBookings(bookings.filter(booking => booking._id !== id))
+      console.log('Booking deleted successfully!')
+      window.alert('Booking deleted successfully!')
     } catch (error) {
-      console.error('Error deleting booking:', error);
-      window.alert('Error deleting booking');
+      console.error('Error deleting booking:', error)
+      window.alert('Error deleting booking')
     }
-  };
+  }
 
   return (
     <div className="p-5">
@@ -79,7 +79,7 @@ const BookingPage = () => {
         </ul>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default BookingPage;
+export default BookingPage
