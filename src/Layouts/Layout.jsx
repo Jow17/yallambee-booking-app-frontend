@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
   return (
     <div className="flex flex-col bg-custom-lime min-h-screen ">
       <Header />
-      <div className="container mx-auto py-10 flex-1">{children}</div>
+      <div className="container mx-auto py-2 flex-1">{children}</div>
       <Footer />
     </div>
   )
