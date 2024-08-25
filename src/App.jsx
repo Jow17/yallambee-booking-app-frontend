@@ -1,6 +1,6 @@
 import React from "react"
 import BookingPage from "./pages/BookingPage"
-import PropertyListingPage from "./pages/PropertyListingPage"
+import PropertyListing from "./pages/PropertyListingPage"
 import ProfilePage from "./pages/ProfilePage"
 import {Routes, Route } from "react-router-dom"
 import Layout from "./Layouts/Layout"
@@ -17,23 +17,22 @@ function App() {
     <> 
       <Routes>
 
-        <Route exact path="/" element={
+        <Route path="/" element={
           <Layout><HomePage/></Layout>} />
-        <Route exact path="/property-listing" element={
-          <Layout><PropertyListingPage /></Layout>} />
-        <Route exact path="/booking" element={
+        <Route path="/property-listing" element={
+          <Layout><PropertyListing /></Layout>} />
+        <Route path="/booking" element={
           <Layout><BookingPage/></Layout>} />
-        <Route exact path="/profile" element={
+        <Route path="/profile" element={
           <Layout><ProfilePage/></Layout>} />
-        <Route exact path="/register" element={
+        <Route path="/register" element={
           <Layout><Register/></Layout>} />
-        <Route exact path="/SignInPage" element={
+        <Route path="/SignInPage" element={
           <Layout><SignInPage/></Layout>} />
-        <Route path="/PropertyCard" element={
-          <Layout><PropertyCard/></Layout>} />
+        <Route path="/property/:id" element={
+          <Layout><PropertyCard /></Layout>} />
         <Route path="/admin-dashboard" element={
           <Layout><AdminDashboard/></Layout>} />
-
         <Route path="*" element={<h3>Page not found!</h3>} />
       
       </Routes>

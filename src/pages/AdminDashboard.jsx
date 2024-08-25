@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { BsWindowSidebar } from 'react-icons/bs';
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
   const [users, setUsers] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', cost: 0 });
-  const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '' });
+  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' });
+  const [newUser, setNewUser] = useState({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' });
 
   // Fetch properties and users from API on component mount
   useEffect(() => {
@@ -35,18 +36,24 @@ const AdminDashboard = () => {
     try {
       const response = await axios.post('http://localhost:4001/properties', newProperty);
       setProperties([...properties, response.data]);
-      setNewProperty({ name: '', location: '', description: '', ageRestriction: 0 }); // Reset form
+      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }); // Reset form
+      console.log('Successfully added property!');
+      window.alert('Successfully added property!')
     } catch (error) {
-      console.error('Error adding property:', error);
+      console.error('Error adding property' , error);
+      window.alert('Error adding property');
     }
   };
 
   const handleDeleteProperty = async (id) => {
     try {
       await axios.delete(`http://localhost:4001/properties/${id}`);
-      setProperties(properties.filter(property => property.id !== id));
+      setProperties(properties.filter(property => property._id !== id));
+      console.log('Property delete successfully!')
+      window.alert('Property deleted successfully!');
     } catch (error) {
-      console.error('Error deleting property:', error);
+      console.log('Error deleting property. Please try again.', error)
+      window.alert('Error deleting property. Please try again.');
     }
   };
 
@@ -54,18 +61,24 @@ const AdminDashboard = () => {
     try {
       const response = await axios.post('http://localhost:4001/users', newUser);
       setUsers([...users, response.data]);
-      setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: ''}); // Reset form
+      setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }); // Reset form
+      console.log('Successfully added user!')
+      window.log('Successfully added user!');
     } catch (error) {
       console.error('Error adding user:', error);
+      window.alert('Error adding user:');
     }
   };
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:4001/users${id}`);
-      setUsers(users.filter(user => user.id !== id));
+      await axios.delete(`http://localhost:4001/users/${id}`);
+      setUsers(users.filter(user => user._id !== id));
+      console.log('Successfully deleted user!');
+      window.alert('User deleted successfully!');
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.log('Error deleting user. Please try again'. error);
+      window.alert('Error deleting user. Please try again.');
     }
   };
 
@@ -76,120 +89,134 @@ const AdminDashboard = () => {
       {/* Properties Section */}
       <section>
         <h2 className="text-2xl font-semibold mb-4">Properties</h2>
-        <div className="mb-4">
-            <input 
+        <div className="flex flex-col md:flex-row items-center mb-4 space-y-2 md:space-y-0 md:space-x-2">
+          <input 
             type="text" 
             placeholder="Property Name" 
             value={newProperty.name} 
             onChange={(e) => setNewProperty({ ...newProperty, name: e.target.value })} 
-            className="border rounded p-2 mr-2"
+            className="border rounded p-2 flex-grow"
           />
-            <input 
+          <input 
             type="text" 
             placeholder="Location" 
             value={newProperty.location} 
             onChange={(e) => setNewProperty({ ...newProperty, location: e.target.value })} 
-            className="border rounded p-2 mr-2"
+            className="border rounded p-2 flex-grow"
           />
-            <input 
+          <input 
             type="text" 
             placeholder="Description" 
             value={newProperty.description} 
             onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })} 
-            className="border rounded p-2 mr-2"
+            className="border rounded p-2 flex-grow"
           />
-            <input 
+          <input 
             type="text" 
             placeholder="Age Restriction" 
             value={newProperty.ageRestriction} 
             onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: e.target.value })} 
-            className="border rounded p-2 mr-2"
+            className="border rounded p-2 flex-grow"
           />
-            <button onClick={handleAddProperty} className="bg-lime-500 text-white p-2 rounded">
-                Add Property
-            </button>
+          <button 
+            onClick={handleAddProperty} 
+            className="bg-lime-500 text-white p-2 rounded"
+          >
+            Add Property
+          </button>
         </div>
         <ul className="list-disc pl-5">
           {properties.map(property => (
-            <div key={property.id} className="mb-2">
+            <div key={property._id} className="mb-2">
               {property.name} - {property.location.city}
-              <button onClick={() => handleDeleteProperty(property.id)} className="text-red-500 ml-4">
-                Delete
+              <button 
+                onClick={() => handleDeleteProperty(property._id)} 
+                className="text-red-500 ml-4"
+              >
+                Delete Property
               </button>
             </div>
           ))}
         </ul>
       </section>
-
+      
       {/* Users Section */}
       <section className="mt-11">
         <h2 className="text-2xl font-semibold mb-4">Users</h2>
-        <div className="mb-4">
+        <div className="max-w-full overflow-x-auto">
+          <div className="flex flex-col md:flex-row items-center mb-4 space-y-2 md:space-y-0 md:space-x-2">
             <input 
-                type="text" 
-                placeholder="Username" 
-                value={newUser.username} 
-                onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} 
-                className="border rounded p-2 mr-2"
-            />  
-            <input 
-                type="password" 
-                placeholder="Password" 
-                value={newUser.password} 
-                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} 
-                className="border rounded p-2 mr-2"
-            />
-             <input 
-                type="text" 
-                placeholder="First Name" 
-                value={newUser.firstName} 
-                onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} 
-                className="border rounded p-2 mr-2"
-            />  
-            <input 
-                type="text" 
-                placeholder="Last Name" 
-                value={newUser.lastName} 
-                onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} 
-                className="border rounded p-2 mr-2"
+              type="text" 
+              placeholder="Username" 
+              value={newUser.username} 
+              onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
             <input 
-                type="email" 
-                placeholder="Email" 
-                value={newUser.email} 
-                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} 
-                className="border rounded p-2 mr-2"
+              type="password" 
+              placeholder="Password" 
+              value={newUser.password} 
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
             <input 
-                type="text" 
-                placeholder="Phone Number" 
-                value={newUser.phone} 
-                onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} 
-                className="border rounded p-2 mr-2"
+              type="text" 
+              placeholder="First Name" 
+              value={newUser.firstName} 
+              onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
             <input 
-                type="date" 
-                placeholder="Date of Birth" 
-                value={newUser.dob} 
-                onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
-                className="border rounded p-2 mr-2"      
+              type="text" 
+              placeholder="Last Name" 
+              value={newUser.lastName} 
+              onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
             <input 
-                type="text" 
-                placeholder="Is Admin" 
-                value={newUser.isAdmin} 
-                onChange={(e) => setNewUser({ ...newUser, isAdmin: e.target.value })} 
-                className="border rounded p-2 mr-2"      
+              type="email" 
+              placeholder="Email" 
+              value={newUser.email} 
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
-            <button onClick={handleAddUser} className="bg-lime-500 text-white p-2 rounded">
-                Add User
+            <input 
+              type="text" 
+              placeholder="Phone Number" 
+              value={newUser.phone} 
+              onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"
+            />
+            <input 
+              type="date" 
+              placeholder="Date of Birth" 
+              value={newUser.dob} 
+              onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"      
+            />
+            <input 
+              type="text" 
+              placeholder="Is Admin" 
+              value={newUser.isAdmin} 
+              onChange={(e) => setNewUser({ ...newUser, isAdmin: e.target.value })} 
+              className="border rounded p-2 flex-grow min-w-[150px]"      
+            />
+            <button 
+              onClick={handleAddUser} 
+              className="bg-lime-500 text-white p-2 rounded md:ml-4"
+            >
+              Add User
             </button>
-            </div>
+          </div>
+        </div>
         <ul className="list-disc pl-5">
           {users.map(user => (
-            <div key={user.id} className="mb-2">
-              {user.firstName} {user.lastName} - {user.email}
-              <button onClick={() => handleDeleteUser(user.id)} className="text-red-500 ml-4">
+            <div key={user._id} className="mb-2">
+              {user.firstName} {user.lastName} - {user.email} 
+              <button 
+                onClick={() => handleDeleteUser(user._id)} 
+                className="text-red-500 ml-4"
+              >
                 Delete User
               </button>
             </div>
