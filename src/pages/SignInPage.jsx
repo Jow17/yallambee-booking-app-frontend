@@ -1,44 +1,48 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import axios from "axios";
+import React from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import axios from "axios"
 
 const SignInForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();  // To programmatically navigate
+  const { register, handleSubmit, formState: { errors } } = useForm()
+  const navigate = useNavigate()  // To programmatically navigate
 
   const onSubmit = async (data) => {
     try {
-      // Replace with your API endpoint
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login/id', data);
+      // Sends post request to the server and retrieves the user login id
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login/id', data)
 
-      // Assuming the response includes the user's ID
-      const userId = response.data.user._id;
+      
+      const { _id, isAdmin } = response.data.user
 
-      // Handle successful login (e.g., store token, redirect user)
-      console.log('Login successful:', response.data);
+      
+      console.log('Login successful:', response.data)
 
-      // Redirect to the user's profile page
-      navigate(`/profile/${userId}`);
+      // Redirect based on user's admin status
+      if (isAdmin) {
+        navigate('/admin-dashboard')  
+      } else {
+        navigate(`/profile/${_id}`)  
+      }
     } catch (error) {
-      // Handle login error (e.g., show error message)
-      console.error('Login error:', error.response?.data || error.message);
+      
+      console.error('Login error:', error.response?.data || error.message)
     }
-  };
+  }
 
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-bold">Sign In</h2>
 
       <label className="text-gray-700 text-sm font-bold flex-1">
-        Username
+        Email
         <input
-          type="username"
+          type="email"
           className="border rounded w-full py-1 px-2 font-normal"
-          {...register("username", { required: "This field is required" })}
+          {...register("email", { required: "This field is required" })}
         />
-        {errors.username && (
-          <span className="text-red-500">{errors.username.message}</span>
+        {errors.email && (
+          <span className="text-red-500">{errors.email.message}</span>
         )}
       </label>
 
@@ -75,7 +79,7 @@ const SignInForm = () => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default SignInForm;
+export default SignInForm

@@ -1,26 +1,25 @@
-// PropertyCard.js
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 const PropertyCard = () => {
-  const [property, setProperty] = useState(null);
-  const { id } = useParams(); // Retrieve ID from URL
+  const [property, setProperty] = useState(null)
+  const { id } = useParams() // Retrieve ID from URL
 
   useEffect(() => {
     const fetchProperty = async () => {
       try {
         if (id) { // Ensure ID is available before making the request
-          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`);
-          setProperty(response.data);
+          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`)
+          setProperty(response.data)
         }
       } catch (error) {
-        console.error('Error fetching property:', error);
+        console.error('Error fetching property:', error)
       }
-    };
+    }
 
-    fetchProperty();
-  }, [id]); // Fetch property whenever the ID changes
+    fetchProperty()
+  }, [id]) // Fetch property whenever the ID changes
 
   return (
     <>
@@ -56,7 +55,7 @@ const PropertyCard = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default PropertyCard;
+export default PropertyCard

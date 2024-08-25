@@ -1,122 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const AdminDashboard = () => {
-  const [properties, setProperties] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [bookings, setBookings] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' });
-  const [newUser, setNewUser] = useState({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' });
-  const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' });
+  const [properties, setProperties] = useState([])
+  const [users, setUsers] = useState([])
+  const [bookings, setBookings] = useState([])
+  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' })
+  const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' })
+  const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' })
 
   // Fetch properties, users, and bookings from API on component mount
   useEffect(() => {
-    fetchProperties();
-    fetchUsers();
-    fetchBookings();
-  }, []);
+    fetchProperties()
+    fetchUsers()
+    fetchBookings()
+  }, [])
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
-      setProperties(response.data);
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties')
+      setProperties(response.data)
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error('Error fetching properties:', error)
     }
-  };
+  }
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users');
-      setUsers(response.data);
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users')
+      setUsers(response.data)
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching users:', error)
     }
-  };
+  }
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/bookings');
-      setBookings(response.data);
+      const response = await axios.get('http://localhost:4001/bookings')
+      setBookings(response.data)
     } catch (error) {
-      console.error('Error fetching bookings:', error);
+      console.error('Error fetching bookings:', error)
     }
-  };
+  }
 
   const handleAddProperty = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty);
-      setProperties([...properties, response.data]);
-      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }); // Reset form
-      console.log('Successfully added property!');
-      window.alert('Successfully added property!');
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty)
+      setProperties([...properties, response.data])
+      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }) // Reset form
+      console.log('Successfully added property!')
+      window.alert('Successfully added property!')
     } catch (error) {
-      console.error('Error adding property', error);
-      window.alert('Error adding property');
+      console.error('Error adding property', error)
+      window.alert('Error adding property')
     }
-  };
+  }
 
   const handleDeleteProperty = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`);
-      setProperties(properties.filter(property => property._id !== id));
-      console.log('Property deleted successfully!');
-      window.alert('Property deleted successfully!');
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`)
+      setProperties(properties.filter(property => property._id !== id))
+      console.log('Property deleted successfully!')
+      window.alert('Property deleted successfully!')
     } catch (error) {
-      console.log('Error deleting property. Please try again.', error);
-      window.alert('Error deleting property. Please try again.');
+      console.log('Error deleting property. Please try again.', error)
+      window.alert('Error deleting property. Please try again.')
     }
-  };
+  }
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser);
-      setUsers([...users, response.data]);
-      setNewUser({ username:'', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }); // Reset form
-      console.log('Successfully added user!');
-      window.alert('Successfully added user!');
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser)
+      setUsers([...users, response.data])
+      setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }) // Reset form
+      console.log('Successfully added user!')
+      window.alert('Successfully added user!')
     } catch (error) {
-      console.error('Error adding user:', error);
-      window.alert('Error adding user');
+      console.error('Error adding user:', error)
+      window.alert('Error adding user')
     }
-  };
+  }
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`);
-      setUsers(users.filter(user => user._id !== id));
-      console.log('Successfully deleted user!');
-      window.alert('User deleted successfully!');
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`)
+      setUsers(users.filter(user => user._id !== id))
+      console.log('Successfully deleted user!')
+      window.alert('User deleted successfully!')
     } catch (error) {
-      console.log('Error deleting user. Please try again.', error);
-      window.alert('Error deleting user. Please try again.');
+      console.log('Error deleting user. Please try again.', error)
+      window.alert('Error deleting user. Please try again.')
     }
-  };
+  }
 
   const handleAddBooking = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking);
-      setBookings([...bookings, response.data]);
-      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' }); // Reset form
-      console.log('Successfully added booking!');
-      window.alert('Successfully added booking!');
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking)
+      setBookings([...bookings, response.data])
+      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' }) // Reset form
+      console.log('Successfully added booking!')
+      window.alert('Successfully added booking!')
     } catch (error) {
-      console.error('Error adding booking', error);
-      window.alert('Error adding booking');
+      console.error('Error adding booking', error)
+      window.alert('Error adding booking')
     }
-  };
+  }
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`);
-      setBookings(bookings.filter(booking => booking._id !== id));
-      console.log('Successfully deleted booking!');
-      window.alert('Booking deleted successfully!');
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`)
+      setBookings(bookings.filter(booking => booking._id !== id))
+      console.log('Successfully deleted booking!')
+      window.alert('Booking deleted successfully!')
     } catch (error) {
-      console.log('Error deleting booking. Please try again.', error);
-      window.alert('Error deleting booking. Please try again.');
+      console.log('Error deleting booking. Please try again.', error)
+      window.alert('Error deleting booking. Please try again.')
     }
-  };
+  }
 
   return (
     <div className="p-5">
@@ -331,7 +331,7 @@ const AdminDashboard = () => {
         </ul>
       </section>
     </div>
-  );
-};
+  )
+}
 
-export default AdminDashboard;
+export default AdminDashboard

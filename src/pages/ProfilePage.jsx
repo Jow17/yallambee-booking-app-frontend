@@ -1,57 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
-  // const [bookings, setBookings] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Fetch user details and bookings from API
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id');
-        setUser(userResponse.data);
+        const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id')
+        setUser(userResponse.data)
 
-        const bookingsResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/booking');
-        setBookings(bookingsResponse.data);
+        const bookingsResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/booking')
+        setBookings(bookingsResponse.data)
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchUserData();
-  }, []);
+    fetchUserData()
+  }, [])
 
   const handleImageChange = (e) => {
-    setSelectedImage(e.target.files[0]);
-  };
+    setSelectedImage(e.target.files[0])
+  }
 
   const handleImageUpload = async () => {
-    const formData = new FormData();
-    formData.append('profileImage', selectedImage);
+    const formData = new FormData()
+    formData.append('profileImage', selectedImage)
 
     try {
       await axios.post('/api/uploadProfileImage', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-      alert('Profile picture updated successfully!');
-      // Re-fetch user data to update the profile picture
-      const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id');
-      setUser(userResponse.data);
+      })
+      alert('Profile picture updated successfully!')
+      const userResponse = await axios.get('https://yallambee-booking-app-backend.onrender.com/users/:id')
+      setUser(userResponse.data)
     } catch (error) {
-      console.error('Error uploading image:', error);
-      alert('Failed to update profile picture.');
+      console.error('Error uploading image:', error)
+      alert('Failed to update profile picture.')
     }
-  };
+  }
 
   if (loading) {
-    return <div>Loading profile...</div>;
+    return <div>Loading profile...</div>
   }
 
   return (
@@ -88,7 +85,7 @@ const ProfilePage = () => {
         </ul>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProfilePage;
+export default ProfilePage

@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
       <div className="container mx-auto py-10 flex-1">{children}</div>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout
