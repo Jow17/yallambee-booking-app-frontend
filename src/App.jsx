@@ -2,7 +2,8 @@ import React from "react"
 import BookingPage from "./pages/BookingPage"
 import PropertyListing from "./pages/PropertyListingPage"
 import UserProfile from "./pages/ProfilePage"
-import {Routes, Route } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { UserProvider } from './context/userContext';
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
@@ -15,7 +16,7 @@ import "./styles/index.css"
 function App() {
 
   return (
-    <> 
+    <UserProvider>
       <Routes>
 
         <Route path="/" element={
@@ -40,7 +41,7 @@ function App() {
         <Route path="*" element={<h3>Page not found!</h3>} />
       
       </Routes>
-    </>
+    </UserProvider>
   )
 }
 
