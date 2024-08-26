@@ -8,6 +8,8 @@ const AdminDashboard = () => {
   const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' })
   const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' })
   const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' })
+  const [error, setError] = useState(null) // To handle general errors
+  const token = localStorage.getItem('token') // Assuming token is stored in localStorage
 
   // Fetch properties, users, and bookings from API on component mount
   useEffect(() => {
@@ -18,36 +20,47 @@ const AdminDashboard = () => {
 
   const fetchProperties = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties')
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setProperties(response.data)
     } catch (error) {
       console.error('Error fetching properties:', error)
+      setError('Failed to fetch properties. Please try again.')
     }
   }
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users')
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setUsers(response.data)
     } catch (error) {
       console.error('Error fetching users:', error)
+      setError('Failed to fetch users. Please try again.')
     }
   }
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('http://localhost:4001/bookings')
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setBookings(response.data)
     } catch (error) {
       console.error('Error fetching bookings:', error)
+      setError('Failed to fetch bookings. Please try again.')
     }
   }
 
   const handleAddProperty = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty)
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setProperties([...properties, response.data])
-      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' }) // Reset form
+      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' })
       console.log('Successfully added property!')
       window.alert('Successfully added property!')
     } catch (error) {
@@ -58,7 +71,9 @@ const AdminDashboard = () => {
 
   const handleDeleteProperty = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`)
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setProperties(properties.filter(property => property._id !== id))
       console.log('Property deleted successfully!')
       window.alert('Property deleted successfully!')
@@ -70,9 +85,11 @@ const AdminDashboard = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser)
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setUsers([...users, response.data])
-      setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' }) // Reset form
+      setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: '' })
       console.log('Successfully added user!')
       window.alert('Successfully added user!')
     } catch (error) {
@@ -83,7 +100,9 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`)
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setUsers(users.filter(user => user._id !== id))
       console.log('Successfully deleted user!')
       window.alert('User deleted successfully!')
@@ -95,9 +114,11 @@ const AdminDashboard = () => {
 
   const handleAddBooking = async () => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking)
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setBookings([...bookings, response.data])
-      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' }) // Reset form
+      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' })
       console.log('Successfully added booking!')
       window.alert('Successfully added booking!')
     } catch (error) {
@@ -108,7 +129,9 @@ const AdminDashboard = () => {
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`)
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       setBookings(bookings.filter(booking => booking._id !== id))
       console.log('Successfully deleted booking!')
       window.alert('Booking deleted successfully!')
@@ -121,6 +144,9 @@ const AdminDashboard = () => {
   return (
     <div className="p-5">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      
+      {/* Error Message */}
+      {error && <div className="bg-red-500 text-white p-2 rounded mb-4">{error}</div>}
       
       {/* Properties Section */}
       <section>
@@ -218,7 +244,7 @@ const AdminDashboard = () => {
             />
             <input 
               type="text" 
-              placeholder="Phone Number" 
+              placeholder="Phone" 
               value={newUser.phone} 
               onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} 
               className="border rounded p-2 flex-grow min-w-[150px]"
@@ -228,87 +254,70 @@ const AdminDashboard = () => {
               placeholder="Date of Birth" 
               value={newUser.dob} 
               onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"      
+              className="border rounded p-2 flex-grow min-w-[150px]"
             />
             <input 
-              type="text" 
-              placeholder="Is Admin" 
-              value={newUser.isAdmin} 
-              onChange={(e) => setNewUser({ ...newUser, isAdmin: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"      
+              type="checkbox" 
+              checked={newUser.isAdmin} 
+              onChange={() => setNewUser({ ...newUser, isAdmin: !newUser.isAdmin })} 
+              className="mr-2"
             />
+            Admin
             <button 
               onClick={handleAddUser} 
-              className="bg-lime-500 text-white p-2 rounded md:ml-4"
+              className="bg-lime-500 text-white p-2 rounded"
             >
               Add User
             </button>
           </div>
+          <ul className="list-disc pl-5">
+            {users.map(user => (
+              <div key={user._id} className="mb-2">
+                {user.username} - {user.email}
+                <button 
+                  onClick={() => handleDeleteUser(user._id)} 
+                  className="text-red-500 ml-4"
+                >
+                  Delete User
+                </button>
+              </div>
+            ))}
+          </ul>
         </div>
-        <ul className="list-disc pl-5">
-          {users.map(user => (
-            <div key={user._id} className="mb-2">
-              {user.firstName} {user.lastName} - {user.email} 
-              <button 
-                onClick={() => handleDeleteUser(user._id)} 
-                className="text-red-500 ml-4"
-              >
-                Delete User
-              </button>
-            </div>
-          ))}
-        </ul>
       </section>
-
+      
       {/* Bookings Section */}
       <section className="mt-11">
         <h2 className="text-2xl font-semibold mb-4">Bookings</h2>
         <div className="flex flex-col md:flex-row items-center mb-4 space-y-2 md:space-y-0 md:space-x-2">
-          <select 
+          <input 
+            type="text" 
+            placeholder="User ID" 
             value={newBooking.user} 
             onChange={(e) => setNewBooking({ ...newBooking, user: e.target.value })} 
-            className="border rounded p-2 flex-grow min-w-[150px]"
-          >
-            <option value="">Select User</option>
-            {users.map(user => (
-              <option key={user._id} value={user._id}>
-                {user.firstName} {user.lastName}
-              </option>
-            ))}
-          </select>
-          <select 
+            className="border rounded p-2 flex-grow"
+          />
+          <input 
+            type="text" 
+            placeholder="Property ID" 
             value={newBooking.property} 
             onChange={(e) => setNewBooking({ ...newBooking, property: e.target.value })} 
-            className="border rounded p-2 flex-grow min-w-[150px]"
-          >
-            <option value="">Select Property</option>
-            {properties.map(property => (
-              <option key={property._id} value={property._id}>
-                {property.name}
-              </option>
-            ))}
-          </select>
+            className="border rounded p-2 flex-grow"
+          />
           <input 
             type="date" 
+            placeholder="Start Date" 
             value={newBooking.startDate} 
             onChange={(e) => setNewBooking({ ...newBooking, startDate: e.target.value })} 
-            className="border rounded p-2 flex-grow min-w-[150px]"
+            className="border rounded p-2 flex-grow"
           />
           <input 
             type="date" 
+            placeholder="End Date" 
             value={newBooking.endDate} 
             onChange={(e) => setNewBooking({ ...newBooking, endDate: e.target.value })} 
-            className="border rounded p-2 flex-grow min-w-[150px]"
+            className="border rounded p-2 flex-grow"
           />
-          <select 
-            value={newBooking.status} 
-            onChange={(e) => setNewBooking({ ...newBooking, status: e.target.value })} 
-            className="border rounded p-2 flex-grow min-w-[150px]"
-          >
-            <option value="Pending">Pending</option>
-            <option value="Confirmed">Confirmed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
           <button 
             onClick={handleAddBooking} 
             className="bg-lime-500 text-white p-2 rounded"
@@ -319,7 +328,7 @@ const AdminDashboard = () => {
         <ul className="list-disc pl-5">
           {bookings.map(booking => (
             <div key={booking._id} className="mb-2">
-              {booking.startDate} to {booking.endDate} - {booking.status}
+              User: {booking.user} - Property: {booking.property} - Status: {booking.status}
               <button 
                 onClick={() => handleDeleteBooking(booking._id)} 
                 className="text-red-500 ml-4"
