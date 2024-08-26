@@ -9,6 +9,7 @@ import Register from "./pages/Register"
 import SignInForm from "./pages/SignInPage"
 import PropertyCard from "./components/PropertyCard"
 import AdminDashboard from "./pages/AdminDashboard"
+import ProfilePage from "./pages/ProfilePage"
 import "./styles/index.css"
 
 function App() {
@@ -29,7 +30,8 @@ function App() {
           <Layout><Register/></Layout>} />
         <Route path="/SignInPage" element={
           <Layout><SignInForm/></Layout>} />
-        <Route path="/profile/:userId" element={<Layout><ProfilePage/></Layout>} />
+        <Route path="/profile/:userId" element={
+          <Layout><ProfilePage/></Layout>} />
         <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={
           <Layout><PropertyCard /></Layout>} />

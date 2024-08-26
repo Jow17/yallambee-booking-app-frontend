@@ -28,7 +28,7 @@ const SignInForm = () => {
       }
   
       // Fetch user details using the user ID
-      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/user/${userId}`, {
+      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
   
