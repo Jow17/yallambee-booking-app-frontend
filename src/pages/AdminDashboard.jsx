@@ -32,27 +32,41 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
+      const token = localStorage.getItem('token');
+      console.log('Stored Token:', token); // Check if token is correctly retrieved
+  
       const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users', {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setUsers(response.data)
+      });
+      console.log('API Response:', response.data);
+  
+      if (Array.isArray(response.data)) {
+        setUsers(response.data); // If it's an array, use it directly
+      } else {
+        setUsers([response.data]); // If it's a single object, convert to an array
+      }
     } catch (error) {
-      console.error('Error fetching users:', error)
-      setError('Failed to fetch users. Please try again.')
+      console.error('Error fetching users:', error.response ? error.response.data : error.message);
+      setError('Failed to fetch users. Please try again.');
     }
-  }
+  };
 
   const fetchBookings = async () => {
     try {
       const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings', {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setBookings(response.data)
+      });
+      console.log('API Response:', response.data);
+  
+      if (Array.isArray(response.data)) {
+        setUsers(response.data); // If it's an array, use it directly
+      } else {
+        setUsers([response.data]); // If it's a single object, convert to an array
+      }
     } catch (error) {
-      console.error('Error fetching bookings:', error)
-      setError('Failed to fetch bookings. Please try again.')
+      console.error('Error fetching users:', error.response ? error.response.data : error.message);
     }
-  }
+  };
 
   const handleAddProperty = async () => {
     try {
@@ -100,17 +114,24 @@ const AdminDashboard = () => {
 
   const handleDeleteUser = async (id) => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+  
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-      setUsers(users.filter(user => user._id !== id))
-      console.log('Successfully deleted user!')
-      window.alert('User deleted successfully!')
+      });
+      
+      // Update state to remove the deleted user
+      setUsers(users.filter(user => user._id !== id));
+      console.log('Successfully deleted user!');
+      window.alert('User deleted successfully!');
     } catch (error) {
-      console.log('Error deleting user. Please try again.', error)
-      window.alert('Error deleting user. Please try again.')
+      console.error('Error deleting user:', error.response?.data || error.message);
+      window.alert('Error deleting user. Please try again.');
     }
-  }
+  };
 
   const handleAddBooking = async () => {
     try {
@@ -204,87 +225,91 @@ const AdminDashboard = () => {
       
       {/* Users Section */}
       <section className="mt-11">
-        <h2 className="text-2xl font-semibold mb-4">Users</h2>
-        <div className="max-w-full overflow-x-auto">
-          <div className="flex flex-col md:flex-row items-center mb-4 space-y-2 md:space-y-0 md:space-x-2">
-            <input 
-              type="text" 
-              placeholder="Username" 
-              value={newUser.username} 
-              onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={newUser.password} 
-              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="text" 
-              placeholder="First Name" 
-              value={newUser.firstName} 
-              onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="text" 
-              placeholder="Last Name" 
-              value={newUser.lastName} 
-              onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={newUser.email} 
-              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="text" 
-              placeholder="Phone" 
-              value={newUser.phone} 
-              onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="date" 
-              placeholder="Date of Birth" 
-              value={newUser.dob} 
-              onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
-              className="border rounded p-2 flex-grow min-w-[150px]"
-            />
-            <input 
-              type="checkbox" 
-              checked={newUser.isAdmin} 
-              onChange={() => setNewUser({ ...newUser, isAdmin: !newUser.isAdmin })} 
-              className="mr-2"
-            />
-            Admin
+  <h2 className="text-2xl font-semibold mb-4">Users</h2>
+  <div className="max-w-full overflow-x-auto">
+    <div className="flex flex-col md:flex-row items-center mb-4 space-y-2 md:space-y-0 md:space-x-2">
+      <input 
+        type="text" 
+        placeholder="Username" 
+        value={newUser.username} 
+        onChange={(e) => setNewUser({ ...newUser, username: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="password" 
+        placeholder="Password" 
+        value={newUser.password} 
+        onChange={(e) => setNewUser({ ...newUser, password: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="text" 
+        placeholder="First Name" 
+        value={newUser.firstName} 
+        onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="text" 
+        placeholder="Last Name" 
+        value={newUser.lastName} 
+        onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="email" 
+        placeholder="Email" 
+        value={newUser.email} 
+        onChange={(e) => setNewUser({ ...newUser, email: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="text" 
+        placeholder="Phone" 
+        value={newUser.phone} 
+        onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="date" 
+        placeholder="Date of Birth" 
+        value={newUser.dob} 
+        onChange={(e) => setNewUser({ ...newUser, dob: e.target.value })} 
+        className="border rounded p-2 flex-grow min-w-[150px]"
+      />
+      <input 
+        type="checkbox" 
+        checked={newUser.isAdmin} 
+        onChange={() => setNewUser({ ...newUser, isAdmin: !newUser.isAdmin })} 
+        className="mr-2"
+      />
+      Admin
+      <button 
+        onClick={handleAddUser} 
+        className="bg-lime-500 text-white p-2 rounded"
+      >
+        Add User
+      </button>
+    </div>
+    <ul className="list-disc pl-5">
+      {users && users.length > 0 ? (
+        users.map(user => (
+          <div key={user._id} className="mb-2">
+            {user.username} - {user.email}
             <button 
-              onClick={handleAddUser} 
-              className="bg-lime-500 text-white p-2 rounded"
+              onClick={() => handleDeleteUser(user._id)} 
+              className="text-red-500 ml-4"
             >
-              Add User
+              Delete User
             </button>
           </div>
-          <ul className="list-disc pl-5">
-            {users.map(user => (
-              <div key={user._id} className="mb-2">
-                {user.username} - {user.email}
-                <button 
-                  onClick={() => handleDeleteUser(user._id)} 
-                  className="text-red-500 ml-4"
-                >
-                  Delete User
-                </button>
-              </div>
-            ))}
-          </ul>
-        </div>
-      </section>
+        ))
+      ) : (
+        <p>No users available</p>
+      )}
+    </ul>
+  </div>
+</section>
       
       {/* Bookings Section */}
       <section className="mt-11">
