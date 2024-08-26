@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { getToken } from './authUtils';
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -8,25 +9,36 @@ const ProfilePage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { id } = useParams();
+  const { _id } = useParams(); // Ensure this matches the route param
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${id}`);
-        setUser(userResponse.data);
+        try {
+            const token = getToken(); // Fetch token from storage or cookies
+            if (!token) {
+                throw new Error('No token found. Please login.');
+            }
 
-        const bookingsResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${id}/bookings`);
-        setBookings(bookingsResponse.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
+            // Fetch user data with Authorization header
+            const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setUser(userResponse.data);
+
+            // Fetch bookings data with Authorization header
+            const bookingsResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/bookings`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setBookings(bookingsResponse.data);
+        } catch (error) {
+            console.error('Error fetching data:', error.response?.data || error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     fetchUserData();
-  }, [id]);
+}, [_id]);
 
   const handleImageChange = (e) => {
     setSelectedImage(e.target.files[0]);
@@ -37,13 +49,17 @@ const ProfilePage = () => {
     formData.append('profileImage', selectedImage);
 
     try {
-      await axios.post(`https://yallambee-booking-app-backend.onrender.com/users/${id}/uploadProfileImage`, formData, {
+      const token = getToken(); // Fetch the token from local storage or cookies
+      await axios.post(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/uploadProfileImage`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
         },
       });
       alert('Profile picture updated successfully!');
-      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${id}`);
+      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setUser(userResponse.data);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -60,7 +76,7 @@ const ProfilePage = () => {
       <h1 className="text-3xl font-bold mb-6">Profile Page</h1>
 
       <div className="profile-info mb-6">
-        <h2 className="text-2xl font-semibold mb-4">{user?.name || 'No Name Available'}</h2>
+        <h2 className="text-2xl font-semibold mb-4">{user?.firstName || 'No Name Available'}</h2>
         <img src={user?.profileImage || '/default-avatar.png'} alt="Profile" width="150" height="150" className="mb-4" />
         <div className="flex items-center mb-4">
           <input type="file" onChange={handleImageChange} className="border rounded p-2" />
