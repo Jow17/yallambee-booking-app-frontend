@@ -10,38 +10,32 @@ const SignInForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      // Sends post request to the server and retrieves the token
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
       const { token } = response.data;
-
+  
       if (!token) {
         throw new Error('Token not received from server');
       }
-
+  
       console.log('Login successful, token:', token);
       saveToken(token); // Save the token to local storage
-
-      // Verify and log token contents
-      await verifyToken(token); // Log decoded token for debugging
-
-      // Extract user ID from token
-      const userId = await extractUserIdFromToken(token); // Note the use of `await`
-
-      console.log('Extracted userId:', userId); // Log userId for debugging
-
+  
+      // Extract user ID from the token
+      const userId = await extractUserIdFromToken(token);
+  
       if (!userId) {
         throw new Error('User ID not found in token');
       }
-
+  
       // Fetch user details using the user ID
       const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/user/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
-      })
-
+      });
+  
       const { _id, isAdmin } = userResponse.data;
-
-      console.log('Fetched user data:', userResponse.data); // Log user data for debugging
-
+  
+      console.log('Fetched user data:', userResponse.data);
+  
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
@@ -51,7 +45,6 @@ const SignInForm = () => {
       console.error('Login error:', error.response?.data || error.message);
     }
   };
-
   return (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
       <h2 className="text-3xl font-bold">Sign In</h2>

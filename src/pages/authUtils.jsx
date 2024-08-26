@@ -1,4 +1,9 @@
-import * as jwtDecode from 'jwt-decode';
+import  { jwtDecode } from 'jwt-decode';
+
+export const saveToken = (token) => {
+  localStorage.setItem('authToken', token);
+};
+
 
 export const extractUserIdFromToken = async (token) => {
   try {
@@ -20,7 +25,3 @@ export const verifyToken = async (token) => {
   
 };
 
-export const saveToken = (token) => {
-    localStorage.setItem('authToken', token);
-  };
-  

@@ -1,7 +1,7 @@
 import React from "react"
 import BookingPage from "./pages/BookingPage"
 import PropertyListing from "./pages/PropertyListingPage"
-import ProfilePage from "./pages/ProfilePage"
+import UserProfile from "./pages/ProfilePage"
 import {Routes, Route } from "react-router-dom"
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
@@ -24,7 +24,7 @@ function App() {
         <Route path="/booking" element={
           <Layout><BookingPage/></Layout>} />
         <Route path="/profile" element={
-          <Layout><ProfilePage/></Layout>} />
+          <Layout><UserProfile/></Layout>} />
         <Route path="/register" element={
           <Layout><Register/></Layout>} />
         <Route path="/SignInPage" element={
