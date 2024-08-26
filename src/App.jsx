@@ -30,7 +30,7 @@ function App() {
           <Layout><Register/></Layout>} />
         <Route path="/SignInPage" element={
           <Layout><SignInForm/></Layout>} />
-        <Route path="/profile/:userId" element={
+        <Route path="/profile/:_id" element={
           <Layout><ProfilePage/></Layout>} />
         <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={
