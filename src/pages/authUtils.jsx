@@ -1,9 +1,14 @@
-import * as jwtDecode from 'jwt-decode';
+import  { jwtDecode } from 'jwt-decode';
+
+export const saveToken = (token) => {
+  localStorage.setItem('authToken', token);
+};
+
 
 export const extractUserIdFromToken = async (token) => {
   try {
     const decodedToken = jwtDecode(token);
-    return decodedToken.userId; // Adjust based on the actual key used in the token
+    return decodedToken.id; // Adjusted to match backend key
   } catch (error) {
     console.error('Error decoding token:', error);
     return null;
@@ -20,7 +25,3 @@ export const verifyToken = async (token) => {
   
 };
 
-export const saveToken = (token) => {
-    localStorage.setItem('authToken', token);
-  };
-  
