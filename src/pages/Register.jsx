@@ -1,38 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
+import { saveToken } from "./authUtils";
 
 const Register = () => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
-  const { setUser } = React.useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
-      const { user } = response.data;
-
-      // Destructure and use the user data from the registration response
+      const { token, user } = response.data;
+  
+      if (!token) {
+        throw new Error('Token not received from server');
+      }
+  
+      console.log('Registration successful, token:', token);
+      
+      // Save the token to local storage
+      saveToken(token);
+  
+      // Set the user context with the newly registered user’s data
       const { _id, isAdmin, ...userData } = user;
-
-      console.log('User created successfully!', user);
-
-      // Update the user context with the logged-in user’s data
       setUser({ id: _id, ...userData, isAdmin });
-
-      // Navigate to the appropriate page based on user role
+  
       if (isAdmin) {
-        window.alert('Admin user created successfully!');
         navigate('/admin-dashboard');
       } else {
-        window.alert('User created successfully!');
         navigate(`/profile/${_id}`);
       }
     } catch (error) {
       console.error('Registration error:', error.response?.data || error.message);
-      window.alert('Invalid email or password! Please try again.');
+      window.alert('Registration failed. Please try again.');
     }
   };
 
