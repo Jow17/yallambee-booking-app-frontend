@@ -34,7 +34,7 @@ const PropertyListing = () => {
                   className="bg-white shadow-lg rounded-lg overflow-hidden"
                 >
                   <img
-                    src='public/tiny_home_pics/5d5e5a09-04e7-4e8d-9d0a-9a44940fe4c4.webp' // Make sure image path is correct
+                    src='/tiny_home_pics/5d5e5a09-04e7-4e8d-9d0a-9a44940fe4c4.webp' // Make sure image path is correct
                     alt={property.name}
                     className="w-full h-48 object-cover"
                   />
