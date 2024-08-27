@@ -1,15 +1,31 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { removeToken } from '../pages/authUtils';
+import { jwtDecode } from 'jwt-decode';
 
 const Header = () => {
   const { user, setUser } = useContext(UserContext);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
+  const token = localStorage.getItem('token'); // Retrieve the token from local storage
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        setIsAdmin(decodedToken.isAdmin); // Set the admin status
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
+  }, [token]);
 
   const handleLogout = () => {
     removeToken(); // Clear the token from local storage or cookies
     setUser(null); // Reset the user state in context
+    setIsAdmin(false); // Reset the admin status
+    window.alert('Successfully logged out!')
     navigate('/'); // Redirect to the homepage or login page
   };
 
@@ -28,10 +44,9 @@ const Header = () => {
         <nav className="flex items-center space-x-6 text-white">
           <Link to="/" className="px-3">Home</Link>
           <Link to="/property-listing" className="px-3">Tiny Homes</Link>
-          {/* <Link to="/booking" className="px-3">Booking</Link> */}
-          {/* {user && (
-            <Link to={`/profile/${user.id}`} className="px-3">Profile</Link>
-          )} */}
+          {isAdmin && (
+            <Link to="/admin-dashboard" className="px-3">Admin Dashboard</Link>
+          )}
         </nav>
         {user ? (
           <div className="flex items-center space-x-4">
@@ -56,4 +71,3 @@ const Header = () => {
 };
 
 export default Header;
-

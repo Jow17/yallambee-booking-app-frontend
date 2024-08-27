@@ -9,7 +9,7 @@ export const getToken = () => {
 };
 
 export const removeToken = () => {
-  localStorage.removeItem('authToken');
+  localStorage.removeItem('token');
 };
 
 export const extractUserIdFromToken = async (token) => {
