@@ -1,19 +1,17 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/userContext';
+import { removeToken } from '../pages/authUtils';
 
 const Header = () => {
-  const token = localStorage.getItem("token");
-  let userId;
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token);
-      userId = decodedToken.id; // Extract the user ID from the token
-    } catch (error) {
-      console.error("Invalid token:", error);
-    }
-  }
+  const handleLogout = () => {
+    removeToken(); // Clear the token from local storage or cookies
+    setUser(null); // Reset the user state in context
+    navigate('/'); // Redirect to the homepage or login page
+  };
 
   return (
     <div className="bg-lime-800 py-6">
@@ -29,19 +27,33 @@ const Header = () => {
         </span>
         <nav className="flex items-center space-x-6 text-white">
           <Link to="/" className="px-3">Home</Link>
-          <Link to="/property-listing" className="px-3">Properties</Link>
-          <Link to="/booking" className="px-3">Booking</Link>
-          {/* Conditionally render the Profile link if userId is available */}
-          {userId && (
-            <Link to={`/profile/${userId}`} className="px-3">Profile</Link>
-          )}
+          <Link to="/property-listing" className="px-3">Tiny Homes</Link>
+          {/* <Link to="/booking" className="px-3">Booking</Link> */}
+          {/* {user && (
+            <Link to={`/profile/${user.id}`} className="px-3">Profile</Link>
+          )} */}
         </nav>
-        <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
-          <Link to="/SignInPage">Sign In</Link>
-        </button>
+        {user ? (
+          <div className="flex items-center space-x-4">
+            <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
+              <Link to={`/profile/${user.id}`}>Account</Link>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 text-white px-3 py-2 font-bold hover:bg-red-500 rounded"
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <button className="bg-white text-black px-3 py-2 font-bold hover:bg-gray-100 rounded">
+            <Link to="/SignInPage">Sign In</Link>
+          </button>
+        )}
       </div>
     </div>
   );
 };
 
 export default Header;
+

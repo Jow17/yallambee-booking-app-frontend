@@ -13,7 +13,7 @@ const BookingPage = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings')
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/booking')
       setBookings(response.data)
     } catch (error) {
       console.error('Error fetching bookings:', error)
@@ -31,7 +31,7 @@ const BookingPage = () => {
 
   const handleAddBooking = async (bookingData) => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/bookings', bookingData)
+      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', bookingData)
       setBookings([...bookings, response.data])
       console.log('Booking added successfully!')
       window.alert('Booking added successfully!')
@@ -43,7 +43,7 @@ const BookingPage = () => {
 
   const handleDeleteBooking = async (id) => {
     try {
-      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/bookings/${id}`)
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`)
       setBookings(bookings.filter(booking => booking._id !== id))
       console.log('Booking deleted successfully!')
       window.alert('Booking deleted successfully!')
