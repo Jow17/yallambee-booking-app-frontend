@@ -1,53 +1,28 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { saveToken, extractUserIdFromToken } from './authUtils';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const { register, watch, handleSubmit, formState: { errors }} = useForm();
+  const { register, watch, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
-      // Step 1: Register the user
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
-      const { token } = response.data;
-  
-      if (!token) {
-        throw new Error('Token not received from server');
-      }
-  
-      console.log('Registration successful, token:', token);
-      saveToken(token); // Save the token to local storage
-  
-      // Step 2: Extract user ID from the token
-      const userId = extractUserIdFromToken(token); // Changed to sync function
-  
-      if (!userId) {
-        throw new Error('User ID not found in token');
-      }
-  
-      console.log('Extracted User ID:', userId);
-  
-      // Step 3: Fetch user details (optional, for additional verification)
-      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-  
-      const { _id, isAdmin } = userResponse.data;
-  
-      console.log('Fetched user data:', userResponse.data);
-  
-      // Step 4: Redirect based on user role
-      if (isAdmin) {
-        navigate('/admin-dashboard');
-      } else {
-        navigate(`/profile/${_id}`);
-        console.log(`Navigating to /profile/${_id}`);
+      if (response.status === 201) {
+        console.log('User created successfully:', response.data);
+        navigate('/login'); // Redirect the user to the login page after successful registration
       }
     } catch (error) {
-      console.error('Registration error:', error.response?.data || error.message);
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((err) => {
+          console.error('Validation error:', err.msg);
+          // Optionally, you can set these errors in state and display them in the UI
+        });
+      } else {
+        console.error('Error creating user:', error.response?.data || error.message);
+      }
     }
   };
 
@@ -77,6 +52,16 @@ const Register = () => {
         </label>
       </div>
       <label className="text-gray-700 text-sm font-bold">
+        Username
+        <input
+          className="border rounded w-full py-1 px-2 font-normal"
+          {...register("username", { required: "This field is required", minLength: 3 })}
+        />
+        {errors.username && (
+          <span className="text-red-500">{errors.username.message}</span>
+        )}
+      </label>
+      <label className="text-gray-700 text-sm font-bold">
         Email
         <input
           type="email"
@@ -90,16 +75,22 @@ const Register = () => {
       <label className="text-gray-700 text-sm font-bold">
         Phone Number
         <input
-          type="text"
+          type="tel"
           className="border rounded w-full py-1 px-2 font-normal"
-          {...register("phone", { required: "This field is required" })}
+          {...register("phone", {
+            required: "This field is required",
+            pattern: {
+              value: /^\d{10,15}$/,
+              message: "Please provide a valid phone number (10-15 digits)",
+            },
+          })}
         />
         {errors.phone && (
           <span className="text-red-500">{errors.phone.message}</span>
         )}
       </label>
       <label className="text-gray-700 text-sm font-bold">
-        DOB
+        Date of Birth
         <input
           type="date"
           className="border rounded w-full py-1 px-2 font-normal"
@@ -153,6 +144,6 @@ const Register = () => {
       </button>
     </form>
   );
-};
+}
 
 export default Register;

@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { saveToken, extractUserIdFromToken, verifyToken } from "./authUtils";
+import { saveToken, extractUserIdFromToken } from "./authUtils";
+import { UserContext } from "../context/userContext";
 
 const SignInForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
     try {
@@ -32,10 +34,13 @@ const SignInForm = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
   
-      const { _id, isAdmin } = userResponse.data;
+      const { _id, isAdmin, ...userData } = userResponse.data;
   
       console.log('Fetched user data:', userResponse.data);
   
+      // Update the user context with the logged-in user’s data
+      setUser({ id: _id, ...userData, isAdmin });
+
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
