@@ -48,6 +48,7 @@ const SignInForm = () => {
       }
     } catch (error) {
       console.error('Login error:', error.response?.data || error.message);
+      window.alert('Invalid email or password. Please try again.');
     }
   };
 
