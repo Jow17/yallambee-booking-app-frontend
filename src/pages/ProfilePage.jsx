@@ -6,11 +6,11 @@ import { UserContext } from '../context/userContext';
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm";
-// import BookingCard from "../components/BookingCard";
+import BookingCard from "../components/BookingCard";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-  // const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false); // State for modal
 
@@ -94,7 +94,7 @@ const ProfilePage = () => {
       )}
 
       <div className="font-bold text-lg mt-8">Your bookings</div>
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {bookings.length > 0 ? (
           bookings.map((booking, index) => (
             <BookingCard type="user" key={index} booking={booking} />
@@ -102,7 +102,7 @@ const ProfilePage = () => {
         ) : (
           <p>No bookings available.</p>
         )}
-      </div> */}
+      </div>
     </div>
   );
 };
