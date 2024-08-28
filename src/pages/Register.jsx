@@ -35,8 +35,11 @@ const Register = () => {
           console.error('Validation error:', err.msg);
         });
       } else {
-        console.error('Error creating user:', error.response?.data || error.message);
+        navigate(`/profile/${_id}`);
       }
+    } catch (error) {
+      console.error('Registration error:', error.response?.data || error.message);
+      window.alert('Registration failed. Please try again.');
     }
   };
 
