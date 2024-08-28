@@ -83,6 +83,7 @@ const ProfilePage = () => {
 
       <div className="profile-info mb-6">
         <h2 className="text-2xl font-semibold mb-4">{user?.firstName || 'No Name Available'}</h2>
+        <h2 className="text-2xl font-semibold mb-4">{user?.lastName || 'No Name Available'}</h2>
         {/* <img src={user?.profileImage || '/default-avatar.png'} alt="Profile" width="150" height="150" className="mb-4" />
         <div className="flex items-center mb-4">
           <input type="file" onChange={handleImageChange} className="border rounded p-2" />

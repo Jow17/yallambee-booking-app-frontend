@@ -227,14 +227,14 @@ const AdminDashboard = () => {
         </div>
         <ul>
           {properties.map((property) => (
-            <li key={property._id} className="mb-2 flex justify-between items-center">
+            <div key={property._id} className="mb-2">
               <span>{property.name}</span>
               <button
                 onClick={() => handleDeleteProperty(property._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded">
-                Delete
+                className="text-red-500 ml-4">
+                Delete Property
               </button>
-            </li>
+            </div>
           ))}
         </ul>
       </section>

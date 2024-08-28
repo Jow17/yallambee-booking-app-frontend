@@ -1,28 +1,41 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/userContext';
+import { saveToken } from "./authUtils";
 
 const Register = () => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
-      if (response.status === 201) {
-        console.log('User created successfully:', response.data);
-        navigate('/login'); // Redirect the user to the login page after successful registration
+      const { token, user } = response.data;
+  
+      if (!token) {
+        throw new Error('Token not received from server');
+      }
+  
+      console.log('Registration successful, token:', token);
+      
+      // Save the token to local storage
+      saveToken(token);
+  
+      // Set the user context with the newly registered user’s data
+      const { _id, isAdmin, ...userData } = user;
+      setUser({ id: _id, ...userData, isAdmin });
+  
+      if (isAdmin) {
+        navigate('/admin-dashboard');
+      } else {
+        navigate(`/profile/${_id}`);
       }
     } catch (error) {
-      if (error.response?.data?.errors) {
-        error.response.data.errors.forEach((err) => {
-          console.error('Validation error:', err.msg);
-          // Optionally, you can set these errors in state and display them in the UI
-        });
-      } else {
-        console.error('Error creating user:', error.response?.data || error.message);
-      }
+      console.error('Registration error:', error.response?.data || error.message);
+      window.alert('Registration failed. Please try again.');
     }
   };
 
