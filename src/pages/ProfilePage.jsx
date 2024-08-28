@@ -3,12 +3,16 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { getToken } from './authUtils';
 import { UserContext } from '../context/userContext';
+import Button from "../components/Button";
+import Modal from "../components/Modal";
+import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm";
+// import BookingCard from "../components/BookingCard";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
-  // const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false); // State for modal
 
   const { _id } = useParams(); // Ensure this matches the route param
   const { setUser: setGlobalUser } = useContext(UserContext); // Get setUser from UserContext
@@ -45,74 +49,60 @@ const ProfilePage = () => {
     fetchUserData();
   }, [_id, setGlobalUser]);
 
-  // const handleImageChange = (e) => {
-  //   setSelectedImage(e.target.files[0]);
-  // };
-
-  // const handleImageUpload = async () => {
-  //   const formData = new FormData();
-  //   formData.append('profileImage', selectedImage);
-
-  //   try {
-  //     const token = getToken(); // Fetch the token from local storage or cookies
-  //     await axios.post(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/uploadProfileImage`, formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer ${token}`
-  //       },
-  //     });
-  //     alert('Profile picture updated successfully!');
-  //     const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
-  //       headers: { Authorization: `Bearer ${token}` }
-  //     });
-  //     setUser(userResponse.data);
-  //     setGlobalUser(userResponse.data); // Update the global user context with the new data
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //     alert('Failed to update profile picture.');
-  //   }
-  // };
-
   if (loading) {
     return <div>Loading profile...</div>;
   }
 
   return (
     <div className="p-5">
-      <h1 className="text-3xl font-bold mb-6">Manage Your Account</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold mb-6">User Profile</h1>
+        <Button
+          onClick={() => {
+            setIsEditUserModalOpen(true);
+          }}
+        >
+          Edit user details
+        </Button>
+      </div>
 
       <div className="profile-info mb-6">
-        <h2 className="text-2xl font-semibold mb-4">{user?.firstName || 'No Name Available'}</h2>
-        {/* <img src={user?.profileImage || '/default-avatar.png'} alt="Profile" width="150" height="150" className="mb-4" />
-        <div className="flex items-center mb-4">
-          <input type="file" onChange={handleImageChange} className="border rounded p-2" />
-          <button
-            onClick={handleImageUpload}
-            className="bg-blue-500 text-white p-2 rounded ml-4"
-          >
-            Upload New Profile Picture
-          </button>
-        </div> */}
-        <p className="mb-2">Email: {user?.email || 'No Email Available'}</p>
-        <p className="mb-2">Phone: {user?.phone || 'No Phone Available'}</p>
+        <div className="mb-2">
+          <span className="font-bold">First Name:</span> {user?.firstName || 'No Name Available'}
+        </div>
+        <div className="mb-2">
+          <span className="font-bold">Last Name:</span> {user?.lastName || 'No Name Available'}
+        </div>
+        <div className="mb-2">
+          <span className="font-bold">Email:</span> {user?.email || 'No Email Available'}
+        </div>
+        <div className="mb-2">
+          <span className="font-bold">Phone Number:</span> {user?.phone || 'No Phone Available'}
+        </div>
+        <div className="mb-2">
+          <span className="font-bold">Address:</span> {user?.address || 'No Address Available'}
+        </div>
       </div>
 
-      <div className="booking-list">
-        <h2 className="text-2xl font-semibold mb-4">Your Bookings</h2>
-        <ul className="list-disc pl-5">
-          {bookings.length > 0 ? (
-            bookings.map((booking) => (
-              <li key={booking._id} className="mb-2">
-                <p className="mb-1"><strong>Booking ID:</strong> {booking._id}</p>
-                <p className="mb-1"><strong>Date:</strong> {booking.date}</p>
-                <p className="mb-1"><strong>Status:</strong> {booking.status}</p>
-              </li>
-            ))
-          ) : (
-            <p>No bookings available.</p>
-          )}
-        </ul>
-      </div>
+      {isEditUserModalOpen && (
+        <Modal
+          title={"Edit User"}
+          onClose={() => setIsEditUserModalOpen(false)}
+        >
+          <UpdateUserDetailsForm user={user} onClose={() => setIsEditUserModalOpen(false)} />
+        </Modal>
+      )}
+
+      <div className="font-bold text-lg mt-8">Your bookings</div>
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {bookings.length > 0 ? (
+          bookings.map((booking, index) => (
+            <BookingCard type="user" key={index} booking={booking} />
+          ))
+        ) : (
+          <p>No bookings available.</p>
+        )}
+      </div> */}
     </div>
   );
 };
