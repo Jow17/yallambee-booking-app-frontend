@@ -3,19 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { removeToken } from '../pages/authUtils';
 import { jwtDecode } from 'jwt-decode';
-import Logo from "/Logo.png"
+import Logo from "/Logo.png";
 
 const Header = () => {
   const { user, setUser } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const token = localStorage.getItem('token'); // Retrieve the token from local storage
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-        setIsAdmin(decodedToken.isAdmin); // Set the admin status
+        setIsAdmin(decodedToken.isAdmin);
       } catch (error) {
         console.error("Invalid token:", error);
       }
@@ -23,12 +23,20 @@ const Header = () => {
   }, [token]);
 
   const handleLogout = () => {
-    removeToken(); // Clear the token from local storage or cookies
-    setUser(null); // Reset the user state in context
-    setIsAdmin(false); // Reset the admin status
-    window.alert('Successfully logged out!')
-    navigate('/'); // Redirect to the homepage or login page
+    removeToken(); // Clear token from local storage or cookies
+    setUser(null); // Reset user state in context
+    setIsAdmin(false); // Reset admin status
+    alert('Successfully logged out!');
+    navigate('/'); // Navigate to home page
   };
+
+  // Handle redirect in useEffect after user state is reset
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate('/');
+  //     window.location.reload(); // Force a reload to ensure the UI updates
+  //   }
+  // }, [user, navigate]);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -126,6 +134,7 @@ const Header = () => {
                 </li>
                 <li>
                   <Link
+                    to="/"
                     onClick={handleLogout}
                     className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
                   >

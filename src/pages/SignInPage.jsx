@@ -54,7 +54,7 @@ const SignInForm = () => {
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
-        navigate(`/profile/${_id}`);
+        navigate(`/`);
       }
     } catch (error) {
       console.error('Login error:', error.response?.data || error.message);
