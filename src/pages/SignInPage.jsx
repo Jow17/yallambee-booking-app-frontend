@@ -14,36 +14,42 @@ const SignInForm = () => {
   const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
+    console.log('Form submitted'); // Add this line
+    
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
+      console.log('Response received:', response); // Add this line
+      
       const { token } = response.data;
-
+      
       if (!token) {
         throw new Error('Token not received from server');
       }
-
+      
       console.log('Login successful, token:', token);
       saveToken(token); // Save the token to local storage
-
+  
       // Extract user ID from the token
       const userId = await extractUserIdFromToken(token);
-
+      
       if (!userId) {
         throw new Error('User ID not found in token');
       }
-
+  
       // Fetch user details using the user ID
       const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-
+      
+      console.log('Fetched user data:', userResponse.data);
+      
       const { _id, isAdmin, ...userData } = userResponse.data;
 
       console.log('Fetched user data:', userResponse.data);
-
+  
       // Update the user context with the logged-in user’s data
       setUser({ _id, ...userData, isAdmin });
-
+  
       // Redirect to appropriate dashboard or profile page
       if (isAdmin) {
         navigate('/admin-dashboard');
@@ -54,7 +60,7 @@ const SignInForm = () => {
       console.error('Login error:', error.response?.data || error.message);
       window.alert('Invalid email or password. Please try again.');
     }
-  };
+  };  
 
   return (
     <div>
