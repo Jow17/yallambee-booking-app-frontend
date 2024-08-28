@@ -4,6 +4,9 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { saveToken, extractUserIdFromToken } from "./authUtils";
 import { UserContext } from "../context/userContext";
+import Button from "../components/Button";
+import Input from "../components/Input";
+import Checkbox from "../components/Checkbox";
 
 const SignInForm = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -11,20 +14,24 @@ const SignInForm = () => {
   const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
+    console.log('Form submitted'); // Add this line
+    
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
+      console.log('Response received:', response); // Add this line
+      
       const { token } = response.data;
-  
+      
       if (!token) {
         throw new Error('Token not received from server');
       }
-  
+      
       console.log('Login successful, token:', token);
       saveToken(token); // Save the token to local storage
   
       // Extract user ID from the token
       const userId = await extractUserIdFromToken(token);
-  
+      
       if (!userId) {
         throw new Error('User ID not found in token');
       }
@@ -33,74 +40,64 @@ const SignInForm = () => {
       const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-  
+      
+      console.log('Fetched user data:', userResponse.data);
+      
       const { _id, isAdmin, ...userData } = userResponse.data;
-  
+
       console.log('Fetched user data:', userResponse.data);
   
       // Update the user context with the logged-in user’s data
-      setUser({ id: _id, ...userData, isAdmin });
-
+      setUser({ _id, ...userData, isAdmin });
+  
+      // Redirect to appropriate dashboard or profile page
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
-        navigate(`/profile/${_id}`);
+        navigate(`/`);
       }
     } catch (error) {
       console.error('Login error:', error.response?.data || error.message);
       window.alert('Invalid email or password. Please try again.');
     }
-  };
+  };  
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="text-3xl font-bold">Sign In</h2>
-      
-      <label className="text-gray-700 text-sm font-bold flex-1">
-        Email
-        <input
-          type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
-          {...register("email", { required: "This field is required" })}
+    <div>
+      <form className="space-y-4 max-w-sm mx-auto mt-20 md:mt-56 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
+        <div className="text-xl font-bold mb-4">Sign In</div>
+        <Input 
+          type="email" 
+          label="Email" 
+          id="email" 
+          {...register("email", { required: "This field is required" })} 
+          error={errors.email?.message}
         />
-        {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
-        )}
-      </label>
-      
-      <label className="text-gray-700 text-sm font-bold flex-1">
-        Password
-        <input
-          type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
-          {...register("password", {
-            required: "This field is required",
+        <Input 
+          type="password" 
+          label="Password" 
+          id="password" 
+          {...register("password", { 
+            required: "This field is required", 
             minLength: {
               value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
+              message: "Password must be at least 6 characters"
+            }
+          })} 
+          error={errors.password?.message}
         />
-        {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
-        )}
-      </label>
-
-      <div className="flex items-center justify-between">
-        <span className="text-sm">
-          Don't have an account?{" "}
-          <Link className="underline" to="/register">
-            Create an account here
-          </Link>
-        </span>
-        <button
-          type="submit"
-          className="bg-green-800 text-white p-2 font-bold hover:bg-green-500 text-xl"
-        >
-          Login
-        </button>
-      </div>
-    </form>
+        <Checkbox label="Remember me" id="remember" />
+        <div className="flex justify-between items-center">
+          <span className="text-sm">
+            Don't have an account?{" "}
+            <Link className="underline" to="/register">
+              Create an account here
+            </Link>
+          </span>
+          <Button type="submit">Login</Button>
+        </div>
+      </form>
+    </div>
   );
 };
 

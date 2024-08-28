@@ -2,8 +2,10 @@ import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { saveToken } from './authUtils';
 import { UserContext } from '../context/userContext';
-import { saveToken } from "./authUtils";
+import Button from '../components/Button';
+import Input from '../components/Input';
 
 const Register = () => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm();
@@ -13,23 +15,25 @@ const Register = () => {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
-      const { token, user } = response.data;
-  
-      if (!token) {
-        throw new Error('Token not received from server');
+      if (response.status === 201) {
+        console.log('User created successfully:', response.data);
+        
+        const { token, user } = response.data;
+
+        // Save the token
+        saveToken(token);
+        
+        // Update the user context with the new user’s data
+        setUser({ id: user._id, ...user, isAdmin: user.isAdmin });
+
+        // Redirect to profile or homepage
+        navigate(`/profile/${user._id}`);
       }
-  
-      console.log('Registration successful, token:', token);
-      
-      // Save the token to local storage
-      saveToken(token);
-  
-      // Set the user context with the newly registered user’s data
-      const { _id, isAdmin, ...userData } = user;
-      setUser({ id: _id, ...userData, isAdmin });
-  
-      if (isAdmin) {
-        navigate('/admin-dashboard');
+    } catch (error) {
+      if (error.response?.data?.errors) {
+        error.response.data.errors.forEach((err) => {
+          console.error('Validation error:', err.msg);
+        });
       } else {
         navigate(`/profile/${_id}`);
       }
@@ -40,56 +44,50 @@ const Register = () => {
   };
 
   return (
-    <form className="flex flex-col gap-5" onSubmit={handleSubmit(onSubmit)}>
-      <h2 className="text-3xl font-bold">Create an Account</h2>
-      <div className="flex flex-col md:flex-row gap-5">
-        <label className="text-gray-700 text-sm font-bold flex-1">
-          First Name
-          <input
-            className="border rounded w-full py-1 px-2 font-normal"
-            {...register("firstName", { required: "This field is required" })}
-          />
-          {errors.firstName && (
-            <span className="text-red-500">{errors.firstName.message}</span>
-          )}
-        </label>
-        <label className="text-gray-700 text-sm font-bold flex-1">
-          Last Name
-          <input
-            className="border rounded w-full py-1 px-2 font-normal"
-            {...register("lastName", { required: "This field is required" })}
-          />
-          {errors.lastName && (
-            <span className="text-red-500">{errors.lastName.message}</span>
-          )}
-        </label>
-      </div>
-      <label className="text-gray-700 text-sm font-bold">
-        Username
-        <input
-          className="border rounded w-full py-1 px-2 font-normal"
+    <div>
+      <form className="space-y-4 max-w-sm mx-auto md:mt-16 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
+        <div className="text-xl font-bold mb-4">Register</div>
+
+        <Input
+          type="text"
+          label="First Name"
+          id="firstname"
+          {...register("firstName", { required: "This field is required" })}
+          placeholder="First Name"
+        />
+        {errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
+
+        <Input
+          type="text"
+          label="Last Name"
+          id="lastname"
+          {...register("lastName", { required: "This field is required" })}
+          placeholder="Last Name"
+        />
+        {errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
+
+        <Input
+          type="text"
+          label="Username"
+          id="username"
           {...register("username", { required: "This field is required", minLength: 3 })}
+          placeholder="Username"
         />
-        {errors.username && (
-          <span className="text-red-500">{errors.username.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold">
-        Email
-        <input
+        {errors.username && <span className="text-red-500">{errors.username.message}</span>}
+
+        <Input
           type="email"
-          className="border rounded w-full py-1 px-2 font-normal"
+          label="Email"
+          id="email"
           {...register("email", { required: "This field is required" })}
+          placeholder="Email"
         />
-        {errors.email && (
-          <span className="text-red-500">{errors.email.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold">
-        Phone Number
-        <input
+        {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+
+        <Input
           type="tel"
-          className="border rounded w-full py-1 px-2 font-normal"
+          label="Phone Number"
+          id="phone"
           {...register("phone", {
             required: "This field is required",
             pattern: {
@@ -97,27 +95,31 @@ const Register = () => {
               message: "Please provide a valid phone number (10-15 digits)",
             },
           })}
+          placeholder="Phone Number"
         />
-        {errors.phone && (
-          <span className="text-red-500">{errors.phone.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold">
-        Date of Birth
-        <input
+        {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+
+        <Input
+          type="text"
+          label="Address"
+          id="address"
+          {...register("address")}
+          placeholder="Address"
+        />
+
+        <Input
           type="date"
-          className="border rounded w-full py-1 px-2 font-normal"
+          label="Date of Birth"
+          id="dob"
           {...register("dob", { required: "This field is required" })}
+          placeholder="Date of Birth"
         />
-        {errors.dob && (
-          <span className="text-red-500">{errors.dob.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold">
-        Password
-        <input
+        {errors.dob && <span className="text-red-500">{errors.dob.message}</span>}
+
+        <Input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          label="Password"
+          id="password"
           {...register("password", {
             required: "This field is required",
             minLength: {
@@ -125,16 +127,14 @@ const Register = () => {
               message: "Password must be at least 6 characters",
             },
           })}
+          placeholder="Password"
         />
-        {errors.password && (
-          <span className="text-red-500">{errors.password.message}</span>
-        )}
-      </label>
-      <label className="text-gray-700 text-sm font-bold">
-        Confirm Password
-        <input
+        {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+
+        <Input
           type="password"
-          className="border rounded w-full py-1 px-2 font-normal"
+          label="Confirm Password"
+          id="password2"
           {...register("confirmPassword", {
             validate: (val) => {
               if (!val) {
@@ -144,19 +144,16 @@ const Register = () => {
               }
             },
           })}
+          placeholder="Confirm Password"
         />
-        {errors.confirmPassword && (
-          <span className="text-red-500">{errors.confirmPassword.message}</span>
-        )}
-      </label>
-      <button
-        type="submit"
-        className="bg-green-600 text-white p-2 font-bold hover:bg-green-500 text-xl"
-      >
-        Create Account
-      </button>
-    </form>
+        {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword.message}</span>}
+
+        <div className="flex justify-end">
+          <Button type="submit">Register</Button>
+        </div>
+      </form>
+    </div>
   );
-}
+};
 
 export default Register;
