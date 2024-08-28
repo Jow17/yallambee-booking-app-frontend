@@ -5,6 +5,8 @@ import { UserContext } from '../context/userContext';
 import Button from "../components/Button";
 import Select from "../components/Select";
 import Input from "../components/Input";
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 const BookingPage = () => {
   const [bookings, setBookings] = useState([]);
@@ -12,8 +14,8 @@ const BookingPage = () => {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [bookingData, setBookingData] = useState({
-    startDate: '',
-    endDate: '',
+    startDate: null,
+    endDate: null,
     status: 'Pending'
   });
 
@@ -72,15 +74,13 @@ const BookingPage = () => {
 
   const isDateUnavailable = (date) => {
     return unavailableDates.some(unavailableDate => 
-      new Date(unavailableDate).toDateString() === new Date(date).toDateString()
+      new Date(unavailableDate).toDateString() === date.toDateString()
     );
   };
 
   return (
     <div className="p-5">
       <div className="flex gap-2 overflow-x-scroll">
-        {/* You can dynamically load property images here based on the selected property */}
-        {/* Example static images below */}
         <img
           src="/tiny_home_pics/5d5e5a09-04e7-4e8d-9d0a-9a44940fe4c4.webp"
           alt="Property Image 1"
@@ -106,9 +106,8 @@ const BookingPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 ">
         <div>
           <div className="text-xl font-bold">Yallambee on Bolong</div>
-          {/* Add logic to display selected property details */}
           <div>
-          Yallambee Tiny Home is a peaceful off grid accommodation for two people set alongside the Bolong River amongst the rolling hills of Golspie - 20 minutes from Crookwell & Taralga and 10 minutes from Laggan on 15 acres of sheep grazing country in the Southern Tablelands. It is the perfect place to stay put and switch off from the hustle of everyday life or your base to explore the Upper Lachlans Shire of historic villages.
+          Yallambee Tiny Home is a peaceful off-grid accommodation for two people set alongside the Bolong River amongst the rolling hills of Golspie - 20 minutes from Crookwell & Taralga and 10 minutes from Laggan on 15 acres of sheep grazing country in the Southern Tablelands. It is the perfect place to stay put and switch off from the hustle of everyday life or your base to explore the Upper Lachlans Shire of historic villages.
           </div>
 
           <div className="mt-4">
@@ -127,10 +126,10 @@ const BookingPage = () => {
         </div>
         <div>
           <form className="space-y-4 bg-gray-100 rounded-lg p-8" onSubmit={handleBookingSubmit}>
-            <div className="text-xl font-bold mb-4">Book property</div>
+            <div className="text-xl font-bold mb-4">Book your stay</div>
 
             <Select
-              label="Select Property"
+              label="Select property and check available dates"
               options={properties.map(property => ({
                 label: property.name,
                 value: property._id
@@ -141,23 +140,35 @@ const BookingPage = () => {
               }}
             />
 
-            <Input
-              label="Check-in"
-              type="date"
-              value={bookingData.startDate}
-              onChange={(e) => setBookingData({ ...bookingData, startDate: e.target.value })}
-              disabled={!selectedProperty}
-              min={new Date().toISOString().split('T')[0]}
-            />
+            <div className="flex flex-col">
+              <label className="text-gray-700 text-sm font-bold mb-2">
+                Check-in
+              </label>
+              <DatePicker
+                selected={bookingData.startDate}
+                onChange={(date) => setBookingData({ ...bookingData, startDate: date })}
+                minDate={new Date()}
+                filterDate={(date) => !isDateUnavailable(date)}
+                className="border rounded w-full py-1 px-2 font-normal"
+                placeholderText="Select a check-in date"
+                // disabled={!selectedProperty}
+              />
+            </div>
 
-            <Input
-              label="Check-out"
-              type="date"
-              value={bookingData.endDate}
-              onChange={(e) => setBookingData({ ...bookingData, endDate: e.target.value })}
-              disabled={!selectedProperty}
-              min={bookingData.startDate}
-            />
+            <div className="flex flex-col">
+              <label className="text-gray-700 text-sm font-bold mb-2">
+                Check-out
+              </label>
+              <DatePicker
+                selected={bookingData.endDate}
+                onChange={(date) => setBookingData({ ...bookingData, endDate: date })}
+                minDate={bookingData.startDate || new Date()}
+                filterDate={(date) => !isDateUnavailable(date)}
+                className="border rounded w-full py-1 px-2 font-normal"
+                placeholderText="Select a check-out date"
+                // disabled={!selectedProperty}
+              />
+            </div>
 
             <div className="flex justify-end">
               <Button type="submit" disabled={!selectedProperty}>Book</Button>
