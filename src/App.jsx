@@ -1,4 +1,4 @@
-import React from "react"
+import React, from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import { UserProvider } from './context/userContext';
 import Layout from "./Layouts/Layout"
@@ -10,6 +10,7 @@ import BookingPage from "./pages/BookingPage"
 import PropertyCard from "./components/PropertyCard"
 import AdminDashboard from "./pages/AdminDashboard"
 import ProfilePage from "./pages/ProfilePage"
+import NotFound404 from "./pages/404";
 import "./styles/index.css"
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
         <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={<Layout><PropertyCard /></Layout>} />
         <Route path="/admin-dashboard" element={<Layout><AdminDashboard /></Layout>} />
-        <Route path="*" element={<h3>Page not found!</h3>} />
+        <Route path="*" element={<NotFound404 />} />
       </Routes>
     </UserProvider>
   );

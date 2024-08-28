@@ -10,7 +10,7 @@ import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm";
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-  const [bookings, setBookings] = useState([]);
+  // const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false); // State for modal
 
