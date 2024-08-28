@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { removeToken } from '../pages/authUtils';
 import { jwtDecode } from 'jwt-decode';
-import Logo from "./../../public/Logo.png"
+import Logo from "/Logo.png"
 
 const Header = () => {
   const { user, setUser } = useContext(UserContext);
@@ -74,7 +74,7 @@ const Header = () => {
             <li>
               <Link
                 to="/"
-                className="block py-2 px-3 text-white bg-green-700 rounded md:bg-transparent md:text-green-700 md:bg-white md:py-1 md:px-2 md:rounded-full"
+                className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
                 aria-current="page"
               >
                 Home
