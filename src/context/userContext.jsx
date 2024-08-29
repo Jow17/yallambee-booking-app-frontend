@@ -12,8 +12,8 @@ export const UserProvider = ({ children }) => {
       const token = getToken();
       if (token) {
         try {
-          const userId = await extractUserIdFromToken(token);
-          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
+          const _id = await extractUserIdFromToken(token);
+          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUser(response.data);
