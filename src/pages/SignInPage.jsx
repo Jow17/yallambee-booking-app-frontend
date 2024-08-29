@@ -14,11 +14,11 @@ const SignInForm = () => {
   const { setUser } = useContext(UserContext);
 
   const onSubmit = async (data) => {
-    console.log('Form submitted'); // Add this line
+    console.log('Form submitted');
     
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
-      console.log('Response received:', response); // Add this line
+      console.log('Response received:', response);
       
       const { token } = response.data;
       
@@ -30,22 +30,21 @@ const SignInForm = () => {
       saveToken(token); // Save the token to local storage
   
       // Extract user ID from the token
-      const userId = await extractUserIdFromToken(token);
+      const _id = await extractUserIdFromToken(token); // Use `_id` instead of `userId`
+      console.log('Extracted User ID:', _id);
       
-      if (!userId) {
+      if (!_id) {
         throw new Error('User ID not found in token');
       }
   
       // Fetch user details using the user ID
-      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
+      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       console.log('Fetched user data:', userResponse.data);
       
-      const { _id, isAdmin, ...userData } = userResponse.data;
-
-      console.log('Fetched user data:', userResponse.data);
+      const { isAdmin, ...userData } = userResponse.data;
   
       // Update the user context with the logged-in user’s data
       setUser({ _id, ...userData, isAdmin });
@@ -60,7 +59,7 @@ const SignInForm = () => {
       console.error('Login error:', error.response?.data || error.message);
       window.alert('Invalid email or password. Please try again.');
     }
-  };  
+  };
 
   return (
     <div>
