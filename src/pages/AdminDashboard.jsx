@@ -189,7 +189,7 @@ const AdminDashboard = () => {
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* Error Message */}
-      {error && <div className="bg-red-500 text-white p-2 rounded mb-4">{error}</div>}
+      {error && <div className="bg-red-600 text-white p-2 rounded mb-4">{error}</div>}
 
       {/* Properties Section */}
       <section>
@@ -223,7 +223,7 @@ const AdminDashboard = () => {
             onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: e.target.value })}
             className="border rounded p-2 flex-grow"
           />
-          <button onClick={handleAddProperty} className="bg-blue-500 text-white px-4 py-2 rounded">Add Property</button>
+          <button onClick={handleAddProperty} className="bg-lime-600 text-white px-4 py-2 rounded">Add Property</button>
         </div>
         <ul>
           {properties.map((property) => (
@@ -231,7 +231,7 @@ const AdminDashboard = () => {
               <span>{property.name}</span>
               <button
                 onClick={() => handleDeleteProperty(property._id)}
-                className="text-red-500 ml-4">
+                className="text-red-600 ml-4">
                 Delete Property
               </button>
             </div>
@@ -303,7 +303,7 @@ const AdminDashboard = () => {
     </div>
     <button 
       onClick={handleAddUser} 
-      className="bg-lime-500 text-white p-2 rounded w-full md:w-auto"
+      className="bg-lime-600 text-white p-2 rounded w-full md:w-auto"
     >
       Add User
     </button>
@@ -315,7 +315,7 @@ const AdminDashboard = () => {
           {user.username} - {user.email}
           <button 
             onClick={() => handleDeleteUser(user._id)} 
-            className="text-red-500 ml-4"
+            className="text-red-600 ml-4"
           >
             Delete User
           </button>
@@ -336,7 +336,7 @@ const AdminDashboard = () => {
             onChange={(e) => setSelectedUserId(e.target.value)}
             className="border rounded p-2 mb-2"
           />
-          <button onClick={handleFetchUserById} className="bg-blue-500 text-white px-4 py-2 rounded mb-4">Fetch User Details</button>
+          <button onClick={handleFetchUserById} className="bg-lime-600 text-white px-4 py-2 rounded mb-4">Fetch User Details</button>
 
           {userToUpdate && (
             <div className="flex flex-col space-y-2">
@@ -389,7 +389,7 @@ const AdminDashboard = () => {
                 onChange={(e) => setUserToUpdate({ ...userToUpdate, isAdmin: e.target.value })}
                 className="border rounded p-2"
               />
-              <button onClick={handleUpdateUser} className="bg-green-500 text-white px-4 py-2 rounded">Update User</button>
+              <button onClick={handleUpdateUser} className="bg-green-600 text-white px-4 py-2 rounded">Update User</button>
             </div>
           )}
         </div>
@@ -427,7 +427,7 @@ const AdminDashboard = () => {
             onChange={(e) => setNewBooking({ ...newBooking, endDate: e.target.value })}
             className="border rounded p-2 flex-grow"
           />
-          <button onClick={handleAddBooking} className="bg-blue-500 text-white px-4 py-2 rounded">Add Booking</button>
+          <button onClick={handleAddBooking} className="bg-lime-600 text-white px-4 py-2 rounded">Add Booking</button>
         </div>
         <ul>
           {bookings.map((booking) => (
@@ -435,7 +435,7 @@ const AdminDashboard = () => {
               <span>{booking.property}</span>
               <button
                 onClick={() => handleDeleteBooking(booking._id)}
-                className="bg-red-500 text-white px-4 py-2 rounded">
+                className="bg-red-600 text-white px-4 py-2 rounded">
                 Delete
               </button>
             </li>

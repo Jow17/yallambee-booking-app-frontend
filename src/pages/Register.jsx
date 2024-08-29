@@ -19,13 +19,13 @@ const Register = () => {
         console.log('User created successfully:', response.data);
         
         const { token, user } = response.data;
-
+  
         // Save the token
         saveToken(token);
         
         // Update the user context with the new user’s data
         setUser({ id: user._id, ...user, isAdmin: user.isAdmin });
-
+  
         // Redirect to profile or homepage
         navigate(`/profile/${user._id}`);
       }
@@ -35,14 +35,12 @@ const Register = () => {
           console.error('Validation error:', err.msg);
         });
       } else {
-        navigate(`/profile/${_id}`);
+        console.error('Registration error:', error.response?.data || error.message);
       }
-    } catch (error) {
-      console.error('Registration error:', error.response?.data || error.message);
       window.alert('Registration failed. Please try again.');
     }
   };
-
+  
   return (
     <div>
       <form className="space-y-4 max-w-sm mx-auto md:mt-16 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
