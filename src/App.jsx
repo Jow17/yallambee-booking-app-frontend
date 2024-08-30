@@ -10,6 +10,7 @@ import BookingPage from "./pages/BookingPage"
 import PropertyCard from "./components/PropertyCard"
 import AdminDashboard from "./pages/AdminDashboard"
 import ProfilePage from "./pages/ProfilePage"
+import Contact from "./pages/Contact";
 import NotFound404 from "./pages/404";
 import "./styles/index.css"
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<SignInForm />} />
         <Route path="/property/:id" element={<Layout><PropertyCard /></Layout>} />
         <Route path="/admin-dashboard" element={<Layout><AdminDashboard /></Layout>} />
+        <Route path="/contact" element={<Layout><Contact /></Layout>} />
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </UserProvider>
