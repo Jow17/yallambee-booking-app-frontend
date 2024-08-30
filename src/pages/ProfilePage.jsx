@@ -98,7 +98,8 @@ const ProfilePage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {bookings.length > 0 ? (
           bookings.map((booking, index) => (
-            <BookingCard type="user" key={index} booking={booking} />
+            <BookingCard type="user" key={index} booking={booking}
+            />
           ))
         ) : (
           <p>No bookings available.</p>

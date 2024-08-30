@@ -1,26 +1,47 @@
 import React from 'react'
+import { useState } from 'react';
 
 const Contact = () => {
-  return (
-    <>
-      <div className="mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-black text-center">Contact Us</h1>
-        <form className="space-y-4 p-6 mx-auto ">
-          <input type="text" placeholder="Name" />
-          <input type="email" placeholder="Email" />
-          <textarea placeholder="Message" rows="1" />
-          <button type="submit" className="w-full px-4 py-2 text-white bg-emerald-600 rounded-md hover:bg-lime-700">
-            Send Message
-          </button>
-        </form>
-        <div className="flex justify-center">
-          <a href="tel:123-456-7890" className="text-blue-600 hover:text-blue-700">
-            Call Us: 123-456-7890
-            </a>
-        </div>
-      </div>
-    </>
-  )
-}
-
-export default Contact
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stateMessage, setStateMessage] = useState(null);  const sendEmail = (e) => {
+    e.persist();
+    e.preventDefault();
+    setIsSubmitting(true);    emailjs
+      .sendForm(
+        process.env.REACT_APP_SERVICE_ID,
+        process.env.REACT_APP_TEMPLATE_ID,
+        e.target,
+        process.env.REACT_APP_PUBLIC_KEY
+      )
+      .then(
+        (result) => {
+          setStateMessage('Message sent!');
+          setIsSubmitting(false);
+          setTimeout(() => {
+            setStateMessage(null);
+          }, 5000); // hide message after 5 seconds
+        },
+        (error) => {
+          setStateMessage('Something went wrong, please try again later');
+          setIsSubmitting(false);
+          setTimeout(() => {
+            setStateMessage(null);
+          }, 5000); // hide message after 5 seconds
+        }
+      );
+    
+    // Clears the form after sending the email
+    e.target.reset();
+  };  return (
+    <form onSubmit={sendEmail}>
+      <label>Name</label>
+      <input type="text" name="user_name" />
+      <label>Email</label>
+      <input type="email" name="user_email" />
+      <label>Message</label>
+      <textarea name="message" />
+      <input type="submit" value="Send" disabled={isSubmitting} />
+      {stateMessage && <p>{stateMessage}</p>}
+    </form>
+  );
+};export default Contact;

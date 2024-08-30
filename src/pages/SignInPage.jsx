@@ -63,6 +63,7 @@ const SignInForm = () => {
   };
 
   return (
+    <>
     <div>
       <form className="space-y-4 max-w-sm mx-auto mt-20 md:mt-56 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
         <div className="text-xl font-bold mb-4">Sign In</div>
@@ -98,6 +99,7 @@ const SignInForm = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 
