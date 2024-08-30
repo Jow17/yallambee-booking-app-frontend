@@ -54,7 +54,7 @@ const AdminDashboard = () => {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/bookings', {
+      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/booking', {
         headers: { Authorization: `Bearer ${token}` },
       });
       console.log('API Response:', response.data);
@@ -225,18 +225,20 @@ const AdminDashboard = () => {
           />
           <button onClick={handleAddProperty} className="bg-lime-600 text-white px-4 py-2 rounded">Add Property</button>
         </div>
+
         <ul>
-          {properties.map((property) => (
-            <div key={property._id} className="mb-2">
-              <span>{property.name}</span>
-              <button
-                onClick={() => handleDeleteProperty(property._id)}
-                className="text-red-600 ml-4">
-                Delete Property
-              </button>
-            </div>
-          ))}
-        </ul>
+  {properties.map((property) => (
+    <li key={property._id} className="mb-2 flex items-center">
+      <strong>{property.name}</strong>
+      <span className="mx-2">-</span>
+      <button
+        onClick={() => handleDeleteProperty(property._id)}
+        className="text-red-600 ml-4">
+        Delete Property
+      </button>
+    </li>
+  ))}
+</ul>
       </section>
 
       {/* Users Section */}
@@ -309,22 +311,22 @@ const AdminDashboard = () => {
     </button>
   </div>
   <ul className="list-disc pl-5">
-    {users && users.length > 0 ? (
-      users.map(user => (
-        <div key={user._id} className="mb-2">
-          {user.username} - {user.email}
-          <button 
-            onClick={() => handleDeleteUser(user._id)} 
-            className="text-red-600 ml-4"
-          >
-            Delete User
-          </button>
-        </div>
-      ))
-    ) : (
-      <p>No users available</p>
-    )}
-  </ul>
+  {users && users.length > 0 ? (
+    users.map((user) => (
+      <div key={user._id} className="mb-2">
+        <strong>{user.username}</strong> - {user.email}
+        <button
+          onClick={() => handleDeleteUser(user._id)}
+          className="text-red-600 ml-4"
+        >
+          Delete User
+        </button>
+      </div>
+    ))
+  ) : (
+    <p>No users available</p>
+  )}
+</ul>
 
         {/* Update User Section */}
         <div className="mt-4">
@@ -429,18 +431,27 @@ const AdminDashboard = () => {
           />
           <button onClick={handleAddBooking} className="bg-lime-600 text-white px-4 py-2 rounded">Add Booking</button>
         </div>
-        <ul>
-          {bookings.map((booking) => (
-            <li key={booking._id} className="mb-2 flex justify-between items-center">
-              <span>{booking.property}</span>
-              <button
-                onClick={() => handleDeleteBooking(booking._id)}
-                className="bg-red-600 text-white px-4 py-2 rounded">
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
+    
+        <ul className="list-disc pl-5">
+  {bookings && bookings.length > 0 ? (
+    bookings.map((booking) => (
+      <div key={booking._id} className="mb-2 flex">
+        <div>
+          <strong>{booking.property.name}</strong> -{" "}
+          {booking.user ? booking.user.username : "Unknown User"} - {booking.email}
+        </div>
+        <button
+          onClick={() => handleDeleteUser(booking._id)}
+          className="text-red-600 ml-4"
+        >
+          Delete Booking
+        </button>
+      </div>
+    ))
+  ) : (
+    <p>No booking available</p>
+  )}
+</ul>
       </section>
     </div>
   );
