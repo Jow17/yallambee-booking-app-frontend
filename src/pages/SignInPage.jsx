@@ -17,6 +17,7 @@ const SignInForm = () => {
     console.log('Form submitted');
     
     try {
+      // Perform login request
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
       console.log('Response received:', response);
       
@@ -53,15 +54,16 @@ const SignInForm = () => {
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
-        navigate(`/`);
+        navigate(`/profile/${_id}`);
       }
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
+      console.error('Error fetching data:', error.response?.data || error.message);
       window.alert('Invalid email or password. Please try again.');
     }
   };
 
   return (
+    <>
     <div>
       <form className="space-y-4 max-w-sm mx-auto mt-20 md:mt-56 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
         <div className="text-xl font-bold mb-4">Sign In</div>
@@ -97,6 +99,7 @@ const SignInForm = () => {
         </div>
       </form>
     </div>
+    </>
   );
 };
 

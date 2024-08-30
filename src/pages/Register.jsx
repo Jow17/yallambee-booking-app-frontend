@@ -19,7 +19,7 @@ const Register = () => {
         console.log('User created successfully:', response.data);
         
         const { token, user } = response.data;
-
+  
         // Save the token
         saveToken(token);
         
@@ -44,7 +44,7 @@ const Register = () => {
       }
     }
   };
-
+  
   return (
     <div>
       <form className="space-y-4 max-w-sm mx-auto md:mt-16 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>

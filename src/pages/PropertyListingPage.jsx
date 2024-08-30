@@ -29,7 +29,7 @@ const PropertyListing = () => {
             {properties.length > 0 ? (
               properties.map(property => (
                 <Link
-                  to={`/property/${property._id}`} // Ensure this path includes the property ID
+                  to= "/booking" // Ensure this path includes the property ID
                   key={property._id}
                   className="bg-white shadow-lg rounded-lg overflow-hidden"
                 >
