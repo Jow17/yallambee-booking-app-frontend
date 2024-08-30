@@ -4,16 +4,15 @@ import { getToken } from './authUtils';
 import { UserContext } from '../context/userContext';
 import Button from "../components/Button";
 import Select from "../components/Select";
-import Input from "../components/Input";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 const BookingPage = () => {
   const [bookings, setBookings] = useState([]);
   const [properties, setProperties] = useState([]);
-  const [selectedProperty, setSelectedProperty] = useState(null);
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [bookingData, setBookingData] = useState({
+    property: null,
     startDate: null,
     endDate: null,
     status: 'Pending'
@@ -26,10 +25,15 @@ const BookingPage = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedProperty) {
-      fetchUnavailableDates(selectedProperty._id);
+    console.log('Booking Data Updated:', bookingData); // Log booking data when it updates
+  }, [bookingData]);
+
+  useEffect(() => {
+    if (bookingData.property) {
+      console.log('Fetching unavailable dates for property:', bookingData.property); // Log the property ID for which unavailable dates are fetched
+      fetchUnavailableDates(bookingData.property);
     }
-  }, [selectedProperty]);
+  }, [bookingData.property]);
 
   const fetchProperties = async () => {
     try {
@@ -40,35 +44,12 @@ const BookingPage = () => {
     }
   };
 
-  const fetchUnavailableDates = async (propertyId) => {
+  const fetchUnavailableDates = async (_id) => {
     try {
-      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}/unavailable-dates`);
+      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/booking/${_id}/unavailable-dates`);
       setUnavailableDates(response.data);
     } catch (error) {
       console.error('Error fetching unavailable dates:', error);
-    }
-  };
-
-  const handleBookingSubmit = async (e) => {
-    e.preventDefault();
-    if (!user) {
-      alert('You must be logged in to make a booking.');
-      return;
-    }
-
-    try {
-      const token = getToken();
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', {
-        ...bookingData,
-        property: selectedProperty._id,
-      }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setBookings([...bookings, response.data]);
-      alert('Booking added successfully!');
-    } catch (error) {
-      console.error('Error adding booking:', error);
-      alert('Error adding booking');
     }
   };
 
@@ -77,6 +58,47 @@ const BookingPage = () => {
       new Date(unavailableDate).toDateString() === date.toDateString()
     );
   };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!user) {
+        alert('You must be logged in to make a booking.');
+        return;
+    }
+
+    if (!bookingData.property) {
+        alert('Please select a property.');
+        return;
+    }
+
+    if (!bookingData.startDate || !bookingData.endDate) {
+        alert('Please select both check-in and check-out dates.');
+        return;
+    }
+
+    // Ensure dates are in the correct format
+    const bookingDataToSend = {
+        property: bookingData.property,
+        startDate: new Date(bookingData.startDate).toISOString().split('T')[0], // Strip time if necessary
+        endDate: new Date(bookingData.endDate).toISOString().split('T')[0], // Strip time if necessary
+        status: bookingData.status,
+    };
+
+    console.log('Booking Data to Send:', bookingDataToSend);
+
+    try {
+        const token = getToken();
+        const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', bookingDataToSend, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        setBookings([...bookings, response.data]);
+        alert('Booking added successfully!');
+    } catch (error) {
+        console.error('Error adding booking:', error.response?.data || error.message);
+        alert('Error adding booking');
+    }
+};
 
   return (
     <div className="p-5">
@@ -130,13 +152,22 @@ const BookingPage = () => {
 
             <Select
               label="Select property and check available dates"
+              id="property-select"  // Ensure id is set
+              value={bookingData.property || ""}  // Control the component
               options={properties.map(property => ({
                 label: property.name,
                 value: property._id
               }))}
               onChange={(e) => {
-                const property = properties.find(p => p._id === e.target.value);
-                setSelectedProperty(property);
+                const selectedPropertyId = e.target.value;
+                console.log('Selected Property ID:', selectedPropertyId); // Log the selected property ID
+                setBookingData(prevData => ({
+                  ...prevData,
+                  property: selectedPropertyId,
+                  startDate: null,
+                  endDate: null
+                }));
+                setUnavailableDates([]); // Clear unavailable dates when a new property is selected
               }}
             />
 
@@ -146,12 +177,15 @@ const BookingPage = () => {
               </label>
               <DatePicker
                 selected={bookingData.startDate}
-                onChange={(date) => setBookingData({ ...bookingData, startDate: date })}
+                onChange={(date) => setBookingData(prevData => ({
+                  ...prevData,
+                  startDate: date
+                }))}
                 minDate={new Date()}
                 filterDate={(date) => !isDateUnavailable(date)}
                 className="border rounded w-full py-1 px-2 font-normal"
                 placeholderText="Select a check-in date"
-                // disabled={!selectedProperty}
+                disabled={!bookingData.property}
               />
             </div>
 
@@ -161,17 +195,20 @@ const BookingPage = () => {
               </label>
               <DatePicker
                 selected={bookingData.endDate}
-                onChange={(date) => setBookingData({ ...bookingData, endDate: date })}
+                onChange={(date) => setBookingData(prevData => ({
+                  ...prevData,
+                  endDate: date
+                }))}
                 minDate={bookingData.startDate || new Date()}
                 filterDate={(date) => !isDateUnavailable(date)}
                 className="border rounded w-full py-1 px-2 font-normal"
                 placeholderText="Select a check-out date"
-                // disabled={!selectedProperty}
+                disabled={!bookingData.property}
               />
             </div>
 
             <div className="flex justify-end">
-              <Button type="submit" disabled={!selectedProperty}>Book</Button>
+              <Button type="submit" disabled={!bookingData.property}>Book</Button>
             </div>
           </form>
         </div>
