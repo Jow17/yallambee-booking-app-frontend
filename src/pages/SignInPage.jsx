@@ -28,31 +28,29 @@ const SignInForm = () => {
       }
       
       console.log('Login successful, token:', token);
-      saveToken(token);
-    
-      // Extract user ID from token
-      const userId = await extractUserIdFromToken(token);
+      saveToken(token); // Save the token to local storage
+  
+      // Extract user ID from the token
+      const _id = await extractUserIdFromToken(token); // Use `_id` instead of `userId`
+      console.log('Extracted User ID:', _id);
       
-      if (!userId) {
+      if (!_id) {
         throw new Error('User ID not found in token');
       }
-    
-      console.log('User ID:', userId);
-      
-      // Fetch user data using the user ID
-      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${userId}`, {
+  
+      // Fetch user details using the user ID
+      const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       console.log('Fetched user data:', userResponse.data);
       
-      // Extract relevant data
-      const { _id, isAdmin, ...userData } = userResponse.data;
-      
-      // Update user context with the fetched data
-      setUser({ id: _id, ...userData, isAdmin });
-    
-      // Redirect based on user role
+      const { isAdmin, ...userData } = userResponse.data;
+  
+      // Update the user context with the logged-in user’s data
+      setUser({ _id, ...userData, isAdmin });
+  
+      // Redirect to appropriate dashboard or profile page
       if (isAdmin) {
         navigate('/admin-dashboard');
       } else {
@@ -63,6 +61,7 @@ const SignInForm = () => {
       window.alert('Invalid email or password. Please try again.');
     }
   };
+
   return (
     <div>
       <form className="space-y-4 max-w-sm mx-auto mt-20 md:mt-56 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>

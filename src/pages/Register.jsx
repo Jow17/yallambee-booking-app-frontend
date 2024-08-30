@@ -25,9 +25,13 @@ const Register = () => {
         
         // Update the user context with the new user’s data
         setUser({ id: user._id, ...user, isAdmin: user.isAdmin });
-  
-        // Redirect to profile or homepage
-        navigate(`/profile/${user._id}`);
+
+        // Redirect based on user role
+        if (user.isAdmin) {
+          navigate('/admin-dashboard');
+        } else {
+          navigate(`/profile/${user._id}`);
+        }
       }
     } catch (error) {
       if (error.response?.data?.errors) {
@@ -36,8 +40,8 @@ const Register = () => {
         });
       } else {
         console.error('Registration error:', error.response?.data || error.message);
+        window.alert('Registration failed. Please try again.');
       }
-      window.alert('Registration failed. Please try again.');
     }
   };
   

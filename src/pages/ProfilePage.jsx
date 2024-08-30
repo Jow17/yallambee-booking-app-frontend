@@ -15,6 +15,7 @@ const ProfilePage = () => {
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false); // State for modal
 
   const { _id } = useParams(); // Ensure this matches the route param
+  console.log('_id from useParams:', _id);
   const { setUser: setGlobalUser } = useContext(UserContext); // Get setUser from UserContext
 
   useEffect(() => {
