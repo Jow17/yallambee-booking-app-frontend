@@ -58,7 +58,7 @@ const PropertyCard = ({ property }) => {
 
           {/* Booking Button */}
           <Link
-            to={`/property/${property._id}`}
+            to={`/booking/${property._id}`}
             className='btn btn-secondary btn-sm max-w-[240px] mx-auto'
           >
             Book now from ${property.price}
