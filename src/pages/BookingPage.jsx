@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'; // To get the property ID from the URL
 import { getToken } from './authUtils';
 import { UserContext } from '../context/userContext';
-import Button from "../components/Button";
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import CheckIn from '../components/CheckIn';
+import CheckOut from '../components/CheckOut';
+import GuestsDropdown from '../components/GuestsDropdown';
+import SelectProperty from '../components/SelectProperty';
+import { FaCheck } from 'react-icons/fa';
 
 const BookingPage = () => {
   const { id: propertyId } = useParams(); // Get property ID from the URL
@@ -16,6 +18,7 @@ const BookingPage = () => {
     property: propertyId,
     startDate: null,
     endDate: null,
+    guests: '1 Guest', // Assuming you have a guests state
     status: 'Pending'
   });
 
@@ -74,6 +77,7 @@ const BookingPage = () => {
       property: propertyId,
       startDate: new Date(bookingData.startDate).toISOString().split('T')[0], // Strip time if necessary
       endDate: new Date(bookingData.endDate).toISOString().split('T')[0], // Strip time if necessary
+      guests: bookingData.guests,
       status: bookingData.status,
     };
 
@@ -94,98 +98,87 @@ const BookingPage = () => {
   };
 
   return (
-    <div className="p-5">
+    <section>
       {property ? (
         <>
-          <div className="flex gap-2 overflow-x-scroll">
-            {property.images && property.images.length > 0 ? (
-              property.images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image}
-                  alt={`Property Image ${index + 1}`}
-                  className="w-1/3 h-48 object-cover mr-2"
-                />
-              ))
-            ) : (
-              <div>No images available</div>
-            )}
+          {/* Banner */}
+          <div className='bg-room bg-cover bg-center h-[560px] relative flex justify-center items-center'>
+            <div className='absolute w-full h-full bg-black/70'></div>
+            <h1 className='text-6xl text-white z-20 font-primary text-center'>
+              {property.name} Details
+            </h1>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-            <div>
-              <div className="text-xl font-bold">{property.name}</div>
-              <div>{property.description}</div>
-
-              <div className="mt-4">
-                <span className="font-bold">Price:</span> ${property.price} AUD/Night
+          <div className='container mx-auto'>
+            <div className='flex flex-col lg:flex-row h-full py-24'>
+              {/* Left Section */}
+              <div className='w-full h-full lg:w-[60%] px-6'>
+                <h2 className='h2'>{property.name}</h2>
+                <p className='mb-8'>{property.description}</p>
+                <img className='mb-8' src={property.images && property.images[0]} alt={property.name} />
+                <div className='mt-12'>
+                  <h3 className='h3 mb-3'>Property Facilities</h3>
+                  <p className='mb-12'>
+                    {property.amenities && property.amenities.length > 0
+                      ? property.amenities.join(', ')
+                      : 'No amenities listed'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <span className="font-bold">Location:</span> {property.location.city}, {property.location.state}
+
+              {/* Right Section */}
+              <div className='w-full h-full lg:w-[40%]'>
+                {/* Reservation */}
+                <div className='py-8 px-6 bg-accent/20 mb-12'>
+                  <div className='flex flex-col space-y-4 mb-4'>
+                    <h3>Your Reservation</h3>
+                    <div className='h-[60px]'>
+                      <CheckIn startDate={bookingData.startDate} setStartDate={(date) => setBookingData(prev => ({ ...prev, startDate: date }))} />
+                    </div>
+                    <div className='h-[60px]'>
+                      <CheckOut endDate={bookingData.endDate} setEndDate={(date) => setBookingData(prev => ({ ...prev, endDate: date }))} />
+                    </div>
+                    <div className='h-[60px]'>
+                      <GuestsDropdown selectedGuests={bookingData.guests} setSelectedGuests={(guests) => setBookingData(prev => ({ ...prev, guests }))} />
+                    </div>
+                    <div className='h-[60px]'>
+                      <SelectProperty selectedProperty={property.name} disabled />
+                    </div>
+                  </div>
+                  <button className='btn btn-lg btn-primary w-full' onClick={handleBookingSubmit}>
+                    Book now for ${property.price}
+                  </button>
+                </div>
+                {/* Rules */}
+                <div>
+                  <h3 className='h3'>Property Rules</h3>
+                  <ul className='flex flex-col gap-y-4'>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      Check-in: 3:00 PM - 9:00 PM
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      Check-out: 10:30 AM
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      No Pets
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      No Smoking
+                    </li>
+                  </ul>
+                </div>
               </div>
-
-              <div className="font-bold">Amenities:</div>
-              <ul className="list-disc list-inside">
-                {property.amenities && property.amenities.length > 0 ? (
-                  property.amenities.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))
-                ) : (
-                  <li>No amenities listed</li>
-                )}
-              </ul>
-            </div>
-            <div>
-              <form className="space-y-4 bg-gray-100 rounded-lg p-8" onSubmit={handleBookingSubmit}>
-                <div className="text-xl font-bold mb-4">Book your stay</div>
-
-                <div className="flex flex-col">
-                  <label className="text-gray-700 text-sm font-bold mb-2">
-                    Check-in
-                  </label>
-                  <DatePicker
-                    selected={bookingData.startDate}
-                    onChange={(date) => setBookingData(prevData => ({
-                      ...prevData,
-                      startDate: date
-                    }))}
-                    minDate={new Date()}
-                    filterDate={(date) => !isDateUnavailable(date)}
-                    className="border rounded w-full py-1 px-2 font-normal"
-                    placeholderText="Select a check-in date"
-                  />
-                </div>
-
-                <div className="flex flex-col">
-                  <label className="text-gray-700 text-sm font-bold mb-2">
-                    Check-out
-                  </label>
-                  <DatePicker
-                    selected={bookingData.endDate}
-                    onChange={(date) => setBookingData(prevData => ({
-                      ...prevData,
-                      endDate: date
-                    }))}
-                    minDate={bookingData.startDate || new Date()}
-                    filterDate={(date) => !isDateUnavailable(date)}
-                    className="border rounded w-full py-1 px-2 font-normal"
-                    placeholderText="Select a check-out date"
-                  />
-                </div>
-
-                <div className="flex justify-end">
-                  <Button type="submit" disabled={!bookingData.startDate || !bookingData.endDate}>
-                    Book
-                  </Button>
-                </div>
-              </form>
             </div>
           </div>
         </>
       ) : (
         <p>Loading property details...</p>
       )}
-    </div>
+    </section>
   );
 };
 
