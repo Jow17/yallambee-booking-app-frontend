@@ -56,6 +56,48 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteProperty = async (id) => {
+    try {
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProperties(properties.filter((property) => property._id !== id));
+      console.log('Property deleted successfully!');
+      window.alert('Property deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting property:', error.response?.data || error.message);
+      window.alert('Error deleting property. Please try again.');
+    }
+  };
+
+  const handleDeleteUser = async (id) => {
+    try {
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(users.filter((user) => user._id !== id));
+      console.log('User deleted successfully!');
+      window.alert('User deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting user:', error.response?.data || error.message);
+      window.alert('Error deleting user. Please try again.');
+    }
+  };
+
+  const handleDeleteBooking = async (id) => {
+    try {
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setBookings(bookings.filter((booking) => booking._id !== id));
+      console.log('Booking deleted successfully!');
+      window.alert('Booking deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting booking:', error.response?.data || error.message);
+      window.alert('Error deleting booking. Please try again.');
+    }
+  };
+
   const handleAddProperty = async () => {
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty, {
@@ -164,7 +206,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {users.map((user) => (
             <UserCard
-              key={user._id}
+              key={user._id} // Ensure each UserCard has a unique key
               user={user}
               onDelete={() => handleDeleteUser(user._id)}
             />
@@ -244,7 +286,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {bookings.map((booking) => (
             <BookingCard
-              key={booking._id}
+              key={booking._id} // Ensure each BookingCard has a unique key
               booking={booking}
               onDelete={() => handleDeleteBooking(booking._id)}
             />
