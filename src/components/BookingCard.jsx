@@ -87,19 +87,28 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
 
           {/* Buttons for Admin or User */}
           <div className="flex gap-2 justify-between items-center p-4 bg-gray-100">
-            <Button onClick={onEditBooking}>Update</Button>
-            <Button variant="danger" onClick={() => onDelete(booking._id)}>
+            <button
+              onClick={onEditBooking}
+              className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+            >
+              Update
+            </button>
+            <button
+              onClick={() => onDelete(booking._id)}
+              className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+            >
               Cancel
-            </Button>
+            </button>
           </div>
 
           {/* Edit Booking Modal */}
           {isEditBookingModalOpen && (
-            <Modal
-              title={"Edit Booking"}
-              onClose={() => setIsEditBookingModalOpen(false)}
-            >
-              <UpdateBookingForm booking={booking} onEdit={onEdit} />
+            <Modal onClose={() => setIsEditBookingModalOpen(false)}>
+              <UpdateBookingForm
+                booking={booking}
+                onEdit={onEdit}
+                onClose={() => setIsEditBookingModalOpen(false)}
+              />
             </Modal>
           )}
         </>
