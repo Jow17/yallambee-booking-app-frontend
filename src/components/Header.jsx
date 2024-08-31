@@ -14,8 +14,8 @@ const Header = () => {
   const location = useLocation();
   const token = localStorage.getItem('token');
 
-  const nonTransparentRoutes = ['/SignInPage', '/admin-dashboard', '/register'];
-  const isNonTransparent = nonTransparentRoutes.includes(location.pathname);
+  const nonTransparentRoutes = ['/SignInPage', '/admin-dashboard', '/register', '/profile'];
+  const isNonTransparent = nonTransparentRoutes.some(route => location.pathname.startsWith(route));
 
   useEffect(() => {
     if (token) {
@@ -44,7 +44,7 @@ const Header = () => {
         window.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [isNonTransparent, location]);
+  }, [isNonTransparent, location.pathname]);
 
   const handleLogout = () => {
     removeToken();
