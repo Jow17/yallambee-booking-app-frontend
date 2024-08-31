@@ -11,27 +11,46 @@ const UserCard = ({ user, onDelete, onEdit }) => {
   };
 
   return (
-    <div className="bg-slate-50 shadow-md rounded-lg overflow-hidden">
-      <div className="p-4">
-        <div>
-          <span className="font-bold">First name: </span>
-          <span>{user.firstName}</span>
+    <div className="bg-white shadow-2xl min-h-[300px] group rounded-lg overflow-hidden">
+      <div className="p-6">
+        <div className="text-center mb-4">
+          <h3 className="h3">{user.firstName} {user.lastName}</h3>
+          <p className="text-gray-500">{user.email}</p>
         </div>
-        <div>
-          <span className="font-bold">Last name: </span>
-          <span>{user.lastName}</span>
-        </div>
-        <div>
-          <span className="font-bold">Email: </span>
-          <span>{user.email}</span>
+
+        <div className="space-y-2">
+          <div className="flex justify-between">
+            <span className="font-semibold text-gray-700">Username:</span>
+            <span>{user.username}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold text-gray-700">Phone:</span>
+            <span>{user.phone}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold text-gray-700">DOB:</span>
+            <span>{new Date(user.dob).toLocaleDateString()}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold text-gray-700">Admin:</span>
+            <span>{user.isAdmin ? "Yes" : "No"}</span>
+          </div>
         </div>
       </div>
 
-      <div className="flex gap-2 justify-between items-center p-4 bg-gray-100">
-        <Button onClick={onEditUser}>Edit</Button>
-        <Button varient="danger" onClick={() => onDelete(user._id)}>
+      <div className="flex justify-between items-center p-4 bg-gray-100 border-t">
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={onEditUser}
+        >
+          Edit
+        </button>
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => onDelete(user._id)}
+        >
           Delete
-        </Button>
+        </button>
       </div>
 
       {isEditUserModalOpen && (

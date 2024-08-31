@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { getToken } from './authUtils';
 import { UserContext } from '../context/userContext';
-import Button from "../components/Button";
 import Modal from "../components/Modal";
 import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm";
 import BookingCard from "../components/BookingCard";
@@ -12,33 +11,29 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false); // State for modal
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
 
-  const { _id } = useParams(); // Ensure this matches the route param
-  console.log('_id from useParams:', _id);
-  const { setUser: setGlobalUser } = useContext(UserContext); // Get setUser from UserContext
+  const { _id } = useParams();
+  const { setUser: setGlobalUser } = useContext(UserContext);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = getToken(); // Fetch token from storage or cookies
+        const token = getToken();
         if (!token) {
           throw new Error('No token found. Please login.');
         }
 
-        // Fetch user data with Authorization header
         const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(userResponse.data);
 
-        // Fetch bookings data with Authorization header
         const bookingsResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/bookings`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setBookings(bookingsResponse.data);
 
-        // Update the global user context with the fetched data
         setGlobalUser(userResponse.data);
       } catch (error) {
         console.error('Error fetching data:', error.response?.data || error.message);
@@ -50,59 +45,94 @@ const ProfilePage = () => {
     fetchUserData();
   }, [_id, setGlobalUser]);
 
+  const handleDeleteBooking = async (bookingId) => {
+    try {
+      const token = getToken();
+      await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${bookingId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setBookings(prevBookings => prevBookings.filter(booking => booking._id !== bookingId));
+    } catch (error) {
+      console.error('Error deleting booking:', error.response?.data || error.message);
+    }
+  };
+
+  const handleEditBooking = async (updatedBooking) => {
+    try {
+      const token = getToken();
+      const response = await axios.put(
+        `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
+        updatedBooking,
+        {
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        }
+      );
+
+      setBookings(prevBookings =>
+        prevBookings.map(booking =>
+          booking._id === response.data._id ? response.data : booking
+        )
+      );
+    } catch (error) {
+      console.error('Error updating booking in ProfilePage:', error.response?.data || error.message);
+    }
+  };
+
   if (loading) {
     return <div>Loading profile...</div>;
   }
 
   return (
-    <div className="p-5">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold mb-6">User Profile</h1>
-        <Button
-          onClick={() => {
-            setIsEditUserModalOpen(true);
-          }}
-        >
-          Edit user details
-        </Button>
-      </div>
+    <div className="bg-gray-100 pt-32 pb-16">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-primary font-semibold">User Profile</h1>
+        </div>
 
-      <div className="profile-info mb-6">
-        <div className="mb-2">
-          <span className="font-bold">First Name:</span> {user?.firstName || 'No Name Available'}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          <div className="bg-white shadow-lg rounded-lg p-6">
+            <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
+            <div className="space-y-2">
+              <p><span className="font-bold">First Name:</span> {user?.firstName || 'No Name Available'}</p>
+              <p><span className="font-bold">Last Name:</span> {user?.lastName || 'No Name Available'}</p>
+              <p><span className="font-bold">Email:</span> {user?.email || 'No Email Available'}</p>
+              <p><span className="font-bold">Phone Number:</span> {user?.phone || 'No Phone Available'}</p>
+              <p><span className="font-bold">Address:</span> {user?.address || 'No Address Available'}</p>
+            </div>
+            <div className="mt-6">
+              <button
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+                onClick={() => setIsEditUserModalOpen(true)}
+              >
+                Edit User Details
+              </button>
+            </div>
+          </div>
+          
+          <div className="bg-white shadow-lg rounded-lg p-6">
+            <h2 className="text-2xl font-semibold mb-4">Your Bookings</h2>
+            <div className="grid grid-cols-1 gap-4">
+              {bookings.length > 0 ? (
+                bookings.map((booking, index) => (
+                  <BookingCard
+                    type="user"
+                    key={index}
+                    booking={booking}
+                    onDelete={handleDeleteBooking}
+                    onEdit={handleEditBooking}
+                  />
+                ))
+              ) : (
+                <p>No bookings available.</p>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="mb-2">
-          <span className="font-bold">Last Name:</span> {user?.lastName || 'No Name Available'}
-        </div>
-        <div className="mb-2">
-          <span className="font-bold">Email:</span> {user?.email || 'No Email Available'}
-        </div>
-        <div className="mb-2">
-          <span className="font-bold">Phone Number:</span> {user?.phone || 'No Phone Available'}
-        </div>
-        <div className="mb-2">
-          <span className="font-bold">Address:</span> {user?.address || 'No Address Available'}
-        </div>
-      </div>
 
-      {isEditUserModalOpen && (
-        <Modal
-          title={"Edit User"}
-          onClose={() => setIsEditUserModalOpen(false)}
-        >
-          <UpdateUserDetailsForm user={user} onClose={() => setIsEditUserModalOpen(false)} />
-        </Modal>
-      )}
-
-      <div className="font-bold text-lg mt-8">Your bookings</div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {bookings.length > 0 ? (
-          bookings.map((booking, index) => (
-            <BookingCard type="user" key={index} booking={booking}
-            />
-          ))
-        ) : (
-          <p>No bookings available.</p>
+        {isEditUserModalOpen && (
+          <Modal onClose={() => setIsEditUserModalOpen(false)}>
+            <UpdateUserDetailsForm user={user} onClose={() => setIsEditUserModalOpen(false)} />
+          </Modal>
         )}
       </div>
     </div>

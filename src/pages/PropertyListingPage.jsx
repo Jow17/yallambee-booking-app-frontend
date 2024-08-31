@@ -1,58 +1,58 @@
-import React, { useState, useEffect } from 'react'
-import SearchBar from '../components/SearchBar'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import PropertyCard from '../components/PropertyCard';
+import { SpinnerDotted } from 'spinners-react';
 
 const PropertyListing = () => {
-  const [properties, setProperties] = useState([])
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties')
-        setProperties(response.data)
+        const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
+        console.log('Fetched Properties:', response.data);
+        setProperties(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching properties:', error)
+        console.error('Error fetching properties:', error);
+        setLoading(false);
       }
-    }
+    };
 
-    fetchProperties()
-  }, [])
+    fetchProperties();
+  }, []);
 
   return (
-    <>
-      <SearchBar />
-      <div className="bg-sage-green min-h-screen p-4">
-        <div className="mx-auto">
-          <h1 className="text-3xl font-bold mb-6 text-black text-center">Property Listings</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.length > 0 ? (
-              properties.map(property => (
-                <Link
-                  to= "/booking" // Ensure this path includes the property ID
-                  key={property._id}
-                  className="bg-white shadow-lg rounded-lg overflow-hidden"
-                >
-                  <img
-                    src='/tiny_home_pics/5d5e5a09-04e7-4e8d-9d0a-9a44940fe4c4.webp' // Make sure image path is correct
-                    alt={property.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h2 className="text-xl font-semibold">{property.name}</h2>
-                    <p className="text-gray-600">{property.location.city}</p>
-                    <p className="mt-2 text-gray-800">{property.description}</p>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p>Loading properties...</p>
-            )}
+    <section className='py-24'>
+      {/* Overlay & Spinner */}
+      {loading && (
+        <div className='h-screen fixed bottom-0 top-0 bg-black/90 w-full z-50 flex justify-center items-center'>
+          <SpinnerDotted color='white' />
+        </div>
+      )}
+
+      <div className='container mx-auto lg:px-0'>
+        <div className='text-center'>
+          <div className='font-tertiary uppercase text-[15px] tracking-[6px]'>
+            Yallambee
           </div>
+          <h2 className='font-primary text-[45px] mb-4'>Tiny Homes</h2>
+        </div>
+
+        {/* Grid */}
+        <div className='grid grid-cols-1 max-w-sm mx-auto gap-[30px] lg:grid-cols-3 lg:max-w-none lg:mx-0'>
+          {properties.length > 0 ? (
+            properties.map((property) => (
+              <PropertyCard property={property} key={property._id} />
+            ))
+          ) : (
+            <p>Loading properties...</p>
+          )}
         </div>
       </div>
-    </>
-  )
-}
+    </section>
+  );
+};
 
-export default PropertyListing
+export default PropertyListing;

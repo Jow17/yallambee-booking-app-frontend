@@ -1,15 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { removeToken } from '../pages/authUtils';
 import { jwtDecode } from 'jwt-decode';
-import Logo from "/Logo.png";
+import logodark from '../assets/img/logodark-1.png';
+import logowhite from '../assets/img/logowhite-1.png';
 
 const Header = () => {
   const { user, setUser } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [header, setHeader] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem('token');
+
+  const nonTransparentRoutes = ['/SignInPage', '/admin-dashboard', '/register', '/profile'];
+  const isNonTransparent = nonTransparentRoutes.some(route => location.pathname.startsWith(route));
 
   useEffect(() => {
     if (token) {
@@ -22,130 +28,87 @@ const Header = () => {
     }
   }, [token]);
 
+  // Update header state based on route and scroll position
+  useEffect(() => {
+    if (isNonTransparent) {
+      setHeader(true); // Force non-transparent header
+    } else {
+      const handleScroll = () => {
+        window.scrollY > 50 ? setHeader(true) : setHeader(false);
+      };
+
+      handleScroll(); // Set initial state based on scroll position
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isNonTransparent, location.pathname]);
+
   const handleLogout = () => {
-    removeToken(); // Clear token from local storage or cookies
-    setUser(null); // Reset user state in context
-    setIsAdmin(false); // Reset admin status
+    removeToken();
+    setUser(null);
+    setIsAdmin(false);
     alert('Successfully logged out!');
-    navigate('/'); // Navigate to home page
-  };
-
-  // Handle redirect in useEffect after user state is reset
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate('/');
-  //     window.location.reload(); // Force a reload to ensure the UI updates
-  //   }
-  // }, [user, navigate]);
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const onMenuButtonClick = () => {
-    setIsMenuOpen((prev) => !prev);
+    navigate('/');
   };
 
   return (
-    <nav className="border-green-200 dark:bg-green-900">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link to="/" className="flex items-center space-x-3 ">
-          <img src={Logo} className="h-16" alt="Logo" />
+    <header
+      className={`${
+        header ? 'bg-white py-6 shadow-lg' : 'bg-transparent py-8'
+      } fixed z-50 w-full transition-all duration-500`}
+    >
+      <div className="container mx-auto flex flex-col items-center gap-y-6 lg:flex-row lg:justify-between lg:gap-y-0">
+        {/* logo */}
+        <Link to="/">
+          <img className="w-[160px]" src={header ? logodark : logowhite} alt="Logo" />
         </Link>
-        <button
-          type="button"
-          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-green-500 rounded-lg md:hidden hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-200 dark:text-green-400 dark:hover:bg-green-700 dark:focus:ring-green-600"
-          aria-controls="navbar-default"
-          aria-expanded={isMenuOpen}
-          onClick={onMenuButtonClick}
+
+        {/* nav */}
+        <nav
+          className={`${
+            header ? 'text-primary' : 'text-white'
+          } flex gap-x-4 font-tertiary tracking-[3px] text-[15px] items-center uppercase lg:gap-x-8`}
         >
-          <span className="sr-only">Open main menu</span>
-          <svg
-            className="w-5 h-5"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 17 14"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
-          </svg>
-        </button>
-        <div
-          className={`w-full md:block md:w-auto ${isMenuOpen ? "" : "hidden"}`}
-          id="navbar-default"
-        >
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-green-800 md:bg-green-900 border-green-700">
-            <li>
+          <Link to="/" className="hover:text-accent transition">
+            Home
+          </Link>
+          <Link to="/#property-listing" className="hover:text-accent transition">
+            Tiny Homes
+          </Link>
+          {/* <Link to="/booking" className="hover:text-accent transition">
+            Stay
+          </Link> */}
+          {isAdmin && (
+            <Link to="/admin-dashboard" className="hover:text-accent transition">
+              Admin
+            </Link>
+          )}
+          {/* <Link to="/contact" className="hover:text-accent transition">
+            Contact
+          </Link> */}
+          {user ? (
+            <>
               <Link
-                to="/"
-                className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                aria-current="page"
+                to={`/profile/${user._id}`}
+                className="hover:text-accent transition"
               >
-                Home
+                Account
               </Link>
-            </li>
-            <li>
-              <Link
-                to="/property-listing"
-                className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Tiny Homes
+              <Link to="/" onClick={handleLogout} className="hover:text-accent transition">
+                Logout
               </Link>
-            </li>
-            {/* <li>
-              <Link
-                to="/booking"
-                className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Book Your Stay
-              </Link>
-            </li> */}
-            <li>
-              <Link
-                to="/contact"
-                className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Contact
-              </Link>
-            </li>
-            {user ? (
-              <>
-                <li>
-                  <Link
-                    to={`/profile/${user._id}`}
-                    className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                  >
-                    Account
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/"
-                    onClick={handleLogout}
-                    className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                  >
-                    Logout
-                  </Link>
-                </li>
-              </>
-            ) : (
-              <li>
-                <Link
-                  to="/SignInPage"
-                  className="block py-2 px-3 text-green-900 rounded hover:bg-green-100 md:hover:bg-transparent md:border-0 md:hover:text-green-700 md:p-0 dark:text-white md:dark:hover:text-green-500 dark:hover:bg-green-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                >
-                  Sign In
-                </Link>
-              </li>
-            )}
-          </ul>
-        </div>
+            </>
+          ) : (
+            <Link to="/SignInPage" className="hover:text-accent transition">
+              Login
+            </Link>
+          )}
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 };
 
