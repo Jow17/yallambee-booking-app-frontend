@@ -58,9 +58,16 @@ const UserCard = ({ user, onDelete, onEdit }) => {
           title={"Edit User"}
           onClose={() => setIsEditUserModalOpen(false)}
         >
-          <UpdateUserDetailsForm user={user} onEdit={onEdit} />
-        </Modal>
-      )}
+        <UpdateUserDetailsForm 
+          user={user} 
+          onEdit={(updatedUser) => {
+          onEdit(updatedUser); // Ensure this function is correctly passed and is valid
+          setIsEditUserModalOpen(false); // Close the modal after editing
+      }}
+      onClose={() => setIsEditUserModalOpen(false)} 
+    />
+  </Modal>
+)}
     </div>
   );
 };

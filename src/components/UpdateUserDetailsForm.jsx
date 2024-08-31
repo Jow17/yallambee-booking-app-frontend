@@ -5,6 +5,7 @@ import { getToken } from "../pages/authUtils";
 const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
+  const [password, setPassword] = useState(user?.password || "");
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
@@ -16,6 +17,7 @@ const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
     const updatedUserData = {
       firstName,
       lastName,
+      password,
       email,
       phone,
       address,
@@ -66,6 +68,16 @@ const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            className="p-2 border rounded-lg"
+            required
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="font-semibold mb-2" htmlFor="lastName">Password</label>
+          <input
+            id="password"
+            type="text"
+            onChange={(e) => setPassword(e.target.value)}
             className="p-2 border rounded-lg"
             required
           />

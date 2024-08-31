@@ -130,8 +130,17 @@ const ProfilePage = () => {
         </div>
 
         {isEditUserModalOpen && (
-          <Modal onClose={() => setIsEditUserModalOpen(false)}>
-            <UpdateUserDetailsForm user={user} onClose={() => setIsEditUserModalOpen(false)} />
+          <Modal 
+          onClose={() => setIsEditUserModalOpen(false)}>
+            <UpdateUserDetailsForm 
+              user={user} 
+              onEdit={(updatedUser) => {
+              setUser(updatedUser); // Update local state with the new user details
+              setGlobalUser(updatedUser); // Update global user context if necessary
+              setIsEditUserModalOpen(false); // Close the modal after editing
+            }} 
+          onClose={() => setIsEditUserModalOpen(false)} 
+          />
           </Modal>
         )}
       </div>
