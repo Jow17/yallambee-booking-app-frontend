@@ -182,15 +182,15 @@ const BookingPage = () => {
                   <ul className='flex flex-col gap-y-4'>
                     <li className='flex items-center gap-x-4'>
                       <FaCheck className='text-accent' />
-                      Check-in: 3:00 PM - 9:00 PM
+                      Check-in: from 3:00pm
                     </li>
                     <li className='flex items-center gap-x-4'>
                       <FaCheck className='text-accent' />
-                      Check-out: 10:30 AM
+                      Check-out: 11:00 AM
                     </li>
                     <li className='flex items-center gap-x-4'>
                       <FaCheck className='text-accent' />
-                      No Pets
+                      Not suitable for pets
                     </li>
                     <li className='flex items-center gap-x-4'>
                       <FaCheck className='text-accent' />
