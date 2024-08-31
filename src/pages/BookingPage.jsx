@@ -7,6 +7,11 @@ import CheckIn from '../components/CheckIn';
 import CheckOut from '../components/CheckOut';
 import GuestsDropdown from '../components/GuestsDropdown';
 import { FaCheck } from 'react-icons/fa';
+// Import Swiper components
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import { EffectFade, Autoplay } from 'swiper/modules';
 
 const BookingPage = () => {
   const { id: propertyId } = useParams();
@@ -18,7 +23,7 @@ const BookingPage = () => {
     startDate: null,
     endDate: null,
     guests: '1 Guest',
-    status: 'Pending'
+    status: 'Pending',
   });
 
   const { user } = useContext(UserContext);
@@ -106,12 +111,33 @@ const BookingPage = () => {
       {property ? (
         <>
           {/* Banner */}
-          <div className='bg-room bg-cover bg-center h-[560px] relative flex justify-center items-center'>
-            <div className='absolute w-full h-full bg-black/70'></div>
-            <h1 className='text-6xl text-white z-20 font-primary text-center'>
-              {property.name} Details
-            </h1>
-          </div>
+          <Swiper
+            modules={[EffectFade, Autoplay]}
+            effect={'fade'}
+            loop={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            className='heroSlider h-[600px] lg:h-[560px]'
+          >
+            {property.images.slice(1).map((image, index) => (
+              <SwiperSlide
+                className='h-full relative flex justify-center items-center'
+                key={index}
+              >
+                <div className='z-20 text-white text-center'>
+                  {/* <h1 className='text-6xl text-white z-20 font-primary text-center'>
+                    {property.name}
+                  </h1> */}
+                </div>
+                <div className='absolute top-0 w-full h-full'>
+                  <img className='object-cover h-full w-full' src={image} alt={`Property ${index}`} />
+                </div>
+                <div className='absolute w-full h-full bg-black/70'></div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
 
           <div className='container mx-auto'>
             <div className='flex flex-col lg:flex-row h-full py-24'>
