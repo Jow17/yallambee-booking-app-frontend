@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { BsCalendar } from 'react-icons/bs';
 import '../styles/datepicker.css';
 
-const CheckIn = ({ startDate, setStartDate }) => {
+const CheckIn = ({ startDate, setStartDate, }) => {
   return (
     <div className='w-full h-full bg-white relative'>
     {/* icon */}

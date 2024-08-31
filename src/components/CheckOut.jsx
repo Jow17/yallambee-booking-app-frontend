@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { BsCalendar } from 'react-icons/bs';
 import '../styles/datepicker.css';
 
-const CheckOut = ({ endDate, setEndDate, startDate }) => {
+const CheckOut = ({ endDate, setEndDate, startDate, }) => {
   return (
     <div className='w-full h-full bg-white relative'>
       <div className='absolute right-8 top-1/2 transform -translate-y-1/2'>

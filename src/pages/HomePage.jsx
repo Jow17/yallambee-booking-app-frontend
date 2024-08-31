@@ -1,12 +1,21 @@
-import React from 'react'
-// import { Link } from 'react-router-dom'
-// import SearchBar from '../components/SearchBar'
+import { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import Hero from '../components/Hero'
-// import BookingPage from './BookingPage';
 import PropertyListing from './PropertyListingPage';
 import CheckAvailability from '../components/CheckAvailability'
 
 const HomePage = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location]);
+
   return (
     <>  
       <Hero />
@@ -15,7 +24,9 @@ const HomePage = () => {
           <CheckAvailability />
         </div>
       </div>
-      <PropertyListing />
+      <div id="property-listing">
+        <PropertyListing />
+      </div>
     </>
   );
 };

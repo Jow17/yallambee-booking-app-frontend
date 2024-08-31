@@ -56,15 +56,15 @@ const Header = () => {
             header ? 'text-primary' : 'text-white'
           } flex gap-x-4 font-tertiary tracking-[3px] text-[15px] items-center uppercase lg:gap-x-8`}
         >
-          {/* <Link to="/" className="hover:text-accent transition">
+          <Link to="/" className="hover:text-accent transition">
             Home
-          </Link> */}
-          <Link to="/property-listing" className="hover:text-accent transition">
+          </Link>
+          <Link to="/#property-listing" className="hover:text-accent transition">
             Tiny Homes
           </Link>
-          <Link to="/booking" className="hover:text-accent transition">
+          {/* <Link to="/booking" className="hover:text-accent transition">
             Stay
-          </Link>
+          </Link> */}
           {isAdmin && (
             <Link to="/admin-dashboard" className="hover:text-accent transition">
               Admin

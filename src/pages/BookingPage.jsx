@@ -6,19 +6,18 @@ import { UserContext } from '../context/userContext';
 import CheckIn from '../components/CheckIn';
 import CheckOut from '../components/CheckOut';
 import GuestsDropdown from '../components/GuestsDropdown';
-import SelectProperty from '../components/SelectProperty';
 import { FaCheck } from 'react-icons/fa';
 
 const BookingPage = () => {
-  const { id: propertyId } = useParams(); // Get property ID from the URL
+  const { id: propertyId } = useParams();
   const [property, setProperty] = useState(null);
-  const [bookings, setBookings] = useState([]); // Add bookings state
+  const [bookings, setBookings] = useState([]);
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [bookingData, setBookingData] = useState({
     property: propertyId,
     startDate: null,
     endDate: null,
-    guests: '1 Guest', // Assuming you have a guests state
+    guests: '1 Guest',
     status: 'Pending'
   });
 
@@ -69,6 +68,11 @@ const BookingPage = () => {
 
     if (!bookingData.startDate || !bookingData.endDate) {
       alert('Please select both check-in and check-out dates.');
+      return;
+    }
+
+    if (isDateUnavailable(bookingData.startDate) || isDateUnavailable(bookingData.endDate)) {
+      alert('The selected dates are not available. Please choose another date.');
       return;
     }
 
@@ -133,16 +137,13 @@ const BookingPage = () => {
                   <div className='flex flex-col space-y-4 mb-4'>
                     <h3>Your Reservation</h3>
                     <div className='h-[60px]'>
-                      <CheckIn startDate={bookingData.startDate} setStartDate={(date) => setBookingData(prev => ({ ...prev, startDate: date }))} />
+                      <CheckIn startDate={bookingData.startDate} setStartDate={(date) => setBookingData(prev => ({ ...prev, startDate: date }))} isDateUnavailable={isDateUnavailable} />
                     </div>
                     <div className='h-[60px]'>
-                      <CheckOut endDate={bookingData.endDate} setEndDate={(date) => setBookingData(prev => ({ ...prev, endDate: date }))} />
+                      <CheckOut endDate={bookingData.endDate} setEndDate={(date) => setBookingData(prev => ({ ...prev, endDate: date }))} isDateUnavailable={isDateUnavailable} />
                     </div>
                     <div className='h-[60px]'>
                       <GuestsDropdown selectedGuests={bookingData.guests} setSelectedGuests={(guests) => setBookingData(prev => ({ ...prev, guests }))} />
-                    </div>
-                    <div className='h-[60px]'>
-                      <SelectProperty selectedProperty={property.name} disabled />
                     </div>
                   </div>
                   <button className='btn btn-lg btn-primary w-full' onClick={handleBookingSubmit}>
