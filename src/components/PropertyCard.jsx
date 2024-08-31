@@ -1,27 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
 
-const PropertyCard = () => {
-  const [property, setProperty] = useState(null);
-  const { id } = useParams();
-
-  useEffect(() => {
-    const fetchProperty = async () => {
-      try {
-        if (id) {
-          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`);
-          setProperty(response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching property:', error);
-      }
-    };
-
-    fetchProperty();
-  }, [id]); // Fetch property whenever the ID changes
-
+const PropertyCard = ({ property }) => {
   return (
     <div className='bg-white shadow-2xl min-h-[500px] group'>
       {property ? (
@@ -77,7 +58,7 @@ const PropertyCard = () => {
 
           {/* Booking Button */}
           <Link
-            to={`/property/${id}`}
+            to={`/property/${property._id}`}
             className='btn btn-secondary btn-sm max-w-[240px] mx-auto'
           >
             Book now from ${property.price}

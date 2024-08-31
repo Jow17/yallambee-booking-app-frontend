@@ -44,7 +44,7 @@ const PropertyListing = () => {
         <div className='grid grid-cols-1 max-w-sm mx-auto gap-[30px] lg:grid-cols-3 lg:max-w-none lg:mx-0'>
           {properties.length > 0 ? (
             properties.map((property) => (
-              <PropertyCard key={property._id} property={property} />
+              <PropertyCard property={property} key={property._id} />
             ))
           ) : (
             <p>Loading properties...</p>
