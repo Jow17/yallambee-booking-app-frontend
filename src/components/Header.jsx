@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
 import { removeToken } from '../pages/authUtils';
 import { jwtDecode } from 'jwt-decode';
@@ -11,7 +11,11 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [header, setHeader] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const token = localStorage.getItem('token');
+
+  const nonTransparentRoutes = ['/SignInPage', '/admin-dashboard', '/register'];
+  const isNonTransparent = nonTransparentRoutes.includes(location.pathname);
 
   useEffect(() => {
     if (token) {
@@ -24,11 +28,23 @@ const Header = () => {
     }
   }, [token]);
 
+  // Update header state based on route and scroll position
   useEffect(() => {
-    window.addEventListener('scroll', () => {
-      window.scrollY > 50 ? setHeader(true) : setHeader(false);
-    });
-  }, []);
+    if (isNonTransparent) {
+      setHeader(true); // Force non-transparent header
+    } else {
+      const handleScroll = () => {
+        window.scrollY > 50 ? setHeader(true) : setHeader(false);
+      };
+
+      handleScroll(); // Set initial state based on scroll position
+      window.addEventListener('scroll', handleScroll);
+
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [isNonTransparent, location]);
 
   const handleLogout = () => {
     removeToken();

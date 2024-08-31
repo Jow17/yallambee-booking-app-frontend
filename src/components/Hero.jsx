@@ -57,7 +57,7 @@ const HeroSlider = () => {
               <h1 className='text-[32px] font-primary uppercase tracking-[2px] max-w-[920px] lg:text-[68px] leading-tight mb-6'>
                 {title}
               </h1>
-              <Link to="/property-listing">
+              <Link to="/#property-listing">
                 <button className='btn btn-lg btn-primary mx-auto'>
                     {btnText}
                 </button>
