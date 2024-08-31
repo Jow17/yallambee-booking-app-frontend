@@ -18,7 +18,7 @@ const Register = () => {
         console.log('User created successfully:', response.data);
       
         const { token, user } = response.data;
-
+  
         // Save the token
         saveToken(token);
 
@@ -43,7 +43,7 @@ const Register = () => {
       }
     }
   };
-
+  
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='bg-white shadow-2xl min-h-[500px] group max-w-sm mx-auto mt-20 rounded-lg'>

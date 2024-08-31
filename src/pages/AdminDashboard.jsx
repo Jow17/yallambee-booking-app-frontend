@@ -148,7 +148,7 @@ const AdminDashboard = () => {
       <h1 className="text-4xl font-bold mb-8 text-center">Admin Dashboard</h1>
 
       {/* Error Message */}
-      {error && <div className="bg-red-500 text-white p-2 rounded mb-4">{error}</div>}
+      {error && <div className="bg-red-600 text-white p-2 rounded mb-4">{error}</div>}
 
       {/* Properties Section */}
       <section className="mb-8">
