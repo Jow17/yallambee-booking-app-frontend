@@ -2,7 +2,7 @@
 
 ## 1. Users
 
-### Endpoint: `/user/register`
+### Endpoint: `/users`
 
 - **Method:** POST
 - **Description:** Register a new user.
@@ -10,9 +10,12 @@
 
 ```json
 {
-  "name": "John Doe",
-  "email": "johndoe@example.com",
-  "password": "password123"
+  "email": "string",
+  "password": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phone": "string",
+  "dob": "string (ISO 8601 date)"
 }
 ```
 
@@ -21,7 +24,7 @@
 - **201 Created:** User registered successfully.
 - **400 Bad Request:** Missing fields or email already taken.
 
-### Endpoint: `/user/login`
+### Endpoint: `/login`
 
 - **Method:** POST
 - **Description:** Log in an existing user.
@@ -39,7 +42,7 @@
 - **200 OK:** Login successful, returns JWT token.
 - **401 Unauthorized:** Incorrect email or password.
 
-### Endpoint: `/user/profile`
+### Endpoint: `/users/:id`
 
 - **Method:** GET
 - **Description:** Retrieve the logged-in user’s profile.
@@ -48,9 +51,23 @@
 **Response:**
 
 - **200 OK:** Returns user profile data.
+
+```json
+{
+  "_id": "string",
+  "username": "string",
+  "email": "string",
+  "firstName": "string",
+  "lastName": "string",
+  "phone": "string",
+  "dob": "string (ISO 8601 date)",
+  "isAdmin": "boolean"
+}
+```
+
 - **401 Unauthorized:** Invalid or expired token.
 
-### Endpoint: `/user/profile`
+### Endpoint: `/users/:id`
 
 - **Method:** PUT
 - **Description:** Update the logged-in user’s profile.
@@ -59,9 +76,10 @@
 
 ```json
 {
-  "name": "John Doe",
-  "email": "newemail@example.com",
-  "password": "newpassword123"
+  "firstName": "string",
+  "lastName": "string",
+  "phone": "string",
+  "dob": "string (ISO 8601 date)"
 }
 ```
 
@@ -80,6 +98,23 @@
 **Response:**
 
 - **200 OK:** User account deleted successfully.
+
+```json
+{
+  "message": "User updated successfully",
+  "user": {
+    "_id": "string",
+    "username": "string",
+    "email": "string",
+    "firstName": "string",
+    "lastName": "string",
+    "phone": "string",
+    "dob": "string (ISO 8601 date)",
+    "isAdmin": "boolean"
+  }
+}
+```
+
 - **401 Unauthorized:** Invalid or expired token.
 
 ## 2. Property Listing/s
@@ -118,18 +153,55 @@
 
 ```json
 {
-  "name": "Luxury Tiny Home",
-  "description": "A luxurious, off-grid tiny home with all the amenities.",
-  "location": "Farm Stay",
-  "pricePerNight": 250,
-  "amenities": ["Firepit", "Air Conditioning", "BBQ"],
-  "images": ["image1.jpg", "image2.jpg"]
+  "name": "NEW property",
+  "description": "A beautiful off-grid tiny home surrounded by nature, perfect for a peaceful getaway.",
+  "price": 150,
+  "availability": [
+    "2024-08-15T00:00:00Z",
+    "2024-08-16T00:00:00Z",
+    "2024-08-17T00:00:00Z"
+  ],
+  "images": [
+    "https://example.com/images/yallambee1.jpg",
+    "https://example.com/images/yallambee2.jpg"
+  ],
+  "location": {
+    "city": "Golspie",
+    "state": "NSW"
+  },
+  "ageRestriction": 18
 }
 ```
 
 **Response:**
 
 - **201 Created:** Property created successfully.
+
+```json
+{
+	"name": "NEW property",
+	"description": "A beautiful off-grid tiny home surrounded by nature, perfect for a peaceful getaway.",
+	"price": 150,
+	"availability": [
+		"2024-08-15T00:00:00.000Z",
+		"2024-08-16T00:00:00.000Z",
+		"2024-08-17T00:00:00.000Z"
+	],
+	"images": [
+		"https://example.com/images/yallambee1.jpg",
+		"https://example.com/images/yallambee2.jpg"
+	],
+	"location": {
+		"city": "Golspie",
+		"state": "NSW"
+	},
+	"ageRestriction": 18,
+	"_id": "66cab11ca125ac91341e1990",
+	"createdAt": "2024-08-25T04:20:44.396Z",
+	"__v": 0
+}
+```
+
 - **401 Unauthorized:** User is not an admin.
 - **400 Bad Request:** Missing or invalid fields.
 
@@ -150,28 +222,6 @@
   "pricePerNight": 300,
   "amenities": ["Updated", "Amenities"],
   "images": ["image1.jpg", "image2.jpg"]
-}
-```
-
-**Response:**
-
-- **200 OK:** Property updated successfully.
-- **400 Bad Request:** Invalid input data.
-- **401 Unauthorized:** User is not an admin.
-- **404 Not Found:** Property with the specified ID not found.
-
-### Endpoint: `/properties/:id`
-
-- **Method:** PATCH
-- **Description:** Partially update an existing property (Admin only).
-- **Headers:** Authorization: Bearer `<jwt-token-string>`
-- **Path Parameters:**
-  - **id:** The ID of the property to update.
-- **Request Body (Example):**
-
-```json
-{
-  "pricePerNight": 275
 }
 ```
 
@@ -271,24 +321,42 @@
 
 ### Endpoint: `/bookings/:id`
 
-- **Method:** PATCH
-- **Description:** Partially update an existing booking.
+- **Method:** DELETE
+- **Description:** Cancel an existing booking.
 - **Headers:** Authorization: Bearer `<jwt-token-string>`
 - **Path Parameters:**
-  - **id:** The ID of the booking to update.
-- **Request Body (Example):**
+  - **id:** The ID of the booking to cancel.
 
-```json
-{
-  "guests": 4
-}
-```
+**Response:**
+
+- **200 OK:** Booking cancelled successfully.
+- **401 Unauthorized:** User is not authenticated or lacks permission.
+- **404 Not Found:** Booking with the specified ID not found.
+
+### Endpoint: `/users/:id/bookings`
+
+- **Method:** GET
+- **Description:** Retrieves all bookings made by a specific user.
+- **Headers:** Authorization: Bearer `<jwt-token-string>`
+- **Path Parameters:**
+  - **id:** The unique identifier of the user.
 
 **Response:**
 
 - **200 OK:** Booking updated successfully.
-- **400 Bad Request:** Invalid input data.
-- **401 Unauthorized:** User is not authenticated or lacks permission.
+
+```json
+[
+  {
+    "_id": "string",
+    "property": "string (Property ID)",
+    "startDate": "string (ISO 8601 date)",
+    "endDate": "string (ISO 8601 date)",
+    "status": "string"
+  }
+]
+```
+
 - **404 Not Found:** Booking with the specified ID not found.
 
 ### Endpoint: `/bookings/:id`
@@ -305,59 +373,3 @@
 - **401 Unauthorized:** User is not authenticated or lacks permission.
 - **404 Not Found:** Booking with the specified ID not found.
 
-## 4. Payments
-
-### Endpoint: `/payments`
-
-- **Method:** GET
-- **Description:** Retrieve a list of all payments (Admin only).
-- **Headers:** Authorization: Bearer `<jwt-token-string>`
-
-**Response:**
-
-- **200 OK:** Returns a list of payments.
-- **401 Unauthorized:** User is not an admin.
-
-### Endpoint: `/payments/charge`
-
-- **Method:** POST
-- **Description:** Process a payment for a booking.
-- **Headers:** Authorization: Bearer `<jwt-token-string>`
-- **Request Body:**
-
-```json
-{
-  "bookingId": "60d0fe4f5311236168a109cd",
-  "paymentMethod": "stripe",
-  "amount": 600,
-  "currency": "AUD"
-}
-```
-
-**Response:**
-
-- **200 OK:** Payment processed successfully.
-- **400 Bad Request:** Payment failed or invalid payment method.
-- **401 Unauthorized:** User is not authenticated.
-
-### Endpoint: `/payments/:id/refund`
-
-- **Method:** POST
-- **Description:** Refund a payment for a booking.
-- **Headers:** Authorization: Bearer `<jwt-token-string>`
-- **Path Parameters:**
-  - **id:** The ID of the payment to refund.
-- **Request Body (Optional):**
-
-```json
-{
-  "amount": 600
-}
-```
-
-**Response:**
-
-- **200 OK:** Refund processed successfully.
-- **400 Bad Request:** Refund failed or invalid request.
-- **401 Unauthorized:** User is not authenticated.
-- **404 Not Found:** Payment with the specified ID not found.
