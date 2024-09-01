@@ -78,17 +78,11 @@ const Header = () => {
           <Link to="/#property-listing" className="hover:text-accent transition">
             Tiny Homes
           </Link>
-          {/* <Link to="/booking" className="hover:text-accent transition">
-            Stay
-          </Link> */}
           {isAdmin && (
             <Link to="/admin-dashboard" className="hover:text-accent transition">
               Admin
             </Link>
           )}
-          {/* <Link to="/contact" className="hover:text-accent transition">
-            Contact
-          </Link> */}
           {user ? (
             <>
               <Link

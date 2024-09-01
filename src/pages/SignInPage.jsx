@@ -1,60 +1,60 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { saveToken, extractUserIdFromToken } from "./authUtils";
-import { UserContext } from "../context/userContext";
-import { BsArrowRight } from 'react-icons/bs';
+import React, { useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import axios from "axios"
+import { saveToken, extractUserIdFromToken } from "./authUtils"
+import { UserContext } from "../context/userContext"
+import { BsArrowRight } from "react-icons/bs"
 
 const SignInForm = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { register, handleSubmit, formState: { errors } } = useForm()
+  const navigate = useNavigate()
+  const { setUser } = useContext(UserContext)
 
   const onSubmit = async (data) => {
-    console.log('Form submitted');
+    console.log("Form submitted")
     
     try {
       // Perform login request
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/login', data);
-      console.log('Response received:', response);
+      const response = await axios.post("https://yallambee-booking-app-backend.onrender.com/login", data)
+      console.log("Response received:", response)
       
-      const { token } = response.data;
+      const { token } = response.data
       
       if (!token) {
-        throw new Error('Token not received from server');
+        throw new Error("Token not received from server")
       }
       
-      console.log('Login successful, token:', token);
-      saveToken(token);
+      console.log("Login successful, token:", token)
+      saveToken(token)
   
-      const _id = await extractUserIdFromToken(token);
-      console.log('Extracted User ID:', _id);
+      const _id = await extractUserIdFromToken(token)
+      console.log("Extracted User ID:", _id)
       
       if (!_id) {
-        throw new Error('User ID not found in token');
+        throw new Error("User ID not found in token")
       }
   
       const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
         headers: { Authorization: `Bearer ${token}` }
-      });
+      })
       
-      console.log('Fetched user data:', userResponse.data);
+      console.log("Fetched user data:", userResponse.data)
       
-      const { isAdmin, ...userData } = userResponse.data;
+      const { isAdmin, ...userData } = userResponse.data
   
-      setUser({ _id, ...userData, isAdmin });
+      setUser({ _id, ...userData, isAdmin })
   
       if (isAdmin) {
-        navigate('/admin-dashboard');
+        navigate("/admin-dashboard")
       } else {
-        navigate(`/profile/${_id}`);
+        navigate(`/profile/${_id}`)
       }
     } catch (error) {
-      console.error('Error fetching data:', error.response?.data || error.message);
-      window.alert('Invalid email or password. Please try again.');
+      console.error("Error fetching data:", error.response?.data || error.message)
+      window.alert("Invalid email or password. Please try again.")
     }
-  };
+  }
 
   return (
     <div className='flex justify-center items-center min-h-screen'>
@@ -111,8 +111,7 @@ const SignInForm = () => {
         </form>
       </div>
     </div>
-  
-  );
-};
+  )
+}
 
-export default SignInForm;
+export default SignInForm

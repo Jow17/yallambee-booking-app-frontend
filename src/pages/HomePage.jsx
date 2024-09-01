@@ -1,26 +1,26 @@
-import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
-import Hero from '../components/Hero'
-import PropertyListing from './PropertyListingPage';
-import CheckAvailability from '../components/CheckAvailability'
+import { useEffect } from "react"
+import { useLocation } from "react-router-dom"
+import Hero from "../components/Hero"
+import PropertyListing from "./PropertyListingPage"
+import CheckAvailability from "../components/CheckAvailability"
 
 const HomePage = () => {
-  const location = useLocation();
+  const location = useLocation()
 
   useEffect(() => {
     if (location.hash) {
-      const element = document.querySelector(location.hash);
+      const element = document.querySelector(location.hash)
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: "smooth" })
       }
     }
-  }, [location]);
+  }, [location])
 
   return (
     <>  
       <Hero />
-      <div className='container mx-auto relative'>
-      <div className='bg-accent/20 mt-4 p-4 lg:shadow-xl lg:absolute lg:left-0 lg:right-0 lg:p-0 lg:z-30 lg:-top-12'>
+      <div className="container mx-auto relative">
+        <div className="bg-accent/20 mt-4 p-4 lg:shadow-xl lg:absolute lg:left-0 lg:right-0 lg:p-0 lg:z-30 lg:-top-12">
           <CheckAvailability />
         </div>
       </div>
@@ -28,7 +28,7 @@ const HomePage = () => {
         <PropertyListing />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default HomePage;
+export default HomePage

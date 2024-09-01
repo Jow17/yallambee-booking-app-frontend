@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
-import axios from 'axios'
-import { useParams } from 'react-router-dom'
-import { getToken } from './authUtils'
-import { UserContext } from '../context/userContext'
+import React, { useState, useEffect, useContext } from "react"
+import axios from "axios"
+import { useParams } from "react-router-dom"
+import { getToken } from "./authUtils"
+import { UserContext } from "../context/userContext"
 import Modal from "../components/Modal"
 import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm"
 import UpdateBookingForm from "../components/UpdateBookingForm"

@@ -42,7 +42,5 @@ describe('CheckIn Component', () => {
     // Ensure that the minDate is correctly set (this is just a general check)
     const minDate = new Date();
     expect(datePicker).toBeInTheDocument();
-
-    // This step is more of a visual check in an actual browser; testing-library can't fully simulate the DatePicker's internals
   });
 });
