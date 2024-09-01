@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import Button from "./Button";
-import Modal from "./Modal";
-import UpdateUserDetailsForm from "./UpdateUserDetailsForm";
+import React, { useState } from "react"
+import Button from "./Button"
+import Modal from "./Modal"
+import UpdateUserDetailsForm from "./UpdateUserDetailsForm"
 
 const UserCard = ({ user, onDelete, onEdit }) => {
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false)
 
   const onEditUser = () => {
-    setIsEditUserModalOpen(true);
-  };
+    setIsEditUserModalOpen(true)
+  }
 
   return (
     <div className="bg-white shadow-2xl min-h-[300px] group rounded-lg overflow-hidden">
@@ -38,7 +38,7 @@ const UserCard = ({ user, onDelete, onEdit }) => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center p-4 bg-gray-100 border-t">
+      <div className="flex justify-between items-center p-4 bg-gray-100 border-t gap-2">
         <button
           className="btn btn-secondary btn-sm"
           onClick={onEditUser}
@@ -46,7 +46,7 @@ const UserCard = ({ user, onDelete, onEdit }) => {
           Edit
         </button>
         <button
-          className="btn btn-danger btn-sm"
+          className="btn btn-danger btn-sm mx-auto bg-red-500 hover:bg-red-600"
           onClick={() => onDelete(user._id)}
         >
           Delete
@@ -58,18 +58,18 @@ const UserCard = ({ user, onDelete, onEdit }) => {
           title={"Edit User"}
           onClose={() => setIsEditUserModalOpen(false)}
         >
-        <UpdateUserDetailsForm 
-          user={user} 
-          onEdit={(updatedUser) => {
-          onEdit(updatedUser); // Ensure this function is correctly passed and is valid
-          setIsEditUserModalOpen(false); // Close the modal after editing
-      }}
-      onClose={() => setIsEditUserModalOpen(false)} 
-    />
-  </Modal>
-)}
+          <UpdateUserDetailsForm 
+            user={user} 
+            onEdit={(updatedUser) => {
+              onEdit(updatedUser) // Ensure this function is correctly passed and is valid
+              setIsEditUserModalOpen(false) // Close the modal after editing
+            }}
+            onClose={() => setIsEditUserModalOpen(false)} 
+          />
+        </Modal>
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default UserCard;
+export default UserCard

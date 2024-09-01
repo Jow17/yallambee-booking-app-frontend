@@ -1,5 +1,5 @@
-import React from "react";
-import logodark from "../assets/img/logowhite-1.png";
+import React from "react"
+import logodark from "../assets/img/logowhite-1.png"
 
 const Footer = () => {
   return (
@@ -16,8 +16,7 @@ const Footer = () => {
         <span>Copyright &copy; 2024. All rights reserved.</span>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;
-
+export default Footer

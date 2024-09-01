@@ -7,7 +7,7 @@ import Register from "./pages/Register"
 import SignInForm from "./pages/SignInPage"
 import PropertyListing from "./pages/PropertyListingPage"
 import BookingPage from "./pages/BookingPage"
-import PropertyCard from "./components/PropertyCard"
+import PropertyCard from "./components/PropertyCardAdmin"
 import AdminDashboard from "./pages/AdminDashboard"
 import ProfilePage from "./pages/ProfilePage"
 import Contact from "./pages/Contact";

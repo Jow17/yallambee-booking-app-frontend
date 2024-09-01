@@ -57,6 +57,7 @@
     - [GitHub Workflow](#github-workflow)
     - [Client Feedback](#client-feedback)
     - [API Specifications](#api-specifications)
+    - [Application Commands](#application-commands)
   - [Appendix](#appendix)
     - [References](#references)
     - [Contributors](#contributors)
@@ -675,6 +676,345 @@ Our draft API specs can be found [here](docs/project_management/API_specs.md).
 
 ---
 
+### Yallambee Tiny Home Booking App Setup
+
+This guide will help you set up the backend of the Yallambee Tiny Homes Booking App on your local machine.
+
+**Prerequisites**
+Before you begin, ensure you have the following installed on your system.
+
+- Node.js (v22.4.0 or later).
+- npm (Node Package Manager) or yarnnpm (Node Package Manager) or yarn.
+- MongoDB (Ensure MongoDB is installed and running locally, or have a MongoDB Atlas connection string ready)
+
+**Clone The Repository**
+First, clone the repository to your local machine with the commands:
+`git clone` <https://github.com/shayzimm/yallambee-booking-app.git>
+`cd yallambee-booking-app`
+
+**Install Dependencies**
+Navigate to the project directory and install the required dependencies using npm or yarn:
+`npm install` or `yarn install`
+
+**Set Up Environment Variables**
+Create a .env file in the root directory of the project. You can use the .env.sample file as a template. Below is an example of what your .env file should look like:
+
+// MongoDB connection string
+MONGO_URI=mongodb://localhost:27017/yallambee
+
+// JWT Secret for token generation
+JWT_SECRET=your_jwt_secret
+
+// Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+// Email Service Configuration (e.g., using Gmail)
+EMAIL_SERVICE=gmail
+EMAIL_USERNAME=<your_email@gmail.com>
+EMAIL_PASSWORD=your_email_password
+
+Make sure to replace the placeholders (your_jwt_secret, your_cloudinary_cloud_name, etc.) with your actual configuration details.
+
+**Database Setup**
+you can use a cloud database service like MongoDB Atlas. Update the MONGO_URI in your .env file with the appropriate connection string.
+
+**Seed The Database**
+Run the seeding script (seed.js), to populate the database with initial data
+`node seed.js`
+
+**Running the Server**
+`npm Start` or `yarn start`
+The server should now be running on the port specified in your .env file (e.g http://localhost:5000)
+
+**Testing the Setup**
+Follow the API documentation to test routes and verify everything is working. (../docs/project_management/API_Documentation.md)
+
+**Running Tests**
+`npm test` or `yarn test`
+
+### Application Commands
+
+- `npm install` - Installs dependencies listed in package.json
+- `npm start` - Starts the application using node index.js (to be updated)
+- `npm run seed` - Populates database with initial data
+
+## Libraries Used In The Yallambee Booking Application 
+
+Our application integrates several key libraries to ensure functionality, security, and performance. Below is a list of these libraries, why they were chosen, and how they benefit the project:
+
+## Backend Libraries and tools
+
+1. **bcrypt** (`^5.1.1`)  
+     **Purpose**: Used for hashing passwords.  
+     **Reason for Choosing**: Bcrypt is a widely trusted library for securely hashing passwords, which is essential for protecting user data. It adds an extra layer of security by making it difficult for attackers to retrieve original passwords even if the database is compromised.  
+     **Benefit**: Enhances security by providing strong hashing algorithms, protecting user credentials.
+
+2. **cloudinary** (`^2.4.0`)  
+     **Purpose**: Cloud-based image and video management.  
+     **Reason for Choosing**: Cloudinary provides easy integration for uploading, storing, and processing images and videos. This is essential for managing media content, especially for user-uploaded images in property listings.  
+     **Benefit**: Simplifies the management of media files, offers powerful transformations, and reduces server load.  
+
+3. **cors** (`^2.8.5`)  
+      **Purpose**: Middleware to enable Cross-Origin Resource Sharing (CORS).  
+      **Reason for Choosing**: CORS is critical for allowing resources to be requested from another domain, which is common in modern web applications where frontend and backend are often hosted separately.  
+      **Benefit**: Enables secure cross-origin requests, essential for frontend-backend communication.  
+
+4. **dotenv** (`^16.4.5`)  
+     **Purpose**: Loads environment variables from a `.env` file.  
+     **Reason for Choosing**: Dotenv allows sensitive information such as API keys, database credentials, and other configuration settings to be securely managed via environment variables.  
+     **Benefit**: Keeps sensitive data out of the codebase and ensures a consistent configuration across different environments (development, testing, production).  
+
+5. **express** (`^4.19.2`)  
+     **Purpose**: Web framework for Node.js.  
+     **Reason for Choosing**: Express is the most popular web framework for Node.js, known for its simplicity, flexibility, and robust features. It provides a foundation for building web applications and APIs.  
+     **Benefit**: Streamlines the development of server-side logic, routing, and middleware management.  
+
+6. **express-validator** (`^7.2.0`)  
+     **Purpose**: Middleware for validating and sanitizing user inputs.  
+     **Reason for Choosing**: Express-validator is crucial for ensuring that the data received from the user is valid, safe, and formatted correctly. It prevents common security issues like SQL injection and XSS attacks.  
+     **Benefit**: Enhances security and data integrity by validating and sanitizing inputs before they reach the backend logic.  
+
+7. **helmet** (`^7.1.0`)  
+     **Purpose**: Helps secure Express apps by setting various HTTP headers.  
+     **Reason for Choosing**: Helmet provides essential security features out of the box by setting HTTP headers that protect against well-known vulnerabilities.  
+     **Benefit**: Enhances the security of the application by mitigating common security threats.  
+
+8. **jsonwebtoken** (`^9.0.2`)  
+     **Purpose**: Handles JSON Web Tokens (JWT) for authentication.  
+     **Reason for Choosing**: JSON Web Tokens are a secure way of transmitting information between parties as a JSON object. They are commonly used for authentication in modern web applications.  
+     **Benefit**: Enables secure, stateless authentication, allowing the app to maintain a seamless user experience while protecting sensitive information.  
+
+9. **mongoose** (`^8.5.3`)  
+     **Purpose**: Object Data Modeling (ODM) library for MongoDB and Node.js.  
+     **Reason for Choosing**: Mongoose simplifies interactions with MongoDB by providing a schema-based solution to model data. It also handles data validation, casting, and business logic.  
+     **Benefit**: Simplifies database interactions, ensures data consistency, and speeds up development by providing an elegant API for MongoDB.  
+
+10. **morgan** (`^1.10.0`)  
+      **Purpose**: HTTP request logger middleware for Node.js.  
+      **Reason for Choosing**: Morgan is useful for logging requests to the server, which is essential for monitoring, debugging, and maintaining the application.  
+      **Benefit**: Provides insightful logging, which helps in tracking the performance and diagnosing issues in the server.  
+
+11. **multer** (`^1.4.5-lts.1`)  
+      **Purpose**: Middleware for handling `multipart/form-data`, used for file uploads.  
+      **Reason for Choosing**: Multer simplifies the process of handling file uploads in a Node.js/Express application, which is particularly useful for managing user-uploaded content like images.  
+      **Benefit**: Facilitates easy and secure file uploads, ensuring that uploaded files are managed efficiently.  
+
+12. **nodemailer** (`^6.9.14`)  
+      **Purpose**: Library for sending emails from Node.js.  
+      **Reason for Choosing**: Nodemailer is a powerful tool for sending emails, which is essential for user notifications, confirmations, and other email-based interactions in the application.  
+      **Benefit**: Simplifies the process of sending emails, supports various transport methods, and allows for templating, ensuring a seamless user communication experience.
+
+## Frontend Libraries and tools
+
+1. **`@headlessui/react` (^2.1.3)**  
+     **Purpose:** Provides unstyled, accessible components for React.  
+     **Reason for Choosing:** Headless UI offers low-level primitives that are accessible and easy to style, allowing for more flexibility and customization in UI design.  
+     **Benefit:** Enables the creation of fully accessible UI components without imposing styling constraints.  
+2. **`axios` (^1.7.5)**  
+     **Purpose:** Promise-based HTTP client for making requests.  
+     **Reason for Choosing:** Axios simplifies the process of making HTTP requests, handling responses, and managing errors. It supports request and response interceptors, which are useful for handling authentication tokens.  
+     **Benefit:** Provides a straightforward and flexible way to interact with APIs and manage asynchronous requests.  
+3. **`date-fns` (^3.6.0)**  
+     **Purpose:** Utility library for date manipulation.  
+     **Reason for Choosing:** Date-fns offers a comprehensive set of functions for parsing, formatting, and manipulating dates, making it easier to handle date-related operations.  
+     **Benefit:** Provides a modular and lightweight approach to date manipulation, avoiding the overhead of larger libraries like Moment.js.  
+4. **`jwt-decode` (^4.0.0)**  
+     **Purpose:** Decode JWT tokens.  
+     **Reason for Choosing:** Jwt-decode is a lightweight library for decoding JSON Web Tokens (JWTs) to extract user information and other payload data.  
+     **Benefit:** Simplifies token decoding, enabling access to user information and token validation on the client side.  
+5. **`react` (^18.3.1)**  
+     **Purpose:** Core library for building user interfaces.  
+     **Reason for Choosing:** React provides a component-based architecture for building dynamic and interactive UIs. It is widely adopted and supported, with a rich ecosystem of tools and libraries.  
+     **Benefit:** Facilitates the development of modern, performant, and maintainable front-end applications.  
+6. **`react-datepicker` (^7.3.0)**  
+     **Purpose:** Date picker component for React.  
+     **Reason for Choosing:** React-datepicker offers a customizable and easy-to-use date picker component that integrates seamlessly with React applications.  
+     **Benefit:** Enhances user experience by providing an intuitive interface for selecting dates.  
+7. **`react-dom` (^18.3.1)**  
+     **Purpose:** Provides DOM-specific methods for React.  
+     **Reason for Choosing:** React-dom is required for rendering React components to the DOM and managing React’s rendering lifecycle.  
+     **Benefit:** Ensures efficient and correct rendering of React components in the browser.  
+8. **`react-hook-form` (^7.52.2)**  
+     **Purpose:** Library for managing forms in React.  
+     **Reason for Choosing:** React-hook-form simplifies form handling, validation, and state management, reducing boilerplate code and improving performance.  
+     **Benefit:** Provides a performant and easy-to-use solution for form management with built-in support for validation.  
+9. **`react-icons` (^5.3.0)**  
+     **Purpose:** Collection of popular icons for React.  
+     **Reason for Choosing:** React-icons provides a wide range of icons from various icon libraries in a convenient, React-compatible format.  
+     **Benefit:** Allows easy integration of icons into React components with consistent styling and accessibility.  
+10. **`react-router-dom` (^6.26.1)**  
+      **Purpose:** Declarative routing for React applications.  
+      **Reason for Choosing:** React-router-dom enables routing and navigation in React applications, allowing for the creation of single-page applications with multiple views.  
+      **Benefit:** Facilitates the creation of a seamless navigation experience with dynamic route handling.  
+11. **`spinners-react` (^1.0.7)**  
+      **Purpose:** Collection of customizable loading spinners for React.  
+      **Reason for Choosing:** Spinners-react provides a set of spinner components that can be easily integrated and styled to indicate loading states.  
+      **Benefit:** Enhances user experience by providing visual feedback during asynchronous operations.  
+12. **`swiper` (^11.1.11)**  
+      **Purpose:** Modern mobile touch slider with hardware-accelerated transitions.  
+      **Reason for Choosing:** Swiper offers a flexible solution for creating touch-friendly sliders and carousels in React applications.  
+      **Benefit:** Provides a smooth slider experience with a wide range of customization options.
+
+## DevLibraries and Tools
+
+1. **`@eslint/js` (^9.9.0)**  
+     **Purpose:** ESLint rules and configuration for JavaScript.  
+     **Reason for Choosing:** Provides a standard set of linting rules to ensure code quality and consistency.  
+     **Benefit:** Helps maintain clean and error-free code by enforcing coding standards.  
+2. **`@testing-library/jest-dom` (^6.5.0)**  
+     **Purpose:** Custom matchers for testing DOM nodes with Jest.  
+     **Reason for Choosing:** Extends Jest with additional matchers for more expressive and readable tests.  
+     **Benefit:** Enhances testing capabilities by providing custom assertions for DOM elements.  
+3. **`@testing-library/react` (^16.0.1)**  
+     **Purpose:** Testing library for React components.  
+     **Reason for Choosing:** Provides utilities for testing React components in a way that focuses on user interactions and behavior.  
+     **Benefit:** Encourages testing practices that ensure components work as expected from the user's perspective.  
+4. **`@testing-library/user-event` (^14.5.2)**  
+     **Purpose:** Utilities for simulating user events in tests.  
+     **Reason for Choosing:** Allows for simulating real user interactions in tests, improving the accuracy of tests.  
+     **Benefit:** Facilitates more realistic testing scenarios by simulating user actions.  
+5. **`@types/react` (^18.3.3)**  
+     **Purpose:** TypeScript definitions for React.  
+     **Reason for Choosing:** Provides TypeScript type definitions for React, improving development with type checking and code completion.  
+     **Benefit:** Enhances the development experience by providing accurate type information and reducing errors.  
+6. **`@types/react-dom` (^18.3.0)**  
+     **Purpose:** TypeScript definitions for ReactDOM.  
+     **Reason for Choosing:** Provides TypeScript type definitions for ReactDOM, ensuring type safety for DOM-related operations.  
+     **Benefit:** Improves type safety and developer experience when working with ReactDOM.  
+7. **`@vitejs/plugin-react-swc` (^3.5.0)**  
+     **Purpose:** Vite plugin for React with SWC support.  
+     **Reason for Choosing:** Provides fast compilation and transformation of React code using SWC.  
+     **Benefit:** Accelerates build times and improves performance during development.  
+8. **`autoprefixer` (^10.4.20)**  
+     **Purpose:** PostCSS plugin for automatically adding vendor prefixes.  
+     **Reason for Choosing:** Autoprefixer ensures that CSS is compatible with different browsers by adding necessary vendor prefixes.  
+     **Benefit:** Simplifies CSS maintenance and ensures cross-browser compatibility.  
+9. **`eslint` (^9.9.0)**  
+     **Purpose:** Linter for identifying and reporting code issues.  
+     **Reason for Choosing:** ESLint helps maintain code quality and consistency by identifying potential errors and enforcing coding standards.  
+     **Benefit:** Improves code quality by providing tools for linting and fixing code issues.  
+10. **`eslint-plugin-react` (^7.35.0)**  
+      **Purpose:** ESLint plugin for React-specific linting rules.  
+      **Reason for Choosing:** Provides rules and recommendations for React code, ensuring best practices are followed.  
+      **Benefit:** Enhances linting for React components and promotes consistent coding practices.  
+11. **`eslint-plugin-react-hooks` (^5.1.0-rc.0)**  
+      **Purpose:** ESLint plugin for React Hooks rules.  
+      **Reason for Choosing:** Enforces best practices and rules for using React Hooks.  
+      **Benefit:** Helps prevent common mistakes and promotes the correct use of React Hooks.  
+12. **`eslint-plugin-react-refresh` (^0.4.9)**  
+      **Purpose:** ESLint plugin for React Fast Refresh.  
+     **Reason for Choosing:** Supports ESLint integration with React Fast Refresh, improving development feedback.  
+     **Benefit:** Enhances the development experience with live reloading and better error feedback.  
+13. **`globals` (^15.9.0)**  
+      **Purpose:** Provides global variables for various environments.  
+      **Reason for Choosing:** Defines global variables for different environments to avoid undefined variable errors in linting.  
+      **Benefit:** Ensures that global variables are recognized and avoids linting errors.  
+14. **`jsdom` (^25.0.0)**  
+      **Purpose:** JavaScript implementation of the web standards, used for testing.  
+      **Reason for Choosing:** Provides a simulated browser environment for testing DOM manipulations and interactions.  
+      **Benefit:** Allows for testing React components as if they were running in a real browser environment.  
+15. **`postcss` (^8.4.41)**  
+      **Purpose:** Tool for transforming CSS with JavaScript plugins.  
+      **Reason for Choosing:** PostCSS is used for processing CSS with plugins like Autoprefixer and Tailwind CSS.  
+      **Benefit:** Enables powerful CSS transformations and optimizations.  
+16. **`tailwindcss` (^3.4.10)**  
+      **Purpose:** Utility-first CSS framework.  
+      **Reason for Choosing:** Tailwind CSS provides a set of low-level utility classes for building custom designs without
+
+## API Documentation for The Yallambee Booking Application 
+
+The Yallambee Tiny Home Booking Platform API provides operations to manage users, properties and bookings. The API is built using RESTful principles and requires authentication for most operations as well as authorisation for admin only operations. Include the token in the ‘Authorization’ header for protected routes.
+
+For comprehensive API documentation, including detailed descriptions, step-by-step instructions for authentication (JWT), sample request bodies and sample responses please go to:
+
+(../docs/project_management/API_documentation.md)
+
+**Authentication**
+To Obtain JWT Token. Include the token in the ‘Authorization’ header for protected routes.
+
+Login User:
+
+- POST /login
+Authenticates and returns a JWT token.
+
+Register User:
+
+- POST /users
+Registers and logs in a new user, returning a JWT token.
+
+**User Endpoints**
+All user related endpoints
+
+- GET /users
+Retrieves all users (admin only) and JWT required.
+
+- GET /users/:id
+Retrieves a user by ID, (admin only) and JWT required.
+
+- POST /users
+Registers a new user and returns a JWT token.
+
+- PUT or PATCH /users/:id
+Update a user by ID and emails notification of updates to user's email, JWT required.
+
+- DELETE /users/:id
+Delete a user by ID, (admin only) and JWT required.
+
+**Property Endpoints**
+all property related endpoints.
+
+- GET /properties
+Retrieves all properties
+
+- GET /properties/:id
+Retrieves a property by ID
+
+-POST /properties
+Creates a new property (admin only) and JWT required.
+
+- PUT or PATCH /properties/:id
+Updates a property by ID (admin only) and JWT required.
+
+-DELETE /properties/:id
+Delete a property by ID (admin only) and JWT required.
+
+**Booking Endpoints**
+All booking related endpoints.
+
+- GET /bookings
+Retrieve all bookings (admin only) and JWT required.
+
+- GET /bookings/:id
+Retrieves a booking by ID, JWT required.
+
+- POST /bookings
+Create a new booking, (admin only) and JWT required. Allows admins to create a booking for other authenticated users.
+
+- PUT /bookings/:id
+Create a new booking to property ID, allows authenticated users to create a booking, JWT required.
+
+- PUT or PATCH /bookings/:id
+Update a booking by ID, JWT required.
+
+- DELETE /bookings/:id
+Delete a booking by ID, (admin only), JWT required.
+
+**Error Handling**
+Overview of endpoint error handling. 
+
+- 400 Bad Request
+Validation errors or missing fields.
+- 401 Unauthorized
+Invalid or missing JWT token.
+- 403 Forbidden
+Insufficient permissions.
+- 404 Not Found
+Resource not found.
+- 500 Internal Server Error
+Server issues.
+
 ## Appendix
 
 ### References
@@ -712,6 +1052,8 @@ Our draft API specs can be found [here](docs/project_management/API_specs.md).
 - Netlify, 2023. *Netlify Documentation*. [online] Available at: <https://docs.netlify.com/>
 
 - Trello, 2023. *Trello Guide*. [online] Available at: <https://trello.com/en/guide> [Accessed 11 August 2024].
+
+- Express-Validator, 2024. *Express Docs*. [online] Available at: <https://express-validator.github.io/docs> [Accessed 17 August 2024].
 
 ### Contributors
 
