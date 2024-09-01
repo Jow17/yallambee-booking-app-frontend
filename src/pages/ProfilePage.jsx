@@ -60,23 +60,23 @@ const ProfilePage = () => {
   const handleEditBooking = async (updatedBooking) => {
     try {
       const token = getToken();
-      const response = await axios.put(
+      const response = await axios.patch(
         `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
         updatedBooking,
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      )
-
+      );
+  
       setBookings(prevBookings =>
         prevBookings.map(booking =>
           booking._id === response.data._id ? response.data : booking
         )
-      )
+      );
     } catch (error) {
       console.error('Error updating booking in ProfilePage:', error.response?.data || error.message);
     }
-  }
+  };
 
   if (loading) {
     return <div>Loading profile...</div>

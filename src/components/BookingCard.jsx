@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Button from "./Button";
 import Modal from "./Modal";
 import UpdateBookingForm from "./UpdateBookingForm";
 import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
 import axios from "axios";
 
-const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
+const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
   const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
   const [property, setProperty] = useState(null);
 
@@ -14,7 +13,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
       fetchPropertyDetails(booking.property._id);
     }
   }, [booking.property]);
-  
+
   const fetchPropertyDetails = async (propertyId) => {
     try {
       const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`);
@@ -22,10 +21,14 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
     } catch (error) {
       console.error('Error fetching property:', error);
     }
-  };  
+  };
 
   const onEditBooking = () => {
     setIsEditBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditBookingModalOpen(false);
   };
 
   return (
@@ -105,13 +108,16 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
 
           {/* Edit Booking Modal */}
           {isEditBookingModalOpen && (
-            <Modal onClose={() => setIsEditBookingModalOpen(false)}>
-              <UpdateBookingForm
-                booking={booking}
-                onEdit={onEdit}
-                onClose={() => setIsEditBookingModalOpen(false)}
-              />
-            </Modal>
+          <Modal onClose={handleCloseModal}>
+            <UpdateBookingForm
+              booking={booking}
+              onEdit={(updatedBooking) => {
+                onEdit(updatedBooking);
+                handleCloseModal(); // Close modal after edit
+              }}
+              onClose={handleCloseModal} // Allow closing modal without updating
+            />
+          </Modal>
           )}
         </>
       ) : (
