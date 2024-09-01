@@ -3,6 +3,10 @@ import axios from 'axios';
 import UserCard from '../components/UserCard';
 import BookingCard from '../components/BookingCard';
 import PropertyCard from '../components/PropertyCard';
+import Modal from '../components/Modal';
+import UpdateUserDetailsForm from '../components/UpdateUserDetailsForm';
+import UpdateBookingForm from '../components/UpdateBookingForm';
+import UpdatePropertyForm from '../components/UpdatePropertyForm';
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -12,6 +16,12 @@ const AdminDashboard = () => {
   const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false });
   const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' });
   const [error, setError] = useState(null);
+  const [editUser, setEditUser] = useState(null);
+  const [editBooking, setEditBooking] = useState(null);
+  const [editProperty, setEditProperty] = useState(null);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
+  const [isEditPropertyModalOpen, setIsEditPropertyModalOpen] = useState(false);
   const token = localStorage.getItem('token');
 
   useEffect(() => {
@@ -143,6 +153,63 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleEditUser = (user) => {
+    setEditUser(user);
+    setIsEditUserModalOpen(true);
+  };
+
+  const handleEditBooking = (booking) => {
+    setEditBooking(booking);
+    setIsEditBookingModalOpen(true);
+  };
+
+  const handleEditProperty = (property) => {
+    setEditProperty(property);
+    setIsEditPropertyModalOpen(true);
+  };
+
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/users/${updatedUser._id}`, updatedUser, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(users.map((user) => (user._id === updatedUser._id ? response.data : user)));
+      setIsEditUserModalOpen(false);
+      window.alert('User updated successfully!');
+    } catch (error) {
+      console.error('Error updating user:', error);
+      window.alert('Failed to update user. Please try again.');
+    }
+  };
+
+  const handleUpdateBooking = async (updatedBooking) => {
+    try {
+      const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`, updatedBooking, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setBookings(bookings.map((booking) => (booking._id === updatedBooking._id ? response.data : booking)));
+      setIsEditBookingModalOpen(false);
+      window.alert('Booking updated successfully!');
+    } catch (error) {
+      console.error('Error updating booking:', error);
+      window.alert('Failed to update booking. Please try again.');
+    }
+  };
+
+  const handleUpdateProperty = async (updatedProperty) => {
+    try {
+      const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/properties/${updatedProperty._id}`, updatedProperty, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProperties(properties.map((property) => (property._id === updatedProperty._id ? response.data : property)));
+      setIsEditPropertyModalOpen(false);
+      window.alert('Property updated successfully!');
+    } catch (error) {
+      console.error('Error updating property:', error);
+      window.alert('Failed to update property. Please try again.');
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-4xl font-bold mb-8 text-center">Admin Dashboard</h1>
@@ -159,6 +226,7 @@ const AdminDashboard = () => {
               key={property._id}
               property={property}
               onDelete={() => handleDeleteProperty(property._id)}
+              onEdit={() => handleEditProperty(property)} // Pass property to edit
             />
           ))}
         </div>
@@ -209,6 +277,7 @@ const AdminDashboard = () => {
               key={user._id} // Ensure each UserCard has a unique key
               user={user}
               onDelete={() => handleDeleteUser(user._id)}
+              onEdit={() => handleEditUser(user)} // Pass user to edit
             />
           ))}
         </div>
@@ -289,6 +358,7 @@ const AdminDashboard = () => {
               key={booking._id} // Ensure each BookingCard has a unique key
               booking={booking}
               onDelete={() => handleDeleteBooking(booking._id)}
+              onEdit={() => handleEditBooking(booking)} // Pass booking to edit
             />
           ))}
         </div>
@@ -329,6 +399,46 @@ const AdminDashboard = () => {
           </div>
         </div>
       </section>
+
+      {/* Modals */}
+      {isEditUserModalOpen && (
+        <Modal
+          title="Edit User"
+          onClose={() => setIsEditUserModalOpen(false)}
+        >
+          <UpdateUserDetailsForm
+            user={editUser}
+            onEdit={handleUpdateUser}
+            onClose={() => setIsEditUserModalOpen(false)}
+          />
+        </Modal>
+      )}
+
+      {isEditBookingModalOpen && (
+        <Modal
+          title="Edit Booking"
+          onClose={() => setIsEditBookingModalOpen(false)}
+        >
+          <UpdateBookingForm
+            booking={editBooking}
+            onEdit={handleUpdateBooking}
+            onClose={() => setIsEditBookingModalOpen(false)}
+          />
+        </Modal>
+      )}
+
+      {isEditPropertyModalOpen && (
+        <Modal
+          title="Edit Property"
+          onClose={() => setIsEditPropertyModalOpen(false)}
+        >
+          <UpdatePropertyForm
+            property={editProperty}
+            onEdit={handleUpdateProperty}
+            onClose={() => setIsEditPropertyModalOpen(false)}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
