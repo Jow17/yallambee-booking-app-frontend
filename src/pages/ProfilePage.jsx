@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { getToken } from './authUtils';
-import { UserContext } from '../context/userContext';
-import Modal from "../components/Modal";
-import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm";
-import BookingCard from "../components/BookingCard";
+import React, { useState, useEffect, useContext } from 'react'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { getToken } from './authUtils'
+import { UserContext } from '../context/userContext'
+import Modal from "../components/Modal"
+import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm"
+import BookingCard from "../components/BookingCard"
 
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
 
-  const { _id } = useParams();
-  const { setUser: setGlobalUser } = useContext(UserContext);
+  const { _id } = useParams()
+  const { setUser: setGlobalUser } = useContext(UserContext)
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = getToken();
+        const token = getToken()
         if (!token) {
-          throw new Error('No token found. Please login.');
+          throw new Error('No token found. Please login.')
         }
 
         const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
@@ -32,13 +32,13 @@ const ProfilePage = () => {
         const bookingsResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/bookings`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setBookings(bookingsResponse.data);
+        setBookings(bookingsResponse.data)
 
-        setGlobalUser(userResponse.data);
+        setGlobalUser(userResponse.data)
       } catch (error) {
-        console.error('Error fetching data:', error.response?.data || error.message);
+        console.error('Error fetching data:', error.response?.data || error.message)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     };
 
@@ -50,12 +50,12 @@ const ProfilePage = () => {
       const token = getToken();
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` }
-      });
-      setBookings(prevBookings => prevBookings.filter(booking => booking._id !== bookingId));
+      })
+      setBookings(prevBookings => prevBookings.filter(booking => booking._id !== bookingId))
     } catch (error) {
-      console.error('Error deleting booking:', error.response?.data || error.message);
+      console.error('Error deleting booking:', error.response?.data || error.message)
     }
-  };
+  }
 
   const handleEditBooking = async (updatedBooking) => {
     try {
@@ -66,20 +66,20 @@ const ProfilePage = () => {
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      );
+      )
 
       setBookings(prevBookings =>
         prevBookings.map(booking =>
           booking._id === response.data._id ? response.data : booking
         )
-      );
+      )
     } catch (error) {
       console.error('Error updating booking in ProfilePage:', error.response?.data || error.message);
     }
-  };
+  }
 
   if (loading) {
-    return <div>Loading profile...</div>;
+    return <div>Loading profile...</div>
   }
 
   return (
@@ -148,4 +148,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default ProfilePage
