@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { getToken } from "../pages/authUtils";
+import React, { useState } from "react"
+import axios from "axios"
+import { getToken } from "../pages/authUtils"
 
 const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
-  const [password, setPassword] = useState(user?.password || "");
-  const [email, setEmail] = useState(user?.email || "");
-  const [phone, setPhone] = useState(user?.phone || "");
-  const [address, setAddress] = useState(user?.address || "");
-  const [dob, setDob] = useState(user?.dob ? user.dob.slice(0, 10) : ""); // Assuming DOB is in "YYYY-MM-DD" format
+  const [firstName, setFirstName] = useState(user?.firstName || "")
+  const [lastName, setLastName] = useState(user?.lastName || "")
+  const [password, setPassword] = useState(user?.password || "")
+  const [email, setEmail] = useState(user?.email || "")
+  const [phone, setPhone] = useState(user?.phone || "")
+  const [address, setAddress] = useState(user?.address || "")
+  const [dob, setDob] = useState(user?.dob ? user.dob.slice(0, 10) : "") // Assuming DOB is in "YYYY-MM-DD" format
 
   const handleUpdateUserDetails = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const updatedUserData = {
       firstName,
@@ -22,29 +22,29 @@ const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
       phone,
       address,
       dob,
-    };
+    }
 
-    console.log("Updated user data being sent to server:", JSON.stringify(updatedUserData, null, 2));
+    console.log("Updated user data being sent to server:", JSON.stringify(updatedUserData, null, 2))
 
     try {
-      const token = getToken();
+      const token = getToken()
       const response = await axios.put(
         `https://yallambee-booking-app-backend.onrender.com/users/${user._id}`,
         updatedUserData,
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      );
+      )
 
-      console.log('User details updated successfully:', response.data);
+      console.log('User details updated successfully:', response.data)
 
-      onEdit(response.data); // Call the onEdit function to update the user details in the parent component
-      onClose(); // Close the modal
+      onEdit(response.data) // Call the onEdit function to update the user details in the parent component
+      onClose() // Close the modal
     } catch (error) {
-      console.error("Error updating user details:", error.response?.data || error.message);
-      console.log("Server error details:", error.response?.data);
+      console.error("Error updating user details:", error.response?.data || error.message)
+      console.log("Server error details:", error.response?.data)
     }
-  };
+  }
 
   return (
     <form className="space-y-4 bg-white shadow-2xl rounded-lg p-8 max-w-[400px] mx-auto" onSubmit={handleUpdateUserDetails}>
@@ -73,7 +73,7 @@ const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
           />
         </div>
         <div className="flex flex-col">
-          <label className="font-semibold mb-2" htmlFor="lastName">Password</label>
+          <label className="font-semibold mb-2" htmlFor="password">Password</label>
           <input
             id="password"
             type="text"
@@ -143,7 +143,7 @@ const UpdateUserDetailsForm = ({ user, onEdit, onClose }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default UpdateUserDetailsForm;
+export default UpdateUserDetailsForm

@@ -1,23 +1,23 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { getToken } from "../pages/authUtils";
+import React, { useState } from "react"
+import axios from "axios"
+import { getToken } from "../pages/authUtils"
 
 const UpdatePropertyForm = ({ property, onEdit, onClose }) => {
-  const [name, setName] = useState(property?.name || "");
-  const [description, setDescription] = useState(property?.description || "");
-  const [price, setPrice] = useState(property?.price || 0);
-  const [size, setSize] = useState(property?.size || 0);
-  const [maxPerson, setMaxPerson] = useState(property?.maxPerson || 1);
-  const [availability, setAvailability] = useState(property?.availability || []);
-  const [images, setImages] = useState(property?.images || []);
+  const [name, setName] = useState(property?.name || "")
+  const [description, setDescription] = useState(property?.description || "")
+  const [price, setPrice] = useState(property?.price || 0)
+  const [size, setSize] = useState(property?.size || 0)
+  const [maxPerson, setMaxPerson] = useState(property?.maxPerson || 1)
+  const [availability, setAvailability] = useState(property?.availability || [])
+  const [images, setImages] = useState(property?.images || [])
   const [location, setLocation] = useState({
     city: property?.location?.city || "",
     state: property?.location?.state || "",
-  });
-  const [ageRestriction, setAgeRestriction] = useState(property?.ageRestriction || 18);
+  })
+  const [ageRestriction, setAgeRestriction] = useState(property?.ageRestriction || 18)
 
   const handleUpdateProperty = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     const updatedPropertyData = {
       name,
@@ -29,29 +29,29 @@ const UpdatePropertyForm = ({ property, onEdit, onClose }) => {
       images,
       location,
       ageRestriction,
-    };
+    }
 
-    console.log("Updated property data being sent to server:", JSON.stringify(updatedPropertyData, null, 2));
+    console.log("Updated property data being sent to server:", JSON.stringify(updatedPropertyData, null, 2))
 
     try {
-      const token = getToken();
+      const token = getToken()
       const response = await axios.put(
         `https://yallambee-booking-app-backend.onrender.com/properties/${property._id}`,
         updatedPropertyData,
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      );
+      )
 
-      console.log('Property details updated successfully:', response.data);
+      console.log('Property details updated successfully:', response.data)
 
-      onEdit(response.data); // Call the onEdit function to update the property details in the parent component
-      onClose(); // Close the modal
+      onEdit(response.data) // Call the onEdit function to update the property details in the parent component
+      onClose() // Close the modal
     } catch (error) {
-      console.error("Error updating property details:", error.response?.data || error.message);
-      console.log("Server error details:", error.response?.data);
+      console.error("Error updating property details:", error.response?.data || error.message)
+      console.log("Server error details:", error.response?.data)
     }
-  };
+  }
 
   return (
     <form className="space-y-4 bg-white shadow-2xl rounded-lg p-8 max-w-[400px] mx-auto" onSubmit={handleUpdateProperty}>
@@ -181,7 +181,7 @@ const UpdatePropertyForm = ({ property, onEdit, onClose }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default UpdatePropertyForm;
+export default UpdatePropertyForm
