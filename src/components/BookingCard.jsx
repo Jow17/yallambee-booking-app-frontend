@@ -1,41 +1,51 @@
-import React, { useState, useEffect } from "react";
-import Modal from "./Modal";
-import UpdateBookingForm from "./UpdateBookingForm";
-import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
-import axios from "axios";
+import React, { useState, useEffect } from "react"
+import Modal from "./Modal"
+import UpdateBookingForm from "./UpdateBookingForm"
+import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs'
+import axios from "axios"
 
 const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
-  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
-  const [property, setProperty] = useState(null);
-  const [error, setError] = useState(null);
+  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false)
+  const [property, setProperty] = useState(null)
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(true) // Loading state for fetching property details
+
+  // Local state for updated booking dates
+  const [startDate, setStartDate] = useState(booking.startDate)
+  const [endDate, setEndDate] = useState(booking.endDate)
 
   useEffect(() => {
     if (booking.property && booking.property._id) {
-      fetchPropertyDetails(booking.property._id);
+      fetchPropertyDetails(booking.property._id)
     }
-  }, [booking.property]);
+  }, [booking.property])
 
   const fetchPropertyDetails = async (propertyId) => {
     try {
-      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`);
-      setProperty(response.data);
+      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`)
+      setProperty(response.data)
     } catch (error) {
-      console.error('Error fetching property:', error);
+      console.error('Error fetching property:', error)
+      setError('Error fetching property details. Please try again.')
+    } finally {
+      setLoading(false) // Set loading to false once fetching is done
     }
-  };
+  }
 
   const onEditBooking = () => {
-    setIsEditBookingModalOpen(true);
-  };
+    setIsEditBookingModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsEditBookingModalOpen(false);
-  };
+    setIsEditBookingModalOpen(false)
+  }
 
   return (
     <div className='bg-white shadow-2xl min-h-[500px] group'>
       {error && <p className="text-red-500">{error}</p>}
-      {property ? (
+      {loading ? (
+        <p>Loading booking details...</p>
+      ) : property ? (
         <>
           {/* Image Section */}
           <div className='overflow-hidden'>
@@ -83,7 +93,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
               {property.description ? property.description.slice(0, 56) : "No description available"}...
             </p>
             <p className="text-gray-600">
-              Dates: {booking.startDate ? new Date(booking.startDate).toLocaleDateString() : "N/A"} - {booking.endDate ? new Date(booking.endDate).toLocaleDateString() : "N/A"}
+              Dates: {startDate ? new Date(startDate).toLocaleDateString() : "N/A"} - {endDate ? new Date(endDate).toLocaleDateString() : "N/A"}
             </p>
             <p className="text-gray-600">Price: ${booking.totalPrice || "N/A"}</p>
           </div>
@@ -108,23 +118,25 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
 
           {/* Edit Booking Modal */}
           {isEditBookingModalOpen && (
-          <Modal onClose={handleCloseModal}>
-            <UpdateBookingForm
-              booking={booking}
-              onEdit={(updatedBooking) => {
-                onEdit(updatedBooking);
-                handleCloseModal(); // Close modal after edit
-              }}
-              onClose={handleCloseModal} // Allow closing modal without updating
-            />
-          </Modal>
+            <Modal onClose={handleCloseModal}>
+              <UpdateBookingForm
+                booking={booking}
+                onEdit={(updatedBooking) => {
+                  setStartDate(updatedBooking.startDate) // Update startDate state
+                  setEndDate(updatedBooking.endDate)     // Update endDate state
+                  onEdit(updatedBooking)
+                  handleCloseModal() // Close modal after edit
+                }}
+                onClose={handleCloseModal} // Allow closing modal without updating
+              />
+            </Modal>
           )}
         </>
       ) : (
-        <p>Loading booking details...</p>
+        <p>No property details available.</p>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default BookingCard;
+export default BookingCard

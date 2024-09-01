@@ -18,6 +18,7 @@ const CheckOut = ({ endDate, setEndDate, startDate }) => {
         placeholderText='Check out'
         onChange={(date) => setEndDate(date)}
         minDate={startDate || new Date()}
+        dateFormat='dd/MM/yyyy' 
       />
     </div>
   );
