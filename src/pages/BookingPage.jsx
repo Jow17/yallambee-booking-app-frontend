@@ -1,46 +1,50 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { getToken } from './authUtils';
 import { UserContext } from '../context/userContext';
-import Button from "../components/Button";
-import Select from "../components/Select";
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import CheckIn from '../components/CheckIn';
+import CheckOut from '../components/CheckOut';
+import GuestsDropdown from '../components/GuestsDropdown';
+import { FaCheck } from 'react-icons/fa';
+// Import Swiper components
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import { EffectFade, Autoplay } from 'swiper/modules';
 
 const BookingPage = () => {
+  const { id: propertyId } = useParams();
+  const [property, setProperty] = useState(null);
   const [bookings, setBookings] = useState([]);
-  const [properties, setProperties] = useState([]);
   const [unavailableDates, setUnavailableDates] = useState([]);
   const [bookingData, setBookingData] = useState({
-    property: null,
+    property: propertyId,
     startDate: null,
     endDate: null,
-    status: 'Pending'
+    guests: '1 Guest',
+    status: 'Pending',
   });
 
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (propertyId) {
+      fetchProperty(propertyId);
+      fetchUnavailableDates(propertyId);
+    }
+  }, [propertyId]);
 
   useEffect(() => {
     console.log('Booking Data Updated:', bookingData); // Log booking data when it updates
   }, [bookingData]);
 
-  useEffect(() => {
-    if (bookingData.property) {
-      console.log('Fetching unavailable dates for property:', bookingData.property); // Log the property ID for which unavailable dates are fetched
-      fetchUnavailableDates(bookingData.property);
-    }
-  }, [bookingData.property]);
-
-  const fetchProperties = async () => {
+  const fetchProperty = async (_id) => {
     try {
-      const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
-      setProperties(response.data);
+      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${_id}`);
+      setProperty(response.data);
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error('Error fetching property:', error);
     }
   };
 
@@ -63,157 +67,145 @@ const BookingPage = () => {
     e.preventDefault();
 
     if (!user) {
-        alert('You must be logged in to make a booking.');
-        return;
-    }
-
-    if (!bookingData.property) {
-        alert('Please select a property.');
-        return;
+      alert('You must be logged in to make a booking.');
+      return;
     }
 
     if (!bookingData.startDate || !bookingData.endDate) {
-        alert('Please select both check-in and check-out dates.');
-        return;
+      alert('Please select both check-in and check-out dates.');
+      return;
+    }
+
+    if (isDateUnavailable(bookingData.startDate) || isDateUnavailable(bookingData.endDate)) {
+      alert('The selected dates are not available. Please choose another date.');
+      return;
     }
 
     // Ensure dates are in the correct format
     const bookingDataToSend = {
-        property: bookingData.property,
-        startDate: new Date(bookingData.startDate).toISOString().split('T')[0], // Strip time if necessary
-        endDate: new Date(bookingData.endDate).toISOString().split('T')[0], // Strip time if necessary
-        status: bookingData.status,
+      property: propertyId,
+      startDate: new Date(bookingData.startDate).toISOString().split('T')[0], // Strip time if necessary
+      endDate: new Date(bookingData.endDate).toISOString().split('T')[0], // Strip time if necessary
+      guests: bookingData.guests,
+      status: bookingData.status,
     };
 
     console.log('Booking Data to Send:', bookingDataToSend);
 
     try {
-        const token = getToken();
-        const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', bookingDataToSend, {
-            headers: { Authorization: `Bearer ${token}` },
-        });
-        setBookings([...bookings, response.data]);
-        alert('Booking added successfully!');
+      const token = getToken();
+      // Post the booking to the backend using the property ID in the URL
+      const response = await axios.post(`https://yallambee-booking-app-backend.onrender.com/booking/${propertyId}`, bookingDataToSend, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setBookings([...bookings, response.data]); // Update the bookings state with the new booking
+      alert('Booking added successfully!');
     } catch (error) {
-        console.error('Error adding booking:', error.response?.data || error.message);
-        alert('Error adding booking');
+      console.error('Error adding booking:', error.response?.data || error.message);
+      alert('Error adding booking');
     }
-};
+  };
 
   return (
-    <div className="p-5">
-      <div className="flex gap-2 overflow-x-scroll">
-        <img
-          src="/tiny_home_pics/5d5e5a09-04e7-4e8d-9d0a-9a44940fe4c4.webp"
-          alt="Property Image 1"
-          className="w-1/3 h-48 object-cover mr-2"
-        />
-        <img
-          src="/tiny_home_pics/090d437b-fc02-4c47-8d0f-27a57186c00a.webp"
-          alt="Property Image 2"
-          className="w-1/3 h-48 object-cover mr-2"
-        />
-        <img
-          src="/tiny_home_pics/86b12c08-40b3-439b-bba0-cabb453fc1bd.webp"
-          alt="Property Image 3"
-          className="w-1/3 h-48 object-cover mr-2"
-        />
-        <img
-          src="/tiny_home_pics/0701fa15-cf25-41fc-8dc4-1bb642e9cc20.webp"
-          alt="Property Image 3"
-          className="w-1/3 h-48 object-cover mr-2"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 ">
-        <div>
-          <div className="text-xl font-bold">Yallambee on Bolong</div>
-          <div>
-          Yallambee Tiny Home is a peaceful off-grid accommodation for two people set alongside the Bolong River amongst the rolling hills of Golspie - 20 minutes from Crookwell & Taralga and 10 minutes from Laggan on 15 acres of sheep grazing country in the Southern Tablelands. It is the perfect place to stay put and switch off from the hustle of everyday life or your base to explore the Upper Lachlans Shire of historic villages.
-          </div>
-
-          <div className="mt-4">
-            <span className="font-bold">Price:</span> $250 AUD/Night
-          </div>
-          <div>
-            <span className="font-bold">Location:</span> Golspie
-          </div>
-
-          <div className="font-bold">Amenities:</div>
-          <ul className="list-disc list-inside">
-            {["River view", "Fire pit", "Solar powered heating and cooling", "Board games and books", "BBQ", "180 degree views", "Stargazing"].map((item) => (
-              <li key={item}>{item}</li>
+    <section>
+      {property ? (
+        <>
+          {/* Banner */}
+          <Swiper
+            modules={[EffectFade, Autoplay]}
+            effect={'fade'}
+            loop={true}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
+            className='heroSlider h-[600px] lg:h-[560px]'
+          >
+            {property.images.slice(1).map((image, index) => (
+              <SwiperSlide
+                className='h-full relative flex justify-center items-center'
+                key={index}
+              >
+                <div className='z-20 text-white text-center'>
+                  {/* <h1 className='text-6xl text-white z-20 font-primary text-center'>
+                    {property.name}
+                  </h1> */}
+                </div>
+                <div className='absolute top-0 w-full h-full'>
+                  <img className='object-cover h-full w-full' src={image} alt={`Property ${index}`} />
+                </div>
+                <div className='absolute w-full h-full bg-black/70'></div>
+              </SwiperSlide>
             ))}
-          </ul>
-        </div>
-        <div>
-          <form className="space-y-4 bg-gray-100 rounded-lg p-8" onSubmit={handleBookingSubmit}>
-            <div className="text-xl font-bold mb-4">Book your stay</div>
+          </Swiper>
 
-            <Select
-              label="Select property and check available dates"
-              id="property-select"  // Ensure id is set
-              value={bookingData.property || ""}  // Control the component
-              options={properties.map(property => ({
-                label: property.name,
-                value: property._id
-              }))}
-              onChange={(e) => {
-                const selectedPropertyId = e.target.value;
-                console.log('Selected Property ID:', selectedPropertyId); // Log the selected property ID
-                setBookingData(prevData => ({
-                  ...prevData,
-                  property: selectedPropertyId,
-                  startDate: null,
-                  endDate: null
-                }));
-                setUnavailableDates([]); // Clear unavailable dates when a new property is selected
-              }}
-            />
+          <div className='container mx-auto'>
+            <div className='flex flex-col lg:flex-row h-full py-24'>
+              {/* Left Section */}
+              <div className='w-full h-full lg:w-[60%] px-6'>
+                <h2 className='h2'>{property.name}</h2>
+                <p className='mb-8'>{property.description}</p>
+                <img className='mb-8' src={property.images && property.images[0]} alt={property.name} />
+                <div className='mt-12'>
+                  <h3 className='h3 mb-3'>Property Facilities</h3>
+                  <p className='mb-12'>
+                    {property.amenities && property.amenities.length > 0
+                      ? property.amenities.join(', ')
+                      : 'No amenities listed'}
+                  </p>
+                </div>
+              </div>
 
-            <div className="flex flex-col">
-              <label className="text-gray-700 text-sm font-bold mb-2">
-                Check-in
-              </label>
-              <DatePicker
-                selected={bookingData.startDate}
-                onChange={(date) => setBookingData(prevData => ({
-                  ...prevData,
-                  startDate: date
-                }))}
-                minDate={new Date()}
-                filterDate={(date) => !isDateUnavailable(date)}
-                className="border rounded w-full py-1 px-2 font-normal"
-                placeholderText="Select a check-in date"
-                disabled={!bookingData.property}
-              />
+              {/* Right Section */}
+              <div className='w-full h-full lg:w-[40%]'>
+                {/* Reservation */}
+                <div className='py-8 px-6 bg-accent/20 mb-12'>
+                  <div className='flex flex-col space-y-4 mb-4'>
+                    <h3>Your Reservation</h3>
+                    <div className='h-[60px]'>
+                      <CheckIn startDate={bookingData.startDate} setStartDate={(date) => setBookingData(prev => ({ ...prev, startDate: date }))} isDateUnavailable={isDateUnavailable} />
+                    </div>
+                    <div className='h-[60px]'>
+                      <CheckOut endDate={bookingData.endDate} setEndDate={(date) => setBookingData(prev => ({ ...prev, endDate: date }))} isDateUnavailable={isDateUnavailable} />
+                    </div>
+                    <div className='h-[60px]'>
+                      <GuestsDropdown selectedGuests={bookingData.guests} setSelectedGuests={(guests) => setBookingData(prev => ({ ...prev, guests }))} />
+                    </div>
+                  </div>
+                  <button className='btn btn-lg btn-primary w-full' onClick={handleBookingSubmit}>
+                    Book now for ${property.price}
+                  </button>
+                </div>
+                {/* Rules */}
+                <div>
+                  <h3 className='h3'>Property Rules</h3>
+                  <ul className='flex flex-col gap-y-4'>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      Check-in: from 3:00pm
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      Check-out: 11:00 AM
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      Not suitable for pets
+                    </li>
+                    <li className='flex items-center gap-x-4'>
+                      <FaCheck className='text-accent' />
+                      No Smoking
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
-
-            <div className="flex flex-col">
-              <label className="text-gray-700 text-sm font-bold mb-2">
-                Check-out
-              </label>
-              <DatePicker
-                selected={bookingData.endDate}
-                onChange={(date) => setBookingData(prevData => ({
-                  ...prevData,
-                  endDate: date
-                }))}
-                minDate={bookingData.startDate || new Date()}
-                filterDate={(date) => !isDateUnavailable(date)}
-                className="border rounded w-full py-1 px-2 font-normal"
-                placeholderText="Select a check-out date"
-                disabled={!bookingData.property}
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <Button type="submit" disabled={!bookingData.property}>Book</Button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+          </div>
+        </>
+      ) : (
+        <p>Loading property details...</p>
+      )}
+    </section>
   );
 };
 

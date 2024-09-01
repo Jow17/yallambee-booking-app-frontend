@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { UserContext } from "../context/userContext";
+import { BsArrowRight } from 'react-icons/bs';
 import { saveToken } from './authUtils';
-import { UserContext } from '../context/userContext';
-import Button from '../components/Button';
-import Input from '../components/Input';
 
 const Register = () => {
   const { register, watch, handleSubmit, formState: { errors } } = useForm();
@@ -17,12 +16,12 @@ const Register = () => {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
       if (response.status === 201) {
         console.log('User created successfully:', response.data);
-        
+      
         const { token, user } = response.data;
   
         // Save the token
         saveToken(token);
-        
+
         // Update the user context with the new user’s data
         setUser({ id: user._id, ...user, isAdmin: user.isAdmin });
 
@@ -30,7 +29,7 @@ const Register = () => {
         if (user.isAdmin) {
           navigate('/admin-dashboard');
         } else {
-          navigate(`/profile/${user._id}`);
+          navigate('/');
         }
       }
     } catch (error) {
@@ -46,114 +45,112 @@ const Register = () => {
   };
   
   return (
-    <div>
-      <form className="space-y-4 max-w-sm mx-auto md:mt-16 bg-gray-100 rounded-lg p-8 shadow-md" onSubmit={handleSubmit(onSubmit)}>
-        <div className="text-xl font-bold mb-4">Register</div>
+    <div className='flex justify-center items-center min-h-screen'>
+      <div className='bg-white shadow-2xl min-h-[500px] group max-w-sm mx-auto mt-20 rounded-lg'>
+        <form className="space-y-4 p-8" onSubmit={handleSubmit(onSubmit)}>
+          <div className="text-center mb-6">
+            <h3 className='h3'>Create an Account</h3>
+            <p className='max-w-[300px] mx-auto'>
+              Please enter your details to register a new account.
+            </p>
+          </div>
 
-        <Input
-          type="text"
-          label="First Name"
-          id="firstname"
-          {...register("firstName", { required: "This field is required" })}
-          placeholder="First Name"
-        />
-        {errors.firstName && <span className="text-red-500">{errors.firstName.message}</span>}
+          {/* First Name */}
+          <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
+            <div className='w-full'>
+              <input 
+                type="text" 
+                className='border-b w-full py-2 px-4 focus:outline-none focus:border-accent'
+                placeholder="First Name" 
+                {...register("firstName", { required: "This field is required" })} 
+              />
+              {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
+            </div>
+          </div>
 
-        <Input
-          type="text"
-          label="Last Name"
-          id="lastname"
-          {...register("lastName", { required: "This field is required" })}
-          placeholder="Last Name"
-        />
-        {errors.lastName && <span className="text-red-500">{errors.lastName.message}</span>}
+          {/* Last Name */}
+          <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
+            <div className='w-full'>
+              <input 
+                type="text" 
+                className='border-b w-full py-2 px-4 focus:outline-none focus:border-accent'
+                placeholder="Last Name" 
+                {...register("lastName", { required: "This field is required" })} 
+              />
+              {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
+            </div>
+          </div>
 
-        <Input
-          type="text"
-          label="Username"
-          id="username"
-          {...register("username", { required: "This field is required", minLength: 3 })}
-          placeholder="Username"
-        />
-        {errors.username && <span className="text-red-500">{errors.username.message}</span>}
+          {/* Email */}
+          <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
+            <div className='w-full'>
+              <input 
+                type="email" 
+                className='border-b w-full py-2 px-4 focus:outline-none focus:border-accent'
+                placeholder="Email" 
+                {...register("email", { required: "This field is required" })} 
+              />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            </div>
+          </div>
 
-        <Input
-          type="email"
-          label="Email"
-          id="email"
-          {...register("email", { required: "This field is required" })}
-          placeholder="Email"
-        />
-        {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+          {/* Password */}
+          <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
+            <div className='w-full'>
+              <input 
+                type="password" 
+                className='border-b w-full py-2 px-4 focus:outline-none focus:border-accent'
+                placeholder="Password" 
+                {...register("password", { 
+                  required: "This field is required", 
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters"
+                  }
+                })} 
+              />
+              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            </div>
+          </div>
 
-        <Input
-          type="tel"
-          label="Phone Number"
-          id="phone"
-          {...register("phone", {
-            required: "This field is required",
-            pattern: {
-              value: /^\d{10,15}$/,
-              message: "Please provide a valid phone number (10-15 digits)",
-            },
-          })}
-          placeholder="Phone Number"
-        />
-        {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+          {/* Confirm Password */}
+          <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
+            <div className='w-full'>
+              <input 
+                type="password" 
+                className='border-b w-full py-2 px-4 focus:outline-none focus:border-accent'
+                placeholder="Confirm Password" 
+                {...register("confirmPassword", { 
+                  required: "This field is required", 
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters"
+                  },
+                  validate: (value) =>
+                    value === watch('password') || "Passwords do not match"
+                })} 
+              />
+              {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>}
+            </div>
+          </div>
 
-        <Input
-          type="text"
-          label="Address"
-          id="address"
-          {...register("address")}
-          placeholder="Address"
-        />
-
-        <Input
-          type="date"
-          label="Date of Birth"
-          id="dob"
-          {...register("dob", { required: "This field is required" })}
-          placeholder="Date of Birth"
-        />
-        {errors.dob && <span className="text-red-500">{errors.dob.message}</span>}
-
-        <Input
-          type="password"
-          label="Password"
-          id="password"
-          {...register("password", {
-            required: "This field is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
-          placeholder="Password"
-        />
-        {errors.password && <span className="text-red-500">{errors.password.message}</span>}
-
-        <Input
-          type="password"
-          label="Confirm Password"
-          id="password2"
-          {...register("confirmPassword", {
-            validate: (val) => {
-              if (!val) {
-                return "This field is required";
-              } else if (watch("password") !== val) {
-                return "Your passwords do not match!";
-              }
-            },
-          })}
-          placeholder="Confirm Password"
-        />
-        {errors.confirmPassword && <span className="text-red-500">{errors.confirmPassword.message}</span>}
-
-        <div className="flex justify-end">
-          <Button type="submit">Register</Button>
-        </div>
-      </form>
+          {/* Redirect to Sign In and Submit Button */}
+          <div className="flex flex-col items-center mt-4 space-y-4">
+            <span className="text-sm text-center">
+              Already have an account?{" "}
+              <Link className="underline text-accent" to="/SignInPage">
+                Sign In here
+              </Link>
+            </span>
+            <button
+              type='submit'
+              className='btn btn-secondary btn-lg w-full flex justify-center items-center gap-x-2'
+            >
+              Register <BsArrowRight className='text-lg' />
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
