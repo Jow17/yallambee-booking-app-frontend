@@ -38,7 +38,7 @@ const UserCard = ({ user, onDelete, onEdit }) => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center p-4 bg-gray-100 border-t">
+      <div className="flex justify-between items-center p-4 bg-gray-100 border-t gap-2">
         <button
           className="btn btn-secondary btn-sm"
           onClick={onEditUser}
@@ -46,7 +46,7 @@ const UserCard = ({ user, onDelete, onEdit }) => {
           Edit
         </button>
         <button
-          className="btn btn-danger btn-sm"
+          className="btn btn-danger btn-sm mx-auto bg-red-500 hover:bg-red-600"
           onClick={() => onDelete(user._id)}
         >
           Delete
