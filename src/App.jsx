@@ -1,6 +1,6 @@
 import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { UserProvider } from './context/userContext';
+import { UserProvider } from './context/userContext'
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
@@ -10,7 +10,7 @@ import BookingPage from "./pages/BookingPage"
 import PropertyCard from "./components/PropertyCardAdmin"
 import AdminDashboard from "./pages/AdminDashboard"
 import ProfilePage from "./pages/ProfilePage"
-import NotFound404 from "./pages/404";
+import NotFound404 from "./pages/404"
 import "./styles/index.css"
 
 function App() {
@@ -29,7 +29,7 @@ function App() {
         <Route path="*" element={<NotFound404 />} />
       </Routes>
     </UserProvider>
-  );
+  )
 }
 
 export default App;
