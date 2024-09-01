@@ -7,6 +7,7 @@ import axios from "axios";
 const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
   const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
   const [property, setProperty] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (booking.property && booking.property._id) {
@@ -33,6 +34,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
 
   return (
     <div className='bg-white shadow-2xl min-h-[500px] group'>
+      {error && <p className="text-red-500">{error}</p>}
       {property ? (
         <>
           {/* Image Section */}
@@ -40,7 +42,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
             {property.images && property.images.length > 0 ? (
               <img
                 className='group-hover:scale-110 transition-all duration-300 w-full'
-                src={property.images[0]} // Display the first image of the property
+                src={property.images[0]}
                 alt={property.name || "Property Image"}
               />
             ) : (
@@ -53,7 +55,6 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
           {/* Property Details */}
           <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] -translate-y-1/2 flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
             <div className='flex justify-between w-[80%]'>
-              {/* Property Size */}
               <div className='flex items-center gap-x-2'>
                 <div className='text-accent'>
                   <BsArrowsFullscreen className='text-[15px]' />
@@ -63,7 +64,6 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
                   <div>{property.size ? `${property.size}m²` : "N/A"}</div>
                 </div>
               </div>
-              {/* Max Guests */}
               <div className='flex items-center gap-x-2'>
                 <div className='text-accent'>
                   <BsPeople className='text-[18px]' />
