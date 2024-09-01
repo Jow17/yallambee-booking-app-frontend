@@ -146,12 +146,18 @@ const AdminDashboard = () => {
 
   const handleAddUser = async () => {
     try {
+      // Log the new user data to see if everything looks correct
+      console.log("User data being sent:", newUser);
+  
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser, {
         headers: { Authorization: `Bearer ${token}` },
       });
+  
+      // Log the server's response
+      console.log('Successfully added user:', response.data);
+  
       setUsers([...users, response.data]);
       setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false });
-      console.log('Successfully added user!');
       window.alert('Successfully added user!');
     } catch (error) {
       console.error('Error adding user:', error);
@@ -205,11 +211,24 @@ const AdminDashboard = () => {
 
   const handleUpdateBooking = async (updatedBooking) => {
     try {
-      const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`, updatedBooking, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setBookings(bookings.map((booking) => (booking._id === updatedBooking._id ? response.data : booking)));
+      const response = await axios.put(
+        `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
+        updatedBooking,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+  
+      setBookings((prevBookings) =>
+        prevBookings.map((booking) =>
+          booking._id === updatedBooking._id ? response.data : booking
+        )
+      );
+  
+      // Close the modal after successful update
       setIsEditBookingModalOpen(false);
+  
+      // Optionally, show a success message
       window.alert('Booking updated successfully!');
     } catch (error) {
       console.error('Error updating booking:', error);
@@ -457,6 +476,7 @@ const AdminDashboard = () => {
             <BookingCard
               key={booking._id} // Ensure each BookingCard has a unique key
               booking={booking}
+              type="admin"
               onDelete={() => handleDeleteBooking(booking._id)}
               onEdit={() => handleEditBooking(booking)} // Pass booking to edit
             />
@@ -464,40 +484,68 @@ const AdminDashboard = () => {
         </div>
 
         {/* Add Booking Form */}
-        <div className="bg-white p-6 mt-6 rounded-lg shadow-md">
+        <form onSubmit={handleAddBooking} className="bg-white p-6 mt-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Add New Booking</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <input
-              type="text"
-              placeholder="User ID"
-              value={newBooking.user}
-              onChange={(e) => setNewBooking({ ...newBooking, user: e.target.value })}
-              className="p-2 border rounded-lg"
-            />
-            <input
-              type="text"
-              placeholder="Property ID"
-              value={newBooking.property}
-              onChange={(e) => setNewBooking({ ...newBooking, property: e.target.value })}
-              className="p-2 border rounded-lg"
-            />
+            {/* User Dropdown */}
+            <div className="col-span-2">
+              <label className="font-semibold mb-2 block" htmlFor="user">User</label>
+              <select
+                id="user"
+                value={newBooking.user}
+                onChange={(e) => setNewBooking({ ...newBooking, user: e.target.value })}
+                className="p-2 border rounded-lg w-full"
+                required
+              >
+                <option value="" disabled>Select User</option>
+                {users.map((user) => (
+                  <option key={user._id} value={user._id}>
+                    {user.firstName} {user.lastName} ({user.email})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Property Dropdown */}
+            <div className="col-span-2">
+              <label className="font-semibold mb-2 block" htmlFor="property">Property</label>
+              <select
+                id="property"
+                value={newBooking.property}
+                onChange={(e) => setNewBooking({ ...newBooking, property: e.target.value })}
+                className="p-2 border rounded-lg w-full"
+                required
+              >
+                <option value="" disabled>Select Property</option>
+                {properties.map((property) => (
+                  <option key={property._id} value={property._id}>
+                    {property.name} ({property.location.city}, {property.location.state})
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <input
               type="date"
               placeholder="Start Date"
               value={newBooking.startDate}
               onChange={(e) => setNewBooking({ ...newBooking, startDate: e.target.value })}
-              className="p-2 border rounded-lg"
+              className="p-2 border rounded-lg col-span-2"
+              required
             />
             <input
               type="date"
               placeholder="End Date"
               value={newBooking.endDate}
               onChange={(e) => setNewBooking({ ...newBooking, endDate: e.target.value })}
-              className="p-2 border rounded-lg"
+              className="p-2 border rounded-lg col-span-2"
+              required
             />
-            <button onClick={handleAddBooking} className="btn btn-primary mt-4 md:mt-0">Add Booking</button>
+            <button type="submit" className="btn btn-primary mt-4 md:mt-0 col-span-1">
+              Add Booking
+            </button>
           </div>
-        </div>
+        </form>
       </section>
 
       {/* Modals for Editing */}

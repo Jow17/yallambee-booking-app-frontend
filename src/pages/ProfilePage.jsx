@@ -60,23 +60,23 @@ const ProfilePage = () => {
   const handleEditBooking = async (updatedBooking) => {
     try {
       const token = getToken();
-      const response = await axios.put(
+      const response = await axios.patch(
         `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
         updatedBooking,
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      )
-
+      );
+  
       setBookings(prevBookings =>
         prevBookings.map(booking =>
           booking._id === response.data._id ? response.data : booking
         )
-      )
+      );
     } catch (error) {
       console.error('Error updating booking in ProfilePage:', error.response?.data || error.message);
     }
-  }
+  };
 
   if (loading) {
     return <div>Loading profile...</div>
@@ -111,6 +111,9 @@ const ProfilePage = () => {
           
           <div className="bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-semibold mb-4">Your Bookings</h2>
+            <p className="text-gray-600 mb-4">
+              If you need any assistance or to cancel a booking, please reach out to the team, we'd love to help! yallambeetinyhomes@gmail.com
+            </p>
             <div className="grid grid-cols-1 gap-4">
               {bookings.length > 0 ? (
                 bookings.map((booking, index) => (
