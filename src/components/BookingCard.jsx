@@ -85,7 +85,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
             <p className="text-gray-600">Price: ${booking.totalPrice || "N/A"}</p>
           </div>
 
-          {/* Buttons for Admin or User */}
+          {/* Update Button for Users and Admins, Delete Button for Admins Only */}
           <div className="flex gap-2 justify-between items-center p-4 bg-gray-100">
             <button
               onClick={onEditBooking}
@@ -93,12 +93,14 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
             >
               Update
             </button>
-            <button
-              onClick={() => onDelete(booking._id)}
-              className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
-            >
-              Cancel
-            </button>
+            {type === "admin" && (
+              <button
+                onClick={() => onDelete(booking._id)}
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+              >
+                Cancel
+              </button>
+            )}
           </div>
 
           {/* Edit Booking Modal */}
