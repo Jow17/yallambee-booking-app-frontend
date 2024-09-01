@@ -1,49 +1,49 @@
-import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import axios from "axios";
-import { UserContext } from "../context/userContext";
-import { BsArrowRight } from 'react-icons/bs';
-import { saveToken } from './authUtils';
+import React, { useContext } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import axios from "axios"
+import { UserContext } from "../context/userContext"
+import { BsArrowRight } from "react-icons/bs"
+import { saveToken } from "./authUtils"
 
 const Register = () => {
-  const { register, watch, handleSubmit, formState: { errors } } = useForm();
-  const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  const { register, watch, handleSubmit, formState: { errors } } = useForm()
+  const navigate = useNavigate()
+  const { setUser } = useContext(UserContext)
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', data);
+      const response = await axios.post("https://yallambee-booking-app-backend.onrender.com/users", data)
       if (response.status === 201) {
-        console.log('User created successfully:', response.data);
-      
-        const { token, user } = response.data;
-  
+        console.log("User created successfully:", response.data)
+
+        const { token, user } = response.data
+
         // Save the token
-        saveToken(token);
+        saveToken(token)
 
         // Update the user context with the new user’s data
-        setUser({ id: user._id, ...user, isAdmin: user.isAdmin });
+        setUser({ id: user._id, ...user, isAdmin: user.isAdmin })
 
         // Redirect based on user role
         if (user.isAdmin) {
-          navigate('/admin-dashboard');
+          navigate("/admin-dashboard")
         } else {
-          navigate('/');
+          navigate("/")
         }
       }
     } catch (error) {
       if (error.response?.data?.errors) {
         error.response.data.errors.forEach((err) => {
-          console.error('Validation error:', err.msg);
-        });
+          console.error("Validation error:", err.msg)
+        })
       } else {
-        console.error('Registration error:', error.response?.data || error.message);
-        window.alert('Registration failed. Please try again.');
+        console.error("Registration error:", error.response?.data || error.message)
+        window.alert("Registration failed. Please try again.")
       }
     }
-  };
-  
+  }
+
   return (
     <div className='flex justify-center items-center min-h-screen'>
       <div className='bg-white shadow-2xl min-h-[500px] group max-w-sm mx-auto mt-20 rounded-lg'>
@@ -152,7 +152,7 @@ const Register = () => {
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register

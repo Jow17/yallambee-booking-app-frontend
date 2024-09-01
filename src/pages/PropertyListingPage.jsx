@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import PropertyCard from '../components/PropertyCard';
-import { SpinnerDotted } from 'spinners-react';
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import PropertyCard from "../components/PropertyCard"
+import { SpinnerDotted } from "spinners-react"
 
 const PropertyListing = () => {
-  const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [properties, setProperties] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchProperties = async () => {
       try {
-        const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
-        console.log('Fetched Properties:', response.data);
-        setProperties(response.data);
-        setLoading(false);
+        const response = await axios.get("https://yallambee-booking-app-backend.onrender.com/properties")
+        console.log("Fetched Properties:", response.data)
+        setProperties(response.data)
+        setLoading(false)
       } catch (error) {
-        console.error('Error fetching properties:', error);
-        setLoading(false);
+        console.error("Error fetching properties:", error)
+        setLoading(false)
       }
-    };
+    }
 
-    fetchProperties();
-  }, []);
+    fetchProperties()
+  }, [])
 
   return (
     <section className='py-24'>
@@ -52,7 +52,7 @@ const PropertyListing = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default PropertyListing;
+export default PropertyListing
