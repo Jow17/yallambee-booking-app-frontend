@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Button from "./Button";
 import Modal from "./Modal";
 import UpdateBookingForm from "./UpdateBookingForm";
 import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
 import axios from "axios";
 
-const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
+const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
   const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
   const [property, setProperty] = useState(null);
 
@@ -14,7 +13,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
       fetchPropertyDetails(booking.property._id);
     }
   }, [booking.property]);
-  
+
   const fetchPropertyDetails = async (propertyId) => {
     try {
       const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`);
@@ -22,10 +21,14 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
     } catch (error) {
       console.error('Error fetching property:', error);
     }
-  };  
+  };
 
   const onEditBooking = () => {
     setIsEditBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsEditBookingModalOpen(false);
   };
 
   return (
@@ -85,7 +88,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
             <p className="text-gray-600">Price: ${booking.totalPrice || "N/A"}</p>
           </div>
 
-          {/* Buttons for Admin or User */}
+          {/* Update Button for Users and Admins, Delete Button for Admins Only */}
           <div className="flex gap-2 justify-between items-center p-4 bg-gray-100">
             <button
               onClick={onEditBooking}
@@ -93,23 +96,28 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
             >
               Update
             </button>
-            <button
-              onClick={() => onDelete(booking._id)}
-              className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
-            >
-              Cancel
-            </button>
+            {type === "admin" && (
+              <button
+                onClick={() => onDelete(booking._id)}
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+              >
+                Cancel
+              </button>
+            )}
           </div>
 
           {/* Edit Booking Modal */}
           {isEditBookingModalOpen && (
-            <Modal onClose={() => setIsEditBookingModalOpen(false)}>
-              <UpdateBookingForm
-                booking={booking}
-                onEdit={onEdit}
-                onClose={() => setIsEditBookingModalOpen(false)}
-              />
-            </Modal>
+          <Modal onClose={handleCloseModal}>
+            <UpdateBookingForm
+              booking={booking}
+              onEdit={(updatedBooking) => {
+                onEdit(updatedBooking);
+                handleCloseModal(); // Close modal after edit
+              }}
+              onClose={handleCloseModal} // Allow closing modal without updating
+            />
+          </Modal>
           )}
         </>
       ) : (
