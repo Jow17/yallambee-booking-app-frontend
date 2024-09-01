@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from "react";
-import Button from "./Button";
+import Button from "./Button"
 import Modal from "./Modal";
 import UpdateBookingForm from "./UpdateBookingForm";
 import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
 import axios from "axios";
 
-const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
-  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
+// Custom Hook
+const usePropertyDetails = (propertyId) => {
   const [property, setProperty] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (booking.property && booking.property._id) {
-      fetchPropertyDetails(booking.property._id);
+    if (propertyId) {
+      const fetchPropertyDetails = async () => {
+        try {
+          const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`);
+          setProperty(response.data);
+        } catch (error) {
+          setError('Error fetching property details');
+        }
+      };
+
+      fetchPropertyDetails();
     }
-  }, [booking.property]);
-  
-  const fetchPropertyDetails = async (propertyId) => {
-    try {
-      const response = await axios.get(`https://yallambee-booking-app-backend.onrender.com/properties/${propertyId}`);
-      setProperty(response.data);
-    } catch (error) {
-      console.error('Error fetching property:', error);
-    }
-  };  
+  }, [propertyId]);
+
+  return { property, error };
+};
+
+const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
+  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
+  const { property, error } = usePropertyDetails(booking.property?._id);
 
   const onEditBooking = () => {
     setIsEditBookingModalOpen(true);
@@ -30,6 +38,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
 
   return (
     <div className='bg-white shadow-2xl min-h-[500px] group'>
+      {error && <p className="text-red-500">{error}</p>}
       {property ? (
         <>
           {/* Image Section */}
@@ -37,7 +46,7 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
             {property.images && property.images.length > 0 ? (
               <img
                 className='group-hover:scale-110 transition-all duration-300 w-full'
-                src={property.images[0]} // Display the first image of the property
+                src={property.images[0]}
                 alt={property.name || "Property Image"}
               />
             ) : (
@@ -50,7 +59,6 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
           {/* Property Details */}
           <div className='bg-white shadow-lg max-w-[300px] mx-auto h-[60px] -translate-y-1/2 flex justify-center items-center uppercase font-tertiary tracking-[1px] font-semibold text-base'>
             <div className='flex justify-between w-[80%]'>
-              {/* Property Size */}
               <div className='flex items-center gap-x-2'>
                 <div className='text-accent'>
                   <BsArrowsFullscreen className='text-[15px]' />
@@ -60,7 +68,6 @@ const BookingCard = ({ booking, type = "user", onDelete, onEdit }) => {
                   <div>{property.size ? `${property.size}m²` : "N/A"}</div>
                 </div>
               </div>
-              {/* Max Guests */}
               <div className='flex items-center gap-x-2'>
                 <div className='text-accent'>
                   <BsPeople className='text-[18px]' />
