@@ -8,9 +8,8 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
   const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false)
   const [property, setProperty] = useState(null)
   const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(true) // Loading state for fetching property details
+  const [loading, setLoading] = useState(true)
 
-  // Local state for updated booking dates
   const [startDate, setStartDate] = useState(booking.startDate)
   const [endDate, setEndDate] = useState(booking.endDate)
 
@@ -28,7 +27,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
       console.error('Error fetching property:', error)
       setError('Error fetching property details. Please try again.')
     } finally {
-      setLoading(false) // Set loading to false once fetching is done
+      setLoading(false)
     }
   }
 
@@ -96,6 +95,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
               Dates: {startDate ? new Date(startDate).toLocaleDateString() : "N/A"} - {endDate ? new Date(endDate).toLocaleDateString() : "N/A"}
             </p>
             <p className="text-gray-600">Price: ${booking.totalPrice || "N/A"}</p>
+            <p className="text-gray-600">Booked by: {booking.user?.email || "N/A"}</p> {/* Display user email */}
           </div>
 
           {/* Update Button for Users and Admins, Delete Button for Admins Only */}
