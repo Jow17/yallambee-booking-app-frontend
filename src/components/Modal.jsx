@@ -7,6 +7,9 @@ const Modal = ({ onClose, children }) => {
       tabIndex="-1"
       aria-hidden="true"
       className="bg-gray-800/50 overflow-y-auto overflow-x-hidden fixed inset-0 z-[999] flex justify-center items-center"
+      role="dialog"
+      aria-modal="true"
+      data-testid="modal"
     >
       <div className="relative w-full max-w-2xl p-4 h-full md:h-auto">
         {/* <!-- Modal content --> */}
@@ -17,6 +20,7 @@ const Modal = ({ onClose, children }) => {
               onClick={onClose}
               type="button"
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex items-center"
+              aria-label="Close modal"
             >
               <svg
                 className="w-5 h-5"

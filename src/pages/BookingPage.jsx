@@ -7,7 +7,6 @@ import CheckIn from '../components/CheckIn';
 import CheckOut from '../components/CheckOut';
 import GuestsDropdown from '../components/GuestsDropdown';
 import { FaCheck } from 'react-icons/fa';
-// Import Swiper components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-fade';

@@ -9,7 +9,7 @@ const CheckOut = ({ endDate, setEndDate, startDate }) => {
     <div className='w-full h-full bg-white relative'>
       <div className='absolute right-8 top-1/2 transform -translate-y-1/2'>
         <div>
-          <BsCalendar className='text-accent text-base' />
+          <BsCalendar className='text-accent text-base' data-testid="calendar-icon" />
         </div>
       </div>
       <DatePicker

@@ -1,69 +1,97 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { UserContext } from '../context/userContext' // Adjust the import based on your project structure
-import Header from '../components/Header' // Adjust the import based on your project structure
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Header from '../components/Header';
+import { UserContext } from '../context/userContext';
+import '@testing-library/jest-dom';
+import { jwtDecode } from 'jwt-decode';
 
-// Mock the UserContext provider
-const mockSetUser = vi.fn()
+// Mocking dependencies
+jest.mock('jwt-decode');
+jest.mock('../assets/img/logodark-1.png', () => 'logodark.png');
+jest.mock('../assets/img/logowhite-1.png', () => 'logowhite.png');
 
-const renderHeader = (user = null, isAdmin = false) => {
-  const value = { user, setUser: mockSetUser }
-  
-  render(
-    <UserContext.Provider value={value}>
-      <MemoryRouter>
-        <Header />
-      </MemoryRouter>
-    </UserContext.Provider>
-  )
-}
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+  useLocation: () => ({
+    pathname: '/',
+  }),
+}));
 
 describe('Header Component', () => {
+  const setUser = jest.fn();
+  const handleLogout = jest.fn();
+
   beforeEach(() => {
-    localStorage.setItem('token', 'mock-token') // Mock the token in local storage
-  })
+    jest.clearAllMocks();
+    localStorage.clear();
+  });
 
-  afterEach(() => {
-    localStorage.removeItem('token') // Clean up after each test
-    vi.clearAllMocks() // Clear mock function calls
-  })
+  it('renders logo and navigation links correctly for a logged-out user', () => {
+    render(
+      <UserContext.Provider value={{ user: null, setUser }}>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
 
-  test('renders logo correctly', () => {
-    renderHeader()
-    const logo = screen.getByAltText('Logo')
-    expect(logo).toBeInTheDocument()
-  })
+    // Check for the logo
+    expect(screen.getByAltText('Logo')).toBeInTheDocument();
 
-  test('shows admin link if user is admin', () => {
-    renderHeader({ _id: '1' }, true)
-    const adminLink = screen.getByText('Admin')
-    expect(adminLink).toBeInTheDocument()
-  })
+    // Check for the navigation links
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Tiny Homes')).toBeInTheDocument();
+    expect(screen.getByText('Login')).toBeInTheDocument();
+  });
 
-  test('does not show admin link if user is not admin', () => {
-    renderHeader({ _id: '1' }, false)
-    const adminLink = screen.queryByText('Admin')
-    expect(adminLink).not.toBeInTheDocument()
-  })
+  it('renders admin link and account link for a logged-in admin user', () => {
+    const mockUser = { _id: '1', isAdmin: true };
+    const token = 'mocked-token';
+    jwtDecode.mockReturnValue({ isAdmin: true });
 
-  test('shows account and logout links if user is logged in', () => {
-    renderHeader({ _id: '1' })
-    expect(screen.getByText('Account')).toBeInTheDocument()
-    expect(screen.getByText('Logout')).toBeInTheDocument()
-  })
+    localStorage.setItem('token', token);
 
-  test('shows login link if user is not logged in', () => {
-    renderHeader(null)
-    expect(screen.getByText('Login')).toBeInTheDocument()
-  })
+    render(
+      <UserContext.Provider value={{ user: mockUser, setUser }}>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
 
-  test('calls handleLogout when Logout is clicked', () => {
-    renderHeader({ _id: '1' })
-    const logoutLink = screen.getByText('Logout')
+    // Check for the admin link
+    expect(screen.getByText('Admin')).toBeInTheDocument();
 
-    fireEvent.click(logoutLink)
+    // Check for the account link
+    expect(screen.getByText('Account')).toBeInTheDocument();
 
-    expect(mockSetUser).toHaveBeenCalledWith(null)
-    expect(screen.getByText('Login')).toBeInTheDocument() // Ensure login link is visible after logout
-  })
-})
+    // Check for the logout link
+    expect(screen.getByText('Logout')).toBeInTheDocument();
+  });
+
+  it('handles logout correctly', () => {
+    const mockUser = { _id: '1', isAdmin: true };
+    const token = 'mocked-token';
+    jwtDecode.mockReturnValue({ isAdmin: true });
+
+    localStorage.setItem('token', token);
+
+    render(
+      <UserContext.Provider value={{ user: mockUser, setUser }}>
+        <MemoryRouter>
+          <Header />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
+
+    fireEvent.click(screen.getByText('Logout'));
+
+    // Check if setUser was called with null
+    expect(setUser).toHaveBeenCalledWith(null);
+
+    // Check if token was removed
+    expect(localStorage.getItem('token')).toBeNull();
+  });
+});
