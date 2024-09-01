@@ -10,11 +10,16 @@ const SelectProperty = ({ selectedProperty, setSelectedProperty }) => {
     const fetchProperties = async () => {
       try {
         const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties');
-        setProperties(response.data);
+        if (response.data) {
+          setProperties(response.data);
+        } else {
+          console.error('No data received');
+        }
       } catch (error) {
         console.error('Error fetching properties:', error);
       }
     };
+    
 
     fetchProperties();
   }, []);
