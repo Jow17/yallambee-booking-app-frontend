@@ -12,7 +12,17 @@ const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
   const [users, setUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [newProperty, setNewProperty] = useState({ name: '', location: '', description: '', ageRestriction: '' });
+  const [newProperty, setNewProperty] = useState({
+    name: '',
+    description: '',
+    price: 0,
+    size: 0,
+    maxPerson: 1,
+    availability: [],
+    images: [],
+    location: { city: '', state: '' },
+    ageRestriction: 18,
+  });
   const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false });
   const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' });
   const [error, setError] = useState(null);
@@ -108,13 +118,24 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleAddProperty = async () => {
+  const handleAddProperty = async (e) => {
+    e.preventDefault();
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProperties([...properties, response.data]);
-      setNewProperty({ name: '', location: '', description: '', ageRestriction: '' });
+      setNewProperty({
+        name: '',
+        description: '',
+        price: 0,
+        size: 0,
+        maxPerson: 1,
+        availability: [],
+        images: [],
+        location: { city: '', state: '' },
+        ageRestriction: 18,
+      });
       console.log('Successfully added property!');
       window.alert('Successfully added property!');
     } catch (error) {
@@ -232,7 +253,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Add Property Form */}
-        <div className="bg-white p-6 mt-6 rounded-lg shadow-md">
+        <form onSubmit={handleAddProperty} className="bg-white p-6 mt-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Add New Property</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <input
@@ -241,31 +262,74 @@ const AdminDashboard = () => {
               value={newProperty.name}
               onChange={(e) => setNewProperty({ ...newProperty, name: e.target.value })}
               className="p-2 border rounded-lg"
+              required
             />
             <input
               type="text"
               placeholder="Location"
-              value={newProperty.location}
-              onChange={(e) => setNewProperty({ ...newProperty, location: e.target.value })}
+              value={newProperty.location.city}
+              onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, city: e.target.value } })}
               className="p-2 border rounded-lg"
+              required
             />
             <input
               type="text"
+              placeholder="State"
+              value={newProperty.location.state}
+              onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, state: e.target.value } })}
+              className="p-2 border rounded-lg"
+              required
+            />
+            <input
+              type="number"
+              placeholder="Price"
+              value={newProperty.price}
+              onChange={(e) => setNewProperty({ ...newProperty, price: parseFloat(e.target.value) })}
+              className="p-2 border rounded-lg"
+              required
+            />
+            <input
+              type="number"
+              placeholder="Size"
+              value={newProperty.size}
+              onChange={(e) => setNewProperty({ ...newProperty, size: parseFloat(e.target.value) })}
+              className="p-2 border rounded-lg"
+              required
+            />
+            <input
+              type="number"
+              placeholder="Max Guests"
+              value={newProperty.maxPerson}
+              onChange={(e) => setNewProperty({ ...newProperty, maxPerson: parseInt(e.target.value) })}
+              className="p-2 border rounded-lg"
+              required
+            />
+            <input
+              type="number"
+              placeholder="Age Restriction"
+              value={newProperty.ageRestriction}
+              onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: parseInt(e.target.value) })}
+              className="p-2 border rounded-lg"
+            />
+            <textarea
               placeholder="Description"
               value={newProperty.description}
               onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })}
-              className="p-2 border rounded-lg"
+              className="p-2 border rounded-lg col-span-2"
+              required
             />
             <input
               type="text"
-              placeholder="Age Restriction"
-              value={newProperty.ageRestriction}
-              onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: e.target.value })}
-              className="p-2 border rounded-lg"
+              placeholder="Images (comma-separated URLs)"
+              value={newProperty.images.join(', ')}
+              onChange={(e) => setNewProperty({ ...newProperty, images: e.target.value.split(',').map(img => img.trim()) })}
+              className="p-2 border rounded-lg col-span-2"
             />
-            <button onClick={handleAddProperty} className="btn btn-primary mt-4 md:mt-0">Add Property</button>
+            <button type="submit" className="btn btn-primary mt-4 md:mt-0 col-span-1">
+              Add Property
+            </button>
           </div>
-        </div>
+        </form>
       </section>
 
       {/* Users Section */}
@@ -400,12 +464,9 @@ const AdminDashboard = () => {
         </div>
       </section>
 
-      {/* Modals */}
+      {/* Modals for Editing */}
       {isEditUserModalOpen && (
-        <Modal
-          title="Edit User"
-          onClose={() => setIsEditUserModalOpen(false)}
-        >
+        <Modal title="Edit User" onClose={() => setIsEditUserModalOpen(false)}>
           <UpdateUserDetailsForm
             user={editUser}
             onEdit={handleUpdateUser}
@@ -415,10 +476,7 @@ const AdminDashboard = () => {
       )}
 
       {isEditBookingModalOpen && (
-        <Modal
-          title="Edit Booking"
-          onClose={() => setIsEditBookingModalOpen(false)}
-        >
+        <Modal title="Edit Booking" onClose={() => setIsEditBookingModalOpen(false)}>
           <UpdateBookingForm
             booking={editBooking}
             onEdit={handleUpdateBooking}
@@ -428,10 +486,7 @@ const AdminDashboard = () => {
       )}
 
       {isEditPropertyModalOpen && (
-        <Modal
-          title="Edit Property"
-          onClose={() => setIsEditPropertyModalOpen(false)}
-        >
+        <Modal title="Edit Property" onClose={() => setIsEditPropertyModalOpen(false)}>
           <UpdatePropertyForm
             property={editProperty}
             onEdit={handleUpdateProperty}
