@@ -5,13 +5,16 @@ import { getToken } from './authUtils'
 import { UserContext } from '../context/userContext'
 import Modal from "../components/Modal"
 import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm"
+import UpdateBookingForm from "../components/UpdateBookingForm"
 import BookingCard from "../components/BookingCard"
 
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false)
+  const [isUpdateBookingModalOpen, setIsUpdateBookingModalOpen] = useState(false)
+  const [selectedBooking, setSelectedBooking] = useState(null)
 
   const { _id } = useParams()
   const { setUser: setGlobalUser } = useContext(UserContext)
@@ -26,12 +29,12 @@ const ProfilePage = () => {
 
         const userResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}`, {
           headers: { Authorization: `Bearer ${token}` }
-        });
-        setUser(userResponse.data);
+        })
+        setUser(userResponse.data)
 
         const bookingsResponse = await axios.get(`https://yallambee-booking-app-backend.onrender.com/users/${_id}/bookings`, {
           headers: { Authorization: `Bearer ${token}` }
-        });
+        })
         setBookings(bookingsResponse.data)
 
         setGlobalUser(userResponse.data)
@@ -40,14 +43,14 @@ const ProfilePage = () => {
       } finally {
         setLoading(false)
       }
-    };
+    }
 
-    fetchUserData();
-  }, [_id, setGlobalUser]);
+    fetchUserData()
+  }, [_id, setGlobalUser])
 
   const handleDeleteBooking = async (bookingId) => {
     try {
-      const token = getToken();
+      const token = getToken()
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -57,26 +60,39 @@ const ProfilePage = () => {
     }
   }
 
-  const handleEditBooking = async (updatedBooking) => {
-    try {
-      const token = getToken();
-      const response = await axios.patch(
-        `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
-        updatedBooking,
-        {
-          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        }
-      );
+  const handleEditBooking = (booking) => {
+    setSelectedBooking(booking)
+    setIsUpdateBookingModalOpen(true)
+  }
+
+  const handleUpdateBooking = (updatedBooking) => {
+    // Update bookings here
   
-      setBookings(prevBookings =>
-        prevBookings.map(booking =>
-          booking._id === response.data._id ? response.data : booking
+    setIsUpdateBookingModalOpen(false) // Close the modal
+    console.log("Modal should be closed now") // Log to confirm closure
+    setSelectedBooking(null)
+  
+  
+  
+    // Optionally, make the API call in the background
+    (async () => {
+      try {
+        const token = getToken()
+        const response = await axios.patch(
+          `https://yallambee-booking-app-backend.onrender.com/booking/${updatedBooking._id}`,
+          updatedBooking,
+          {
+            headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          }
         )
-      );
-    } catch (error) {
-      console.error('Error updating booking in ProfilePage:', error.response?.data || error.message);
-    }
-  };
+  
+        // If the API call fails, you might want to handle the error and revert the optimistic update
+      } catch (error) {
+        console.error('Error updating booking in ProfilePage:', error.response?.data || error.message)
+        // Optionally, you can revert the optimistic update here if necessary
+      }
+    })()
+  }
 
   if (loading) {
     return <div>Loading profile...</div>
@@ -116,10 +132,10 @@ const ProfilePage = () => {
             </p>
             <div className="grid grid-cols-1 gap-4">
               {bookings.length > 0 ? (
-                bookings.map((booking, index) => (
+                bookings.map((booking) => (
                   <BookingCard
                     type="user"
-                    key={index}
+                    key={booking._id}
                     booking={booking}
                     onDelete={handleDeleteBooking}
                     onEdit={handleEditBooking}
@@ -133,22 +149,31 @@ const ProfilePage = () => {
         </div>
 
         {isEditUserModalOpen && (
-          <Modal 
-          onClose={() => setIsEditUserModalOpen(false)}>
+          <Modal onClose={() => setIsEditUserModalOpen(false)}>
             <UpdateUserDetailsForm 
               user={user} 
               onEdit={(updatedUser) => {
-              setUser(updatedUser); // Update local state with the new user details
-              setGlobalUser(updatedUser); // Update global user context if necessary
-              setIsEditUserModalOpen(false); // Close the modal after editing
-            }} 
-          onClose={() => setIsEditUserModalOpen(false)} 
-          />
+                setUser(updatedUser)
+                setGlobalUser(updatedUser)
+                setIsEditUserModalOpen(false)
+              }} 
+              onClose={() => setIsEditUserModalOpen(false)} 
+            />
           </Modal>
         )}
+
+{isUpdateBookingModalOpen && selectedBooking && (
+  <Modal onClose={() => setIsUpdateBookingModalOpen(false)}>
+    <UpdateBookingForm
+      booking={selectedBooking}
+      onEdit={handleUpdateBooking}
+      onClose={() => setIsUpdateBookingModalOpen(false)}
+    />
+  </Modal>
+)}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default ProfilePage

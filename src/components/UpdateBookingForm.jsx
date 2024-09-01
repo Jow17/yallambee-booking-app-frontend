@@ -1,48 +1,54 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { getToken } from "../pages/authUtils";
+import React, { useState, useEffect } from "react"
+import axios from "axios"
+import { getToken } from "../pages/authUtils"
 
 const UpdateBookingForm = ({ booking, onEdit, onClose }) => {
-  const [startDate, setStartDate] = useState(booking.startDate);
-  const [endDate, setEndDate] = useState(booking.endDate);
-  const [guests, setGuests] = useState(booking.guests);
+  const [startDate, setStartDate] = useState(booking.startDate)
+  const [endDate, setEndDate] = useState(booking.endDate)
+  const [guests, setGuests] = useState(booking.guests)
+  const [loading, setLoading] = useState(false) // State for loading
 
   useEffect(() => {
     // Initialize the form with booking data
-    setStartDate(booking.startDate);
-    setEndDate(booking.endDate);
-    setGuests(booking.guests);
-  }, [booking]);
+    setStartDate(booking.startDate)
+    setEndDate(booking.endDate)
+    setGuests(booking.guests)
+  }, [booking])
 
   const handleUpdateBooking = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    setLoading(true)
   
     const updatedBookingData = {
-      startDate: new Date(startDate).toISOString().split('T')[0], // "YYYY-MM-DD"
-      endDate: new Date(endDate).toISOString().split('T')[0],     // "YYYY-MM-DD"
+      startDate: new Date(startDate).toISOString().split("T")[0],
+      endDate: new Date(endDate).toISOString().split("T")[0],
       guests,
-    };
+    }
   
-    console.log("Updated booking data being sent to server:", JSON.stringify(updatedBookingData, null, 2));
+    console.log("Updated booking data being sent to server:", JSON.stringify(updatedBookingData, null, 2))
   
     try {
-      const token = getToken();
+      const token = getToken()
       const response = await axios.patch(
         `https://yallambee-booking-app-backend.onrender.com/booking/${booking._id}`,
         updatedBookingData,
         {
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         }
-      );
+      )
   
-      console.log('Booking updated successfully:', response.data);
+      console.log("Booking updated successfully:", response.data)
   
-      onEdit(response.data); // Update the booking in the parent component
-      onClose(); // Close the modal
+      // Update the booking in the parent component
+      onEdit(response.data) 
+      console.log("Closing the modal") // Add this line
+      onClose() // Close the modal
     } catch (error) {
-      console.error("Error updating booking:", error.response?.data || error.message);
+      console.error("Error updating booking:", error.response?.data || error.message)
+    } finally {
+      setLoading(false)
     }
-  };  
+  }
 
   return (
     <form className="space-y-4 bg-white shadow-2xl rounded-lg p-8 max-w-[400px] mx-auto" onSubmit={handleUpdateBooking}>
@@ -87,8 +93,9 @@ const UpdateBookingForm = ({ booking, onEdit, onClose }) => {
         <button
           type="submit"
           className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+          disabled={loading} // Disable button when loading
         >
-          Update
+          {loading ? "Updating..." : "Update"} {/* Show loading text */}
         </button>
         <button
           type="button"
@@ -99,7 +106,7 @@ const UpdateBookingForm = ({ booking, onEdit, onClose }) => {
         </button>
       </div>
     </form>
-  );
-};
+  )
+}
 
-export default UpdateBookingForm;
+export default UpdateBookingForm

@@ -19,6 +19,7 @@ const CheckIn = ({ startDate, setStartDate }) => {
         placeholderText='Check in'
         onChange={(date) => setStartDate(date)}
         minDate={new Date()}
+        dateFormat='dd/MM/yyyy' 
       />
     </div>
   );
