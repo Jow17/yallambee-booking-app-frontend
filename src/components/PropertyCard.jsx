@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs';
+import { UserContext } from '../context/userContext'; // Assuming you have a UserContext to manage user state
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, onDelete, onEdit }) => {
+  const { user } = useContext(UserContext); // Get user context to check if the user is an admin
+
   return (
     <div className='bg-white shadow-2xl min-h-[500px] group'>
       {property ? (
@@ -56,13 +59,30 @@ const PropertyCard = ({ property }) => {
             </p>
           </div>
 
-          {/* Booking Button */}
-          <Link
-            to={`/booking/${property._id}`}
-            className='btn btn-secondary btn-sm max-w-[240px] mx-auto'
-          >
-            Book now from ${property.price}
-          </Link>
+          {/* Conditional Rendering for Admins and Users */}
+          {user && user.isAdmin ? (
+            <div className="flex flex-col gap-2 p-4">
+              <button
+                onClick={() => onEdit(property)}
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+              >
+                Edit Property
+              </button>
+              <button
+                onClick={() => onDelete(property._id)}
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto bg-red-500 hover:bg-red-600"
+              >
+                Delete Property
+              </button>
+            </div>
+          ) : (
+            <Link
+              to={`/booking/${property._id}`}
+              className='btn btn-secondary btn-sm max-w-[240px] mx-auto'
+            >
+              Book now from ${property.price}
+            </Link>
+          )}
         </>
       ) : (
         <p>Loading property details...</p>
