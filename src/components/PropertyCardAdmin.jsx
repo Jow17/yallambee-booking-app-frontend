@@ -61,7 +61,7 @@ const PropertyCardAdmin = ({ property, onDelete, onEdit }) => {
 
           {/* Conditional Rendering for Admins and Users */}
           {user && user.isAdmin ? (
-            <div className="flex flex-col gap-2 p-4">
+            <div className="flex justify-between items-center p-4 bg-gray-100 border-t gap-2">
               <button
                 onClick={() => onEdit(property)}
                 className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
@@ -78,7 +78,7 @@ const PropertyCardAdmin = ({ property, onDelete, onEdit }) => {
           ) : (
             <Link
               to={`/booking/${property._id}`}
-              className='btn btn-secondary btn-sm max-w-[240px] mx-auto'
+              className='btn btn-secondary= btn-sm max-w-[240px] mx-auto'
             >
               Book now from ${property.price}
             </Link>

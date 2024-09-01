@@ -111,7 +111,7 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
             {type === "admin" && (
               <button
                 onClick={() => onDelete(booking._id)}
-                className="btn btn-secondary btn-sm max-w-[240px] mx-auto"
+                className="btn btn-secondary btn-sm max-w-[240px] mx-auto bg-red-500 hover:bg-red-600"
               >
                 Cancel
               </button>
