@@ -95,7 +95,9 @@ const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
               Dates: {startDate ? new Date(startDate).toLocaleDateString() : "N/A"} - {endDate ? new Date(endDate).toLocaleDateString() : "N/A"}
             </p>
             <p className="text-gray-600">Price: ${booking.totalPrice || "N/A"}</p>
-            <p className="text-gray-600">Booked by: {booking.user?.email || "N/A"}</p> {/* Display user email */}
+            {type === "admin" && ( // Only show email for admins
+            <p className="text-gray-600">Booked by: {booking.user?.email || "N/A"}</p>
+           )}
           </div>
 
           {/* Update Button for Users and Admins, Delete Button for Admins Only */}
