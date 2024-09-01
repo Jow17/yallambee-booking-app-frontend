@@ -484,6 +484,16 @@ The user testing process was instrumental in refining Yallambee Tiny Homes. Feed
 
 - **Testing Logs**: Detailed logs of each testing session are available in the project management tool (e.g., Trello, Jira).
 - **Screenshots**: Before-and-after screenshots highlighting key improvements.
+- **Early Frontend**
+  ![Early frontend development](docs/images/beforeUI/1.png)
+  ![Early frontend development](docs/images/beforeUI/2.png)
+  ![Early frontend development](docs/images/beforeUI/3.png)
+- **Mid-Project**
+  ![Mid-Project](docs/images/beforeUI/4.png)
+  ![Mid-Project](docs/images/beforeUI/5.png)
+- **Getting there!**
+  ![Getting there!](docs/images/beforeUI/8.png)
+  ![Getting there!](docs/images/beforeUI/9.png)
 
 ## R9: Formal Testing Framework
 
