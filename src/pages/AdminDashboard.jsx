@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import UserCard from '../components/UserCard';
-import BookingCard from '../components/BookingCard';
-import PropertyCardAdmin from '../components/PropertyCardAdmin';
-import Modal from '../components/Modal';
-import UpdateUserDetailsForm from '../components/UpdateUserDetailsForm';
-import UpdateBookingForm from '../components/UpdateBookingForm';
-import UpdatePropertyForm from '../components/UpdatePropertyForm';
+import React, { useEffect, useState } from "react"
+import axios from "axios"
+import UserCard from "../components/UserCard"
+import BookingCard from "../components/BookingCard"
+import PropertyCardAdmin from "../components/PropertyCardAdmin"
+import Modal from "../components/Modal"
+import UpdateUserDetailsForm from "../components/UpdateUserDetailsForm"
+import UpdateBookingForm from "../components/UpdateBookingForm"
+import UpdatePropertyForm from "../components/UpdatePropertyForm"
 
 const AdminDashboard = () => {
   const [properties, setProperties] = useState([]);
@@ -23,32 +23,32 @@ const AdminDashboard = () => {
     location: { city: '', state: '' },
     ageRestriction: 18,
   });
-  const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false });
-  const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' });
-  const [error, setError] = useState(null);
-  const [editUser, setEditUser] = useState(null);
-  const [editBooking, setEditBooking] = useState(null);
-  const [editProperty, setEditProperty] = useState(null);
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
-  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false);
-  const [isEditPropertyModalOpen, setIsEditPropertyModalOpen] = useState(false);
-  const token = localStorage.getItem('token');
+  const [newUser, setNewUser] = useState({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false })
+  const [newBooking, setNewBooking] = useState({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' })
+  const [error, setError] = useState(null)
+  const [editUser, setEditUser] = useState(null)
+  const [editBooking, setEditBooking] = useState(null)
+  const [editProperty, setEditProperty] = useState(null)
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false)
+  const [isEditBookingModalOpen, setIsEditBookingModalOpen] = useState(false)
+  const [isEditPropertyModalOpen, setIsEditPropertyModalOpen] = useState(false)
+  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    fetchProperties();
-    fetchBookings();
-    fetchUsers();
-  }, []);
+    fetchProperties()
+    fetchBookings()
+    fetchUsers()
+  }, [])
 
   const fetchProperties = async () => {
     try {
       const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/properties', {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setProperties(response.data);
+      })
+      setProperties(response.data)
     } catch (error) {
-      console.error('Error fetching properties:', error);
-      setError('Failed to fetch properties. Please try again.');
+      console.error('Error fetching properties:', error)
+      setError('Failed to fetch properties. Please try again.')
     }
   };
 
@@ -56,23 +56,23 @@ const AdminDashboard = () => {
     try {
       const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/users', {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setUsers(response.data);
+      })
+      setUsers(response.data)
     } catch (error) {
-      console.error('Error fetching users:', error.response ? error.response.data : error.message);
-      setError('Failed to fetch users. Please try again.');
+      console.error('Error fetching users:', error.response ? error.response.data : error.message)
+      setError('Failed to fetch users. Please try again.')
     }
-  };
+  }
 
   const fetchBookings = async () => {
     try {
       const response = await axios.get('https://yallambee-booking-app-backend.onrender.com/booking', {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setBookings(response.data);
+      })
+      setBookings(response.data)
     } catch (error) {
-      console.error('Error fetching bookings:', error.response ? error.response.data : error.message);
-      setError('Failed to fetch bookings. Please try again.');
+      console.error('Error fetching bookings:', error.response ? error.response.data : error.message)
+      setError('Failed to fetch bookings. Please try again.')
     }
   };
 
@@ -80,27 +80,27 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/properties/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setProperties(properties.filter((property) => property._id !== id));
-      console.log('Property deleted successfully!');
-      window.alert('Property deleted successfully!');
+      })
+      setProperties(properties.filter((property) => property._id !== id))
+      console.log('Property deleted successfully!')
+      window.alert('Property deleted successfully!')
     } catch (error) {
-      console.error('Error deleting property:', error.response?.data || error.message);
-      window.alert('Error deleting property. Please try again.');
+      console.error('Error deleting property:', error.response?.data || error.message)
+      window.alert('Error deleting property. Please try again.')
     }
-  };
+  }
 
   const handleDeleteUser = async (id) => {
     try {
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/users/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setUsers(users.filter((user) => user._id !== id));
-      console.log('User deleted successfully!');
-      window.alert('User deleted successfully!');
+      })
+      setUsers(users.filter((user) => user._id !== id))
+      console.log('User deleted successfully!')
+      window.alert('User deleted successfully!')
     } catch (error) {
-      console.error('Error deleting user:', error.response?.data || error.message);
-      window.alert('Error deleting user. Please try again.');
+      console.error('Error deleting user:', error.response?.data || error.message)
+      window.alert('Error deleting user. Please try again.')
     }
   };
 
@@ -108,23 +108,23 @@ const AdminDashboard = () => {
     try {
       await axios.delete(`https://yallambee-booking-app-backend.onrender.com/booking/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
       setBookings(bookings.filter((booking) => booking._id !== id));
-      console.log('Booking deleted successfully!');
-      window.alert('Booking deleted successfully!');
+      console.log('Booking deleted successfully!')
+      window.alert('Booking deleted successfully!')
     } catch (error) {
-      console.error('Error deleting booking:', error.response?.data || error.message);
-      window.alert('Error deleting booking. Please try again.');
+      console.error('Error deleting booking:', error.response?.data || error.message)
+      window.alert('Error deleting booking. Please try again.')
     }
-  };
+  }
 
   const handleAddProperty = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/properties', newProperty, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setProperties([...properties, response.data]);
+      })
+      setProperties([...properties, response.data])
       setNewProperty({
         name: '',
         description: '',
@@ -135,33 +135,33 @@ const AdminDashboard = () => {
         images: [],
         location: { city: '', state: '' },
         ageRestriction: 18,
-      });
-      console.log('Successfully added property!');
-      window.alert('Successfully added property!');
+      })
+      console.log('Successfully added property!')
+      window.alert('Successfully added property!')
     } catch (error) {
-      console.error('Error adding property', error);
-      window.alert('Error adding property');
+      console.error('Error adding property', error)
+      window.alert('Error adding property')
     }
   };
 
   const handleAddUser = async () => {
     try {
       // Log the new user data to see if everything looks correct
-      console.log("User data being sent:", newUser);
+      console.log("User data being sent:", newUser)
   
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/users', newUser, {
         headers: { Authorization: `Bearer ${token}` },
-      });
+      })
   
       // Log the server's response
-      console.log('Successfully added user:', response.data);
+      console.log('Successfully added user:', response.data)
   
-      setUsers([...users, response.data]);
-      setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false });
-      window.alert('Successfully added user!');
+      setUsers([...users, response.data])
+      setNewUser({ username: '', password: '', firstName: '', lastName: '', email: '', phone: '', dob: '', isAdmin: false })
+      window.alert('Successfully added user!')
     } catch (error) {
-      console.error('Error adding user:', error);
-      window.alert('Error adding user');
+      console.error('Error adding user:', error)
+      window.alert('Error adding user')
     }
   };
 
@@ -169,43 +169,43 @@ const AdminDashboard = () => {
     try {
       const response = await axios.post('https://yallambee-booking-app-backend.onrender.com/booking', newBooking, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setBookings([...bookings, response.data]);
-      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' });
-      console.log('Successfully added booking!');
-      window.alert('Successfully added booking!');
+      })
+      setBookings([...bookings, response.data])
+      setNewBooking({ user: '', property: '', startDate: '', endDate: '', status: 'Pending' })
+      console.log('Successfully added booking!')
+      window.alert('Successfully added booking!')
     } catch (error) {
-      console.error('Error adding booking', error);
-      window.alert('Error adding booking');
+      console.error('Error adding booking', error)
+      window.alert('Error adding booking')
     }
-  };
+  }
 
   const handleEditUser = (user) => {
-    setEditUser(user);
-    setIsEditUserModalOpen(true);
-  };
+    setEditUser(user)
+    setIsEditUserModalOpen(true)
+  }
 
   const handleEditBooking = (booking) => {
-    setEditBooking(booking);
-    setIsEditBookingModalOpen(true);
-  };
+    setEditBooking(booking)
+    setIsEditBookingModalOpen(true)
+  }
 
   const handleEditProperty = (property) => {
-    setEditProperty(property);
-    setIsEditPropertyModalOpen(true);
-  };
+    setEditProperty(property)
+    setIsEditPropertyModalOpen(true)
+  }
 
   const handleUpdateUser = async (updatedUser) => {
     try {
       const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/users/${updatedUser._id}`, updatedUser, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setUsers(users.map((user) => (user._id === updatedUser._id ? response.data : user)));
-      setIsEditUserModalOpen(false);
-      window.alert('User updated successfully!');
+      setUsers(users.map((user) => (user._id === updatedUser._id ? response.data : user)))
+      setIsEditUserModalOpen(false)
+      window.alert('User updated successfully!')
     } catch (error) {
-      console.error('Error updating user:', error);
-      window.alert('Failed to update user. Please try again.');
+      console.error('Error updating user:', error)
+      window.alert('Failed to update user. Please try again.')
     }
   };
 
@@ -217,38 +217,38 @@ const AdminDashboard = () => {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );
+      )
   
       setBookings((prevBookings) =>
         prevBookings.map((booking) =>
           booking._id === updatedBooking._id ? response.data : booking
         )
-      );
+      )
   
       // Close the modal after successful update
-      setIsEditBookingModalOpen(false);
+      setIsEditBookingModalOpen(false)
   
       // Optionally, show a success message
-      window.alert('Booking updated successfully!');
+      window.alert('Booking updated successfully!')
     } catch (error) {
       console.error('Error updating booking:', error);
-      window.alert('Failed to update booking. Please try again.');
+      window.alert('Failed to update booking. Please try again.')
     }
-  };
+  }
 
   const handleUpdateProperty = async (updatedProperty) => {
     try {
       const response = await axios.put(`https://yallambee-booking-app-backend.onrender.com/properties/${updatedProperty._id}`, updatedProperty, {
         headers: { Authorization: `Bearer ${token}` },
-      });
-      setProperties(properties.map((property) => (property._id === updatedProperty._id ? response.data : property)));
-      setIsEditPropertyModalOpen(false);
-      window.alert('Property updated successfully!');
+      })
+      setProperties(properties.map((property) => (property._id === updatedProperty._id ? response.data : property)))
+      setIsEditPropertyModalOpen(false)
+      window.alert('Property updated successfully!')
     } catch (error) {
-      console.error('Error updating property:', error);
+      console.error('Error updating property:', error)
       window.alert('Failed to update property. Please try again.');
     }
-  };
+  }
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -588,4 +588,4 @@ const AdminDashboard = () => {
   )
 }
 
-export default AdminDashboard;
+export default AdminDashboard
