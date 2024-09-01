@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import UserCard from '../components/UserCard';
 import BookingCard from '../components/BookingCard';
-import PropertyCard from '../components/PropertyCard';
+import PropertyCardAdmin from '../components/PropertyCardAdmin';
 import Modal from '../components/Modal';
 import UpdateUserDetailsForm from '../components/UpdateUserDetailsForm';
 import UpdateBookingForm from '../components/UpdateBookingForm';
@@ -262,7 +262,7 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-semibold mb-4">Manage Properties</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {properties.map((property) => (
-            <PropertyCard
+            <PropertyCardAdmin
               key={property._id}
               property={property}
               onDelete={() => handleDeleteProperty(property._id)}
