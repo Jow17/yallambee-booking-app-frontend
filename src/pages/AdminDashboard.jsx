@@ -506,8 +506,8 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-            {/* Property Dropdown */}
-            <div className="col-span-2">
+             {/* Property Dropdown */}
+             <div className="col-span-2">
               <label className="font-semibold mb-2 block" htmlFor="property">Property</label>
               <select
                 id="property"
@@ -519,67 +519,73 @@ const AdminDashboard = () => {
                 <option value="" disabled>Select Property</option>
                 {properties.map((property) => (
                   <option key={property._id} value={property._id}>
-                    {property.name} ({property.location.city}, {property.location.state})
+                    {property.name} - {property.location.city}, {property.location.state}
                   </option>
                 ))}
               </select>
             </div>
 
-            <input
-              type="date"
-              placeholder="Start Date"
-              value={newBooking.startDate}
-              onChange={(e) => setNewBooking({ ...newBooking, startDate: e.target.value })}
-              className="p-2 border rounded-lg col-span-2"
-              required
-            />
-            <input
-              type="date"
-              placeholder="End Date"
-              value={newBooking.endDate}
-              onChange={(e) => setNewBooking({ ...newBooking, endDate: e.target.value })}
-              className="p-2 border rounded-lg col-span-2"
-              required
-            />
-            <button type="submit" className="btn btn-primary mt-4 md:mt-0 col-span-1">
+            {/* Date Inputs */}
+            <div className="flex flex-col col-span-2">
+              <label className="font-semibold mb-2" htmlFor="startDate">Start Date</label>
+              <input
+                id="startDate"
+                type="date"
+                value={newBooking.startDate}
+                onChange={(e) => setNewBooking({ ...newBooking, startDate: e.target.value })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col col-span-2">
+              <label className="font-semibold mb-2" htmlFor="endDate">End Date</label>
+              <input
+                id="endDate"
+                type="date"
+                value={newBooking.endDate}
+                onChange={(e) => setNewBooking({ ...newBooking, endDate: e.target.value })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary mt-4 md:mt-0 col-span-2">
               Add Booking
             </button>
           </div>
         </form>
       </section>
 
-      {/* Modals for Editing */}
+      {/* Modals for editing users, bookings, and properties */}
       {isEditUserModalOpen && (
-        <Modal title="Edit User" onClose={() => setIsEditUserModalOpen(false)}>
-          <UpdateUserDetailsForm
-            user={editUser}
-            onEdit={handleUpdateUser}
-            onClose={() => setIsEditUserModalOpen(false)}
+        <Modal onClose={() => setIsEditUserModalOpen(false)}>
+          <UpdateUserDetailsForm 
+            user={editUser} 
+            onUpdate={handleUpdateUser} 
+            onClose={() => setIsEditUserModalOpen(false)} 
           />
         </Modal>
       )}
-
       {isEditBookingModalOpen && (
-        <Modal title="Edit Booking" onClose={() => setIsEditBookingModalOpen(false)}>
-          <UpdateBookingForm
-            booking={editBooking}
-            onEdit={handleUpdateBooking}
-            onClose={() => setIsEditBookingModalOpen(false)}
+        <Modal onClose={() => setIsEditBookingModalOpen(false)}>
+          <UpdateBookingForm 
+            booking={editBooking} 
+            onUpdate={handleUpdateBooking} 
+            onClose={() => setIsEditBookingModalOpen(false)} 
           />
         </Modal>
       )}
-
       {isEditPropertyModalOpen && (
-        <Modal title="Edit Property" onClose={() => setIsEditPropertyModalOpen(false)}>
-          <UpdatePropertyForm
-            property={editProperty}
-            onEdit={handleUpdateProperty}
-            onClose={() => setIsEditPropertyModalOpen(false)}
+        <Modal onClose={() => setIsEditPropertyModalOpen(false)}>
+          <UpdatePropertyForm 
+            property={editProperty} 
+            onUpdate={handleUpdateProperty} 
+            onClose={() => setIsEditPropertyModalOpen(false)} 
           />
         </Modal>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default AdminDashboard;
