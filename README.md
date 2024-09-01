@@ -103,6 +103,11 @@
 
 Please see our deployed site [here](https://main--yallambee-booking-app-frontend.netlify.app/).
 
+```
+Admin login: admin@example.com 
+password: admin123
+```
+
 [Backend Repository](https://github.com/shayzimm/yallambee-booking-app-backend.git)
 
 [Frontend Repository](https://github.com/Jow17/yallambee-booking-app-frontend.git)
