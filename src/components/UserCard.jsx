@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import Button from "./Button";
-import Modal from "./Modal";
-import UpdateUserDetailsForm from "./UpdateUserDetailsForm";
+import React, { useState } from "react"
+import Button from "./Button"
+import Modal from "./Modal"
+import UpdateUserDetailsForm from "./UpdateUserDetailsForm"
 
 const UserCard = ({ user, onDelete, onEdit }) => {
-  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
+  const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false)
 
   const onEditUser = () => {
-    setIsEditUserModalOpen(true);
-  };
+    setIsEditUserModalOpen(true)
+  }
 
   return (
     <div className="bg-white shadow-2xl min-h-[300px] group rounded-lg overflow-hidden">
@@ -58,18 +58,18 @@ const UserCard = ({ user, onDelete, onEdit }) => {
           title={"Edit User"}
           onClose={() => setIsEditUserModalOpen(false)}
         >
-        <UpdateUserDetailsForm 
-          user={user} 
-          onEdit={(updatedUser) => {
-          onEdit(updatedUser); // Ensure this function is correctly passed and is valid
-          setIsEditUserModalOpen(false); // Close the modal after editing
-      }}
-      onClose={() => setIsEditUserModalOpen(false)} 
-    />
-  </Modal>
-)}
+          <UpdateUserDetailsForm 
+            user={user} 
+            onEdit={(updatedUser) => {
+              onEdit(updatedUser) // Ensure this function is correctly passed and is valid
+              setIsEditUserModalOpen(false) // Close the modal after editing
+            }}
+            onClose={() => setIsEditUserModalOpen(false)} 
+          />
+        </Modal>
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default UserCard;
+export default UserCard

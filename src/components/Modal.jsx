@@ -1,4 +1,4 @@
-import React from "react";
+import React from "react"
 
 const Modal = ({ onClose, children }) => {
   return (
@@ -44,7 +44,7 @@ const Modal = ({ onClose, children }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Modal;
+export default Modal

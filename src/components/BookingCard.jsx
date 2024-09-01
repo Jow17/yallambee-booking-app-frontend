@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import Modal from "./Modal"
 import UpdateBookingForm from "./UpdateBookingForm"
-import { BsArrowsFullscreen, BsPeople } from 'react-icons/bs'
+import { BsArrowsFullscreen, BsPeople } from "react-icons/bs"
 import axios from "axios"
 
 const BookingCard = ({ booking, type = "admin", onDelete, onEdit }) => {
