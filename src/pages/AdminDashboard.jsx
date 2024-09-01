@@ -483,11 +483,11 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Add Booking Form */}
+        {/* Add Booking Form
         <form onSubmit={handleAddBooking} className="bg-white p-6 mt-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Add New Booking</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {/* User Dropdown */}
+            User Dropdown
             <div className="col-span-2">
               <label className="font-semibold mb-2 block" htmlFor="user">User</label>
               <select
@@ -506,7 +506,7 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-             {/* Property Dropdown */}
+             Property Dropdown
              <div className="col-span-2">
               <label className="font-semibold mb-2 block" htmlFor="property">Property</label>
               <select
@@ -525,7 +525,7 @@ const AdminDashboard = () => {
               </select>
             </div>
 
-            {/* Date Inputs */}
+            Date Inputs
             <div className="flex flex-col col-span-2">
               <label className="font-semibold mb-2" htmlFor="startDate">Start Date</label>
               <input
@@ -553,7 +553,7 @@ const AdminDashboard = () => {
               Add Booking
             </button>
           </div>
-        </form>
+        </form> */}
       </section>
 
       {/* Modals for editing users, bookings, and properties */}

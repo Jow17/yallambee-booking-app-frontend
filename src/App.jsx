@@ -1,6 +1,6 @@
 import React from "react"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import { UserProvider } from './context/userContext'
+import { UserProvider } from "./context/userContext"
 import Layout from "./Layouts/Layout"
 import HomePage from "./pages/HomePage"
 import Register from "./pages/Register"
