@@ -256,75 +256,111 @@ const AdminDashboard = () => {
         <form onSubmit={handleAddProperty} className="bg-white p-6 mt-6 rounded-lg shadow-md">
           <h3 className="text-lg font-semibold mb-4">Add New Property</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <input
-              type="text"
-              placeholder="Property Name"
-              value={newProperty.name}
-              onChange={(e) => setNewProperty({ ...newProperty, name: e.target.value })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Location"
-              value={newProperty.location.city}
-              onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, city: e.target.value } })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="text"
-              placeholder="State"
-              value={newProperty.location.state}
-              onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, state: e.target.value } })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Price"
-              value={newProperty.price}
-              onChange={(e) => setNewProperty({ ...newProperty, price: parseFloat(e.target.value) })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Size"
-              value={newProperty.size}
-              onChange={(e) => setNewProperty({ ...newProperty, size: parseFloat(e.target.value) })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Max Guests"
-              value={newProperty.maxPerson}
-              onChange={(e) => setNewProperty({ ...newProperty, maxPerson: parseInt(e.target.value) })}
-              className="p-2 border rounded-lg"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Age Restriction"
-              value={newProperty.ageRestriction}
-              onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: parseInt(e.target.value) })}
-              className="p-2 border rounded-lg"
-            />
-            <textarea
-              placeholder="Description"
-              value={newProperty.description}
-              onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })}
-              className="p-2 border rounded-lg col-span-2"
-              required
-            />
-            <input
-              type="text"
-              placeholder="Images (comma-separated URLs)"
-              value={newProperty.images.join(', ')}
-              onChange={(e) => setNewProperty({ ...newProperty, images: e.target.value.split(',').map(img => img.trim()) })}
-              className="p-2 border rounded-lg col-span-2"
-            />
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="propertyName">Property Name</label>
+              <input
+                id="propertyName"
+                type="text"
+                placeholder="Property Name"
+                value={newProperty.name}
+                onChange={(e) => setNewProperty({ ...newProperty, name: e.target.value })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="locationCity">City</label>
+              <input
+                id="locationCity"
+                type="text"
+                placeholder="City"
+                value={newProperty.location.city}
+                onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, city: e.target.value } })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="locationState">State</label>
+              <input
+                id="locationState"
+                type="text"
+                placeholder="State"
+                value={newProperty.location.state}
+                onChange={(e) => setNewProperty({ ...newProperty, location: { ...newProperty.location, state: e.target.value } })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="price">Price</label>
+              <input
+                id="price"
+                type="number"
+                placeholder="Price"
+                value={newProperty.price}
+                onChange={(e) => setNewProperty({ ...newProperty, price: parseFloat(e.target.value) })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="size">Size</label>
+              <input
+                id="size"
+                type="number"
+                placeholder="Size"
+                value={newProperty.size}
+                onChange={(e) => setNewProperty({ ...newProperty, size: parseFloat(e.target.value) })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="maxGuests">Max Guests</label>
+              <input
+                id="maxGuests"
+                type="number"
+                placeholder="Max Guests"
+                value={newProperty.maxPerson}
+                onChange={(e) => setNewProperty({ ...newProperty, maxPerson: parseInt(e.target.value) })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="font-semibold mb-2" htmlFor="ageRestriction">Age Restriction</label>
+              <input
+                id="ageRestriction"
+                type="number"
+                placeholder="Age Restriction"
+                value={newProperty.ageRestriction}
+                onChange={(e) => setNewProperty({ ...newProperty, ageRestriction: parseInt(e.target.value) })}
+                className="p-2 border rounded-lg"
+              />
+            </div>
+            <div className="flex flex-col col-span-2">
+              <label className="font-semibold mb-2" htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                placeholder="Description"
+                value={newProperty.description}
+                onChange={(e) => setNewProperty({ ...newProperty, description: e.target.value })}
+                className="p-2 border rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex flex-col col-span-2">
+              <label className="font-semibold mb-2" htmlFor="images">Images (comma-separated URLs)</label>
+              <input
+                id="images"
+                type="text"
+                placeholder="Images (comma-separated URLs)"
+                value={newProperty.images.join(', ')}
+                onChange={(e) => setNewProperty({ ...newProperty, images: e.target.value.split(',').map(img => img.trim()) })}
+                className="p-2 border rounded-lg"
+              />
+            </div>
             <button type="submit" className="btn btn-primary mt-4 md:mt-0 col-span-1">
               Add Property
             </button>
